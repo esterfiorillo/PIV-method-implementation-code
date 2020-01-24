@@ -1,1 +1,3 @@
 In order to test the code, two artificial images were made. These images consist of a black background, with a particle. In the first image, the particle is located at the coordinate (100, 300) and in the second image, at the coordinate (108, 300). Then, the code must determine an offset of 8 pixels on the x-axis when processing these two images. The result found was satisfactory for an initial interrogation window of 64 pixels, with 0 overlap. The displacement map with only an 8 pixel displacement vector was plotted.
+
+
