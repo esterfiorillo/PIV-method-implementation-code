@@ -141,7 +141,11 @@
        </widget>
       </item>
       <item>
-       <widget class="QSpinBox" name="Number_of_images"/>
+       <widget class="QSpinBox" name="Number_of_images">
+        <property name="maximum">
+         <number>100000000</number>
+        </property>
+       </widget>
       </item>
      </layout>
     </item>
