@@ -1,9 +1,17 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Mon Jan  6 21:08:05 2020
+Created on Thu Mar 19 10:50:39 2020
 
 @author: esterfiorillo
+"""
+
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Mon Feb  3 13:36:39 2020
+
+@author: cfx
 """
 
 import numpy as np
@@ -11,68 +19,148 @@ from scipy.signal import fftconvolve
 import matplotlib.pyplot as plt
 from numpy import log
 
+#If the user does not have the opencv library installed,
+#the modo_erro_cv variable will be equal to 1, and otherwise, it will be equal to 0. 
+#This will be used to pass a message on the graphical interface
+#if the library is not installed
 modo_erro_cv = 0
 try:
     import cv2
-except ModuleNotFoundError: 
+except ModuleNotFoundError:
     modo_erro_cv = 1
+    
 #librarys from interface
 from PyQt5 import uic
 from PyQt5.QtWidgets import QApplication
 from PyQt5 import QtWidgets
 import sys
 
+def calc_background (n_im, photo_path2):
+#Function that calculates the average of all images to be processed
+    im1 = plt.imread(photo_path2)
+    im1 = np.asarray (im1)
+    if len (np.shape (im1)) > 2:
+        im1 = np.mean(im1, -1) #rgb to gray  
+    soma = im1
+    for i in range (0, n_im):
+        auxi1 = len(photo_path2)
+        auxi2 = photo_path2[auxi1-9:auxi1-4]
+        auxi3 = int (auxi2)
+        auxi4 = auxi3 +1
+        if (auxi4 < 10):
+            photo_path2 = photo_path2[:-5] + str(auxi4) + ".tif"
+        elif (auxi4 < 100):
+            photo_path2 = photo_path2[:-6] + str(auxi4) + ".tif"
+        elif (auxi4 < 1000):
+            photo_path2 = photo_path2[:-7] + str(auxi4) + ".tif"
+        elif (auxi4 < 10000):
+            photo_path2 = photo_path2[:-8] + str(auxi4) + ".tif"
+        elif (auxi4 < 100000):
+            photo_path2 = photo_path2[:-9] + str(auxi4) + ".tif"
+       
+        im2 = plt.imread(photo_path2)
+        im2 = np.asarray (im2)
+        if len (np.shape (im2)) > 2:
+            im2 = np.mean (im2, -1) #rgb to gray
+        soma = soma + im2
+    res = soma/n_im
+    return res
+
+def calc_m (n_im, photo_path):
+    aux = 0
+    for i in range (0, n_im):
+        im1 = plt.imread(photo_path)
+        im1 = np.asarray (im1)
+        if len (np.shape (im1)) > 2:
+            im1 = np.mean(im1, -1) #rgb to gray
+        h,bins = np.histogram(im1.ravel(),256,[0,256])
+        h_media = np.mean(h)
+        aux = aux + h_media
+        auxi1 = len(photo_path)
+        auxi2 = photo_path[auxi1-9:auxi1-4]
+        auxi3 = int (auxi2)
+        auxi4 = auxi3 +2
+        if (auxi4 < 10):
+            photo_path = photo_path[:-5] + str(auxi4) + ".tif"
+        elif (auxi4 < 100):
+            photo_path = photo_path[:-6] + str(auxi4) + ".tif"
+        elif (auxi4 < 1000):
+            photo_path = photo_path[:-7] + str(auxi4) + ".tif"
+        elif (auxi4 < 10000):
+            photo_path = photo_path[:-8] + str(auxi4) + ".tif"
+        elif (auxi4 < 100000):
+            photo_path = photo_path[:-9] + str(auxi4) + ".tif"
+    mzao = aux/n_im
+    return mzao
+
 class image_par:
-#Base class of normal_method class and multigrid_method class, 
+#Base class of normal_method class and multigrid_method class,
 #which represents the methods of traversing the pair of images
 #with the interrogation windows while the cross correlation between them is applyed.
 #The advantage of using inheritance in this case is the possibility
 #of adding more methods without having to change anything in the code
 #Atributes:
-    #image1: 2d np.narray
-    #image2: 2d np.narray
+#    image1: 2d np.narray
+#    image2: 2d np.narray
 #Functions:
-    #sobel_filter1
-    #sobel_filter2
+#    sobel_filter1
+#    sobel_filter2
+#    laplacian_filter
+#    remove_background
+#    calc_m
+#    calc_teta
+#    homogenize_brightness
+    
     def __init__(self, image1, image2): #Constructor
         self.im1 = image1
         self.im2 = image2
         self.tam_x, self.tam_y = np.shape(self.im1)
-    
+   
     def sobel_filter1(self):
 #Function that applies a Sobel filter to an image. This filter has the function
 #of detecting horizontal edges.
         self.im1 = cv2.Sobel(self.im1, cv2.CV_64F,1,0,ksize=5)
         self.im2 = cv2.Sobel(self.im2, cv2.CV_64F,1,0,ksize=5)
-    
+        #return self.im1
+   
     def sobel_filter2(self):
 #Function that applies a Sobel filter to an image. This filter has the function
 #of detecting vertical edges.
         self.im1 = cv2.Sobel(self.im1, cv2.CV_64F,0,1,ksize=5)
         self.im2 = cv2.Sobel(self.im2, cv2.CV_64F,0,1,ksize=5)
-        
-    def remove_background (self, n_im, photo_path2):
-        im1 = cv2.imread(photo_path2)
-        im1 = np.asarray (im1) 
-        if len (np.shape (im1)) > 2:
-            im1 = np.mean(im1, -1) #rgb to gray
-        soma = im1
-        for i in range (1, n_im):
-            auxi1 = len(photo_path2)
-            auxi2 = photo_path2[auxi1-5]
-            auxi3 = int (auxi2)
-            auxi4 = auxi3 +1
-            photo_path2 = photo_path2[:-5]
-            photo_path2 = photo_path2 + str(auxi4) + ".png"
-            im2 = cv2.imread(photo_path2)
-            im2 = np.asarray (im2)
-            if len (np.shape (im2)) > 2:
-                im2 = np.mean (im2, -1) #rgb to gray
-            soma = soma + im2
-        res = soma/n_im
+       
+    def laplacian_filter(self):
+#Function that applies a Laplacian filter to an image. This filter has the function
+#of detecting vertical and horizontal edges.
+        self.im1 = cv2.Laplacian(self.im1,cv2.CV_64F)
+        self.im2 = cv2.Laplacian(self.im2,cv2.CV_64F)
+       
+    def remove_background (self, res):
+#Function that subtracts that average from the pair of images.
+#This is intended to remove the background from the images.
         self.im1 = self.im1 - res
         self.im2 = self.im2 - res
         
+#The two functions below (calc_teta and homogenize_brightness) aim to 
+#homogenize the brightness of the second image according to that of the first
+#Brightness correction, homogenization and adjunstment of images for face recognition, Eduardo Machado Silva, UNESP, ISSN 2316-9664, Volume 14, fev. 2019, Edic ̧ao Ermac  
+   
+    def calc_teta(self, mmao):
+        h,bins = np.histogram(self.im2.ravel(),256,[0,256])
+        h_min = min(h)
+        h_max = max(h)
+        h_media = np.mean(h)
+        teta = (mmao - h_media)/(h_max - h_min)
+        return teta
+   
+    def homogenize_brightness(self,  mmao):
+        teta = self.calc_teta(mmao)
+        tam_x = len(self.im2)
+        tam_y = len(self.im2[0])
+        for i in range(tam_x):
+            for j in range (tam_y):
+                self.im2[i][j] = self.im2[i][j] - teta*self.im2[i][j]
+       
 class interrogation_window:
 #Class that represents the interrogation windows and the functions applyed to then.
 #Atributes:
@@ -83,10 +171,10 @@ class interrogation_window:
     #normxcorr2()
     #find_peak()
     #gauss_subpixel_peak_position
-    def __init__(self, w1, w2):
+    def __init__(self, w1, w2): #Constructor
         self.window1 = w1
         self.window2 = w2
-    
+   
     def normxcorr2(self, mode="full"):
 ########################################################################################
 # Author: Ujash Joshi, University of Toronto, 2017                                     #
@@ -97,7 +185,7 @@ class interrogation_window:
 # https://github.com/Sabrewarrior/normxcorr2-python/master/norxcorr2.py                #
 # http://lordsabre.blogspot.ca/2017/09/matlab-normxcorr2-implemented-in-python.html    #
 ########################################################################################
-    
+   
 
 #    Input arrays should be floating point numbers.
 #    :param template: N-D array, of template or filter you are using for cross-correlation.
@@ -105,12 +193,12 @@ class interrogation_window:
 #    Length of each dimension must be less than length of image.
 #    :param image: N-D array
 #    :param mode: Options, "full", "valid", "same"
-#    full (Default): The output of fftconvolve is the full discrete linear convolution of the inputs. 
+#    full (Default): The output of fftconvolve is the full discrete linear convolution of the inputs.
 #    Output size will be image size + 1/2 template size in each dimension.
 #    valid: The output consists only of those elements that do not rely on the zero-padding.
 #    same: The output is the same size as image, centered with respect to the ‘full’ output.
 #    :return: N-D array of same dimensions as image. Size depends on mode parameter.
-    
+   
     # If this happens, it is probably a mistake
         if np.ndim(self.window1) > np.ndim(self.window2) or \
                 len([i for i in range(np.ndim(self.window1)) if self.window1.shape[i] > self.window2.shape[i]]) > 0:
@@ -137,7 +225,7 @@ class interrogation_window:
         out[np.where(np.logical_not(np.isfinite(out)))] = 0
    
         self.cross_corr = out
-        
+       
     def find_peak (self):    
 #Function that returns the coordinates in x and y of the biggest point (peak)
 #in the 2d array resulted from the cross correlation.
@@ -150,7 +238,7 @@ class interrogation_window:
     def gauss_subpixel_peak_position (self, x_pico, y_pico):
 #Function that returns the gauss interpolation coordinates
 #
-#In: 
+#In:
 #    x_pico: int
 #         x-coordinate of the peak
 #    y_pico: int
@@ -165,7 +253,7 @@ class interrogation_window:
         elif y_pico +1 >= len(self.cross_corr[0]):
             subp_peak_position = x_pico, y_pico
         else:
-            
+           
             c = self.cross_corr[x_pico, y_pico]
             cl = self.cross_corr[x_pico - 1, y_pico]
             cr = self.cross_corr[x_pico + 1, y_pico]
@@ -178,7 +266,7 @@ class interrogation_window:
                 subp_peak_position = (x_pico + ((log(cl) - log(cr)) / (2 * log(cl) - 4 * log(c) + 2 * log(cr))),
 y_pico + ((log(cd) - log(cu)) / (2 * log(cd) - 4 * log(c) + 2 * log(cu))))
         return subp_peak_position[0], subp_peak_position[1]        
-    
+   
 
 class displacement_map:
 #Class that represents the displacement map resulting from the methods.
@@ -192,14 +280,13 @@ class displacement_map:
     #calculate_r (int ii, int jj)
     #neighborhood_median(int ii, int jj)
     #replacement3()
-    #correct_previous_dp()
     #resize_dp
     #index_guard()
-    
+   
     def __init__ (self, dp_x, dp_y): #Constructor
         self.dpx = dp_x
         self.dpy = dp_y
-        
+       
     def neighborhood_median (self, ii, jj):
     #Function that calculates the median of the neighboorhood points (3x3) of a certain position (ii, jj) on the displacement map
         aux1 = np.array([[self.dpx[ii-1][jj-1], self.dpx[ii-1][jj], self.dpx[ii-1][jj+1], self.dpx[ii][jj-1], self.dpx[ii][jj+1], self.dpx[ii+1][jj-1], self.dpx[ii+1][jj], self.dpx[ii+1][jj+1]]])
@@ -254,20 +341,15 @@ class displacement_map:
                 r1_value, r2_value = self.calculate_r(i, j)
                 if r2_value <=2:
                     al, self.dpy[i][j] = self.neighborhood_mean (i, j)
-                            
-    def correct_previous_dp (self):
-        ux_size = len (self.dpx)
-        uy_size = len (self.dpx[0])
-        for i in range (0, ux_size):
-            for j in range (0, uy_size):
-                if (np.isnan(self.dpx[i][j])):
-                    self.dpx[i][j] = 0 #olhar isso
 
-    def resize_dp (self): 
+    def resize_dp (self):
+#Function that divides the values ​​of the displacement vectors by two
         self.dpx = self.dpx/2
         self.dpy = self.dpy/2
 
     def index_guard (self):
+#function that stores in a vector twice the value of the indexes of 
+#the displacement map of the previous iteration
         indices1_x = np.zeros((len(self.dpx)))
         indices1_y = np.zeros((len(self.dpx[0])))
         indices2_x = np.zeros((len(self.dpx)))
@@ -288,7 +370,7 @@ class normal_method(image_par):
         self.y_size = w_size
         self.overlap = ovl
 
-    def result_dimensions (self):   
+    def result_dimensions (self):  
 #Function used to find the dimensions of the result of applying cross correlation in the interrogation windows, according to the interrogation window size and overlap
 #In:
 #    x_im: int
@@ -332,17 +414,14 @@ class normal_method(image_par):
 #    dpy1: 2d array
 #        displacement in y    
         size_r_x, size_r_y = self.result_dimensions()
-        
         #create matrix for substitute divisions of im1
         a = np.zeros ((self.x_size, self.y_size))
         #create matrix for substitute search window in im2
         b = np.zeros ((self.x_size, self.y_size))
-        
-        #look for a in b
+
         dpx1 = np.zeros ((size_r_x, size_r_y))
         dpy1 = np.zeros ((size_r_x, size_r_y))
-        #corr_anterior = np.ones((len(a), len(a[0])))
-        
+       
         for i in range (0, size_r_x):
             for j in range (0, size_r_y):
                 x1_min = i*(self.x_size - self.overlap)
@@ -353,35 +432,30 @@ class normal_method(image_par):
 
                 a = np.copy (self.im1[x1_min:x1_max, y1_min:y1_max])
                 b = np.copy (self.im2[x1_min:x1_max, y1_min:y1_max])
-                
+               
                 janela = interrogation_window (a , b)
-
                 janela.normxcorr2 ('same')
-
-    #            corr_resultado = corr*corr_anterior
-    #            corr_anterior = corr_resultado
-        
-                #xx, yy = find_peak(corr_resultado)
+                
                 xx, yy = janela.find_peak()
                 xx, yy = janela.gauss_subpixel_peak_position (xx, yy)
                 xx -= (self.x_size + self.x_size - 1)//2
                 yy -= (self.y_size + self.y_size - 1)//2
 
-                dpx1[i][j], dpy1[i][j] = -xx, yy 
+                dpx1[i][j], dpy1[i][j] = -xx, yy
 
         res = displacement_map(dpx1, dpy1)
         return res
 
 class multigrid_method (image_par):
-#Method2 
-    def __init__ (self, im1, im2, w_size, ovl, n_passadas):
+#Method2
+    def __init__ (self, im1, im2, w_size, ovl, n_passadas): #Constructor
         image_par.__init__(self, im1, im2)
         self.x_size = w_size
         self.y_size = w_size
         self.overlap = ovl
         self.num_passadas = n_passadas
 
-    def result_dimensions (self): 
+    def result_dimensions (self):
 #Function used to find the dimensions of the result of applying cross correlation in the interrogation windows, according to the interrogation window size and overlap.
 #In:
 #    x_im: int
@@ -397,11 +471,11 @@ class multigrid_method (image_par):
 #        x-dimension of matrix resulting from applying cross-correlation between interrogation windows
 #    y_dimension: int
 #       y-dimension of matrix resulting from applying cross-correlation between interrogation windows
-    
+   
         x_dimension = (self.tam_x - self.x_size) // (self.x_size - self.overlap) + 1
         y_dimension = (self.tam_y - self.y_size) // (self.y_size - self.overlap) + 1
         return x_dimension, y_dimension
-    
+   
     def multigrid_method1 (self, dp_anterior):
 #Function that implements the Multigrid method, which is an iterative procedure for traversing images with interrogation windows while applying a cross correlation.
 #It consists of moving windows according to the displacement map found in the previous iteration.
@@ -442,8 +516,8 @@ class multigrid_method (image_par):
             self.overlap = self.overlap//2
             size_r_x, size_r_y = self.result_dimensions()
             ind1_x, ind1_y, ind2_x, ind2_y = dp_anterior.index_guard()
-    
-            dp_anterior.resize_dp () 
+   
+            dp_anterior.resize_dp ()
 
             dpx = np.zeros((size_r_x, size_r_y))
             dpy = np.zeros((size_r_x, size_r_y))
@@ -453,13 +527,13 @@ class multigrid_method (image_par):
             cont2 = 0
             for i in range (0, size_r_x):
                 for j in range (0, size_r_y):
-                    x1_min = i* (self.x_size - self.overlap) 
+                    x1_min = i* (self.x_size - self.overlap)
                     y1_min = j* (self.x_size - self.overlap)
                     if i == ind2_x[cont1]:
                         if j == ind2_y[cont2]:
                             teste1_indice1 = int (ind1_x[cont1])
                             teste1_indice2 = int (ind1_y[cont2])
-    
+   
                             if (np.isnan(dp_anterior.dpx[teste1_indice1][teste1_indice2])):
                                 auxliar1 = 0
                             else:
@@ -470,9 +544,9 @@ class multigrid_method (image_par):
                                 auxliar2 = dp_anterior.dpy[teste1_indice1][teste1_indice2]
                             x2_min = int (i*(self.x_size - self.overlap) + auxliar1)
                             y2_min = int (j*(self.x_size - self.overlap) + auxliar2)
-    
+   
                             cont2 = cont2 + 1
-                            
+                           
                             if cont1 >= (size_r_x/2):
                                 cont1 = 0
                             if cont2 >= (size_r_y/2 - 1):
@@ -484,7 +558,7 @@ class multigrid_method (image_par):
                     y1_max = y1_min + self.y_size
                     x2_max = x2_min + self.x_size
                     y2_max = y2_min + self.y_size
-                    
+                   
                     if x1_min > self.tam_x:
                         x1_min = int (i*(self.x_size - self.overlap))
                         x1_max = x1_min + self.x_size
@@ -497,7 +571,7 @@ class multigrid_method (image_par):
                     if x2_max > self.tam_x:
                         x2_min = int (i*(self.x_size - self.overlap))
                         x2_max = x2_min + self.x_size
-        
+       
                     if y1_min >= self.tam_y:
                         y1_min = int (j*(self.y_size - self.overlap))
                         y1_max = y1_min + self.y_size
@@ -506,33 +580,36 @@ class multigrid_method (image_par):
                         y2_max = y2_min + self.y_size
                     if y1_max >= self.tam_y:
                         y1_min = int (j*(self.y_size - self.overlap))
-                        y1_max = y1_min + self.y_size 
+                        y1_max = y1_min + self.y_size
                     if y2_max >= self.tam_y:
                         y2_min = int (j*(self.y_size - self.overlap))
-                        y2_max = y2_min + self.y_size 
-                    
+                        y2_max = y2_min + self.y_size
+                   
                     c = np.copy (self.im1[x1_min:x1_max, y1_min:y1_max])
                     d = np.copy (self.im2[x2_min:x2_max, y2_min:y2_max])
-                    e = np.ones ((self.x_size, self.y_size))
-                    f = np.ones ((self.x_size, self.y_size))
-                
-                    if c.size !=0:
-                        e = c
-                    if c.size == 0:
-                        c = e
-                    if d.size !=0:
-                        f = d
-                    if d.size == 0:
-                        d = f
-                    janela = interrogation_window (c , d)
                     
+                    if c.size == 0:
+                        x1_min = i* (self.x_size - self.overlap)
+                        y1_min = j* (self.x_size - self.overlap)
+                        x1_max = x1_min + self.x_size
+                        y1_max = y1_min + self.y_size
+                        c = np.copy (self.im1[x1_min:x1_max, y1_min:y1_max])
+                    if d.size == 0:
+                        x1_min = i* (self.x_size - self.overlap)
+                        y1_min = j* (self.x_size - self.overlap)
+                        x1_max = x1_min + self.x_size
+                        y1_max = y1_min + self.y_size
+                        d = np.copy (self.im1[x1_min:x1_max, y1_min:y1_max])
+                        
+                    janela = interrogation_window (c , d)
+                   
                     janela.normxcorr2 ('same')
 
                     xx, yy = janela.find_peak()
                     xx, yy = janela.gauss_subpixel_peak_position (xx, yy)
                     xx -= (self.x_size + self.x_size - 1)//2
                     yy -= (self.y_size + self.y_size - 1)//2
-                        
+                       
                     dpx[i, j], dpy[i, j] = -xx, yy
             dp_anterior.dpx = np.zeros((size_r_x, size_r_y))
             dp_anterior.dpy = np.zeros((size_r_x, size_r_y))
@@ -544,8 +621,12 @@ class multigrid_method (image_par):
         return dp_anterior
 
 #Load interface
-
 Form, Window = uic.loadUiType("interface5.4.ui")
+
+dpx_list1 = []
+dpy_list1 = []
+dpx_list2 = []
+dpy_list2 = []
 
 class mywindow(QtWidgets.QMainWindow):
     def __init__(self):
@@ -555,44 +636,75 @@ class mywindow(QtWidgets.QMainWindow):
         self.ui.form.setupUi(self)
         self.ui.form.Ok_button2.clicked.connect(self.populate_im_lines)
         self.ui.form.image1_button.clicked.connect(self.select_images1)
-        
+       
     def select_images1(self):
         photo_path1, ext1 = QtWidgets.QFileDialog.getOpenFileName(self, "Select Photo")
         if photo_path1:
             self.ui.form.image1.setText(photo_path1)
         self.string_photo = photo_path1
-        
+       
     def populate_im_lines(self):
         if modo_erro_cv == 1:
             QtWidgets.QMessageBox.about (self, "Not valid", "Install OpenCV library")
-
+           
         num_images = self.ui.form.Number_of_images.text()
         num_images = int (num_images)
         photo_path2 = self.string_photo
+        bck_ground = calc_background(num_images, photo_path2)
+        mao = calc_m(num_images, photo_path2)
         for i in range (1, num_images):
-            
-            im1 = cv2.imread(photo_path2)
-            im1 = np.asarray (im1) 
+           
+            im1 = plt.imread(photo_path2)
+            print (photo_path2)
+            print(i)
+            im1 = np.asarray (im1)
+           
             auxi1 = len(photo_path2)
-            auxi2 = photo_path2[auxi1-5]
+            auxi2 = photo_path2[auxi1-9:auxi1-4]
             auxi3 = int (auxi2)
             auxi4 = auxi3 +1
-            photo_path2 = photo_path2[:-5]
-            photo_path2 = photo_path2 + str(auxi4) + ".png"
-            im2 = cv2.imread(photo_path2)
+            if (auxi4 < 10):
+                photo_path2 = photo_path2[:-5] + str(auxi4) + ".tif"
+            elif (auxi4 < 100):
+                photo_path2 = photo_path2[:-6] + str(auxi4) + ".tif"
+            elif (auxi4 < 1000):
+                photo_path2 = photo_path2[:-7] + str(auxi4) + ".tif"
+            elif (auxi4 < 10000):
+                photo_path2 = photo_path2[:-8] + str(auxi4) + ".tif"
+            elif (auxi4 < 100000):
+                photo_path2 = photo_path2[:-9] + str(auxi4) + ".tif"
+           
+            print(photo_path2)
+            im2 = plt.imread(photo_path2)
             im2 = np.asarray (im2)
-            
+           
+            auxi1 = len(photo_path2)
+            auxi2 = photo_path2[auxi1-9:auxi1-4]
+            auxi3 = int (auxi2)
+            auxi4 = auxi3 +1
+            if (auxi4 < 10):
+                photo_path2 = photo_path2[:-5] + str(auxi4) + ".tif"
+            elif (auxi4 < 100):
+                photo_path2 = photo_path2[:-6] + str(auxi4) + ".tif"
+            elif (auxi4 < 1000):
+                photo_path2 = photo_path2[:-7] + str(auxi4) + ".tif"
+            elif (auxi4 < 10000):
+                photo_path2 = photo_path2[:-8] + str(auxi4) + ".tif"
+            elif (auxi4 < 100000):
+                photo_path2 = photo_path2[:-9] + str(auxi4) + ".tif"
+           
             if len (np.shape (im1)) > 2:
                 im1 = np.mean(im1, -1) #rgb to gray
             if len (np.shape (im2)) > 2:
                 im2 = np.mean (im2, -1) #rgb to gray
-            
+           
             pr = image_par(im1, im2)
            
             pr.sobel_filter1 ()
             pr.sobel_filter1 ()
 
-            pr.remove_background(num_images, self.string_photo)
+            pr.remove_background(bck_ground)
+            pr.homogenize_brightness(mao)
             tam_x, tam_y = np.shape(im1)
    
             w_size = self.ui.form.WindowSize.text() #window size
@@ -611,27 +723,33 @@ class mywindow(QtWidgets.QMainWindow):
             n_iterations = self.ui.form.number_iterations2.text()
             n_iterations = int (n_iterations)
             met = self.ui.form.write_method.currentText()
-        
+       
             if met == 'Multigrid':
                 par1 = normal_method(pr.im1, pr.im2, w_size, ovl)
                 r = par1.first_iteration()
-                
+               
                 par2 = multigrid_method(im1, im2, w_size, ovl, n_iterations)
                 s = par2.multigrid_method1(r)
                 s.replacement3()
-                plt.quiver(s.dpx, s.dpy) 
-                
+                dpx_list1.append(s.dpx)
+                dpy_list1.append(s.dpy)
+                if i == (num_images -1):
+                    dpx_def = sum (dpx_list1)/len (dpx_list1)
+                    dpy_def = sum (dpy_list1)/len (dpx_list1)
+                    plt.quiver(dpx_def, dpy_def)
+                #plt.quiver(s.dpx, s.dpy)
+               
+               
             if met == 'Normal':
                 par1 = normal_method(pr.im1, pr.im2, w_size, ovl)
                 r = par1.first_iteration()
-                plt.quiver(r.dpx, s.dpy)
-            
+                dpx_list2.append(s.dpx)
+                dpy_list2.append(s.dpy)
+                #plt.quiver(r.dpx, r.dpy)
 
+
+    
 app = QApplication([])
 application = mywindow()
 application.show()
 sys.exit(app.exec())
-
-
-
-
