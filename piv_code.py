@@ -6,18 +6,11 @@ Created on Thu Mar 19 10:50:39 2020
 @author: esterfiorillo
 """
 
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Mon Feb  3 13:36:39 2020
-
-@author: cfx
-"""
-
 import numpy as np
 from scipy.signal import fftconvolve
 import matplotlib.pyplot as plt
 from numpy import log
+import pandas as pd
 
 #If the user does not have the opencv library installed,
 #the modo_erro_cv variable will be equal to 1, and otherwise, it will be equal to 0. 
@@ -107,7 +100,6 @@ class image_par:
 #    sobel_filter2
 #    laplacian_filter
 #    remove_background
-#    calc_m
 #    calc_teta
 #    homogenize_brightness
     
@@ -650,8 +642,9 @@ class mywindow(QtWidgets.QMainWindow):
         num_images = self.ui.form.Number_of_images.text()
         num_images = int (num_images)
         photo_path2 = self.string_photo
+        num_images2 = int (num_images/2)
         bck_ground = calc_background(num_images, photo_path2)
-        mao = calc_m(num_images, photo_path2)
+        mao = calc_m(num_images2, photo_path2)
         for i in range (1, num_images):
            
             im1 = plt.imread(photo_path2)
@@ -736,16 +729,29 @@ class mywindow(QtWidgets.QMainWindow):
                 if i == (num_images -1):
                     dpx_def = sum (dpx_list1)/len (dpx_list1)
                     dpy_def = sum (dpy_list1)/len (dpx_list1)
-                    plt.quiver(dpx_def, dpy_def)
-                #plt.quiver(s.dpx, s.dpy)
-               
+#                    plt.quiver(dpx_def, dpy_def)
+                     
+                    #saves the average of dpx and dpy results in two csv files
+                    dpx_csv = pd.DataFrame(dpx_def)
+                    pd.DataFrame(dpx_csv).to_csv("dpx_resultado_multigrid", sep='\t')
+                    dpy_csv = pd.DataFrame(dpy_def)
+                    pd.DataFrame(dpy_csv).to_csv("dpy_resultado_multigrid", sep='\t')
                
             if met == 'Normal':
                 par1 = normal_method(pr.im1, pr.im2, w_size, ovl)
                 r = par1.first_iteration()
                 dpx_list2.append(s.dpx)
                 dpy_list2.append(s.dpy)
-                #plt.quiver(r.dpx, r.dpy)
+                
+                if i == (num_images -1):
+                    dpx_def2 = sum (dpx_list2)/len (dpx_list2)
+                    dpy_def2 = sum (dpy_list2)/len (dpx_list2)
+                
+                    #saves the average of dpx and dpy results in two csv files
+                    dpx_csv2 = pd.DataFrame(dpx_def2)
+                    pd.DataFrame(dpx_csv2).to_csv("dpx_resultado_multigrid", sep='\t')
+                    dpy_csv2 = pd.DataFrame(dpy_def2)
+                    pd.DataFrame(dpy_csv2).to_csv("dpy_resultado_multigrid", sep='\t')
 
 
     
