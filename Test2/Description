@@ -1,1 +1,2 @@
-
+The test was done by running the code for the pair of images exp1_001_1.png and exp1_001_2.png.
+The results can be found in the csv files dpx_result (displacement map on the x axis) and dpy_result (displacement map on the y axis).
