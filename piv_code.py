@@ -10,7 +10,6 @@ import numpy as np
 from scipy.signal import fftconvolve
 import matplotlib.pyplot as plt
 from numpy import log
-import pandas as pd
 
 #If the user does not have the opencv library installed,
 #the modo_erro_cv variable will be equal to 1, and otherwise, it will be equal to 0. 
@@ -21,68 +20,37 @@ try:
     import cv2
 except ModuleNotFoundError:
     modo_erro_cv = 1
-    
-#librarys from interface
-from PyQt5 import uic
-from PyQt5.QtWidgets import QApplication
-from PyQt5 import QtWidgets
-import sys
 
-def calc_background (n_im, photo_path2):
+def calc_background (n_im, dir, file_prefix, num_primeira):
 #Function that calculates the average of all images to be processed
-    im1 = plt.imread(photo_path2)
+    im1 = plt.imread(dir + "/" + file_prefix + str (num_primeira).zfill(5) + ".tif")
     im1 = np.asarray (im1)
     if len (np.shape (im1)) > 2:
         im1 = np.mean(im1, -1) #rgb to gray  
     soma = im1
-    for i in range (0, n_im):
-        auxi1 = len(photo_path2)
-        auxi2 = photo_path2[auxi1-9:auxi1-4]
-        auxi3 = int (auxi2)
-        auxi4 = auxi3 +1
-        if (auxi4 < 10):
-            photo_path2 = photo_path2[:-5] + str(auxi4) + ".tif"
-        elif (auxi4 < 100):
-            photo_path2 = photo_path2[:-6] + str(auxi4) + ".tif"
-        elif (auxi4 < 1000):
-            photo_path2 = photo_path2[:-7] + str(auxi4) + ".tif"
-        elif (auxi4 < 10000):
-            photo_path2 = photo_path2[:-8] + str(auxi4) + ".tif"
-        elif (auxi4 < 100000):
-            photo_path2 = photo_path2[:-9] + str(auxi4) + ".tif"
-       
-        im2 = plt.imread(photo_path2)
+    for i in range (0, n_im):            
+        num_primeira = num_primeira + 1
+        im2 = plt.imread(dir + "/" + file_prefix + str (num_primeira).zfill(5) + ".tif")
+        print (file_prefix + str (num_primeira).zfill(5) + ".tif")
         im2 = np.asarray (im2)
+
         if len (np.shape (im2)) > 2:
             im2 = np.mean (im2, -1) #rgb to gray
         soma = soma + im2
     res = soma/n_im
     return res
 
-def calc_m (n_im, photo_path):
+def calc_m (n_im, dir, file_prefix, num_primeira):
     aux = 0
     for i in range (0, n_im):
-        im1 = plt.imread(photo_path)
+        im1 = plt.imread(dir + "/" + file_prefix + str (num_primeira).zfill(5) + ".tif")
         im1 = np.asarray (im1)
         if len (np.shape (im1)) > 2:
             im1 = np.mean(im1, -1) #rgb to gray
         h,bins = np.histogram(im1.ravel(),256,[0,256])
         h_media = np.mean(h)
         aux = aux + h_media
-        auxi1 = len(photo_path)
-        auxi2 = photo_path[auxi1-9:auxi1-4]
-        auxi3 = int (auxi2)
-        auxi4 = auxi3 +2
-        if (auxi4 < 10):
-            photo_path = photo_path[:-5] + str(auxi4) + ".tif"
-        elif (auxi4 < 100):
-            photo_path = photo_path[:-6] + str(auxi4) + ".tif"
-        elif (auxi4 < 1000):
-            photo_path = photo_path[:-7] + str(auxi4) + ".tif"
-        elif (auxi4 < 10000):
-            photo_path = photo_path[:-8] + str(auxi4) + ".tif"
-        elif (auxi4 < 100000):
-            photo_path = photo_path[:-9] + str(auxi4) + ".tif"
+        num_primeira = num_primeira + 2
     mzao = aux/n_im
     return mzao
 
@@ -611,151 +579,3 @@ class multigrid_method (image_par):
             cont2 = 0
             aux = aux +1
         return dp_anterior
-
-#Load interface
-Form, Window = uic.loadUiType("interface5.4.ui")
-
-dpx_list1 = []
-dpy_list1 = []
-dpx_list2 = []
-dpy_list2 = []
-
-class mywindow(QtWidgets.QMainWindow):
-    def __init__(self):
-        super(mywindow, self).__init__()
-        self.ui = Window()
-        self.ui.form = Form()
-        self.ui.form.setupUi(self)
-        self.ui.form.Ok_button2.clicked.connect(self.populate_im_lines)
-        self.ui.form.image1_button.clicked.connect(self.select_images1)
-       
-    def select_images1(self):
-        photo_path1, ext1 = QtWidgets.QFileDialog.getOpenFileName(self, "Select Photo")
-        if photo_path1:
-            self.ui.form.image1.setText(photo_path1)
-        self.string_photo = photo_path1
-       
-    def populate_im_lines(self):
-        if modo_erro_cv == 1:
-            QtWidgets.QMessageBox.about (self, "Not valid", "Install OpenCV library")
-           
-        num_images = self.ui.form.Number_of_images.text()
-        num_images = int (num_images)
-        photo_path2 = self.string_photo
-        num_images2 = int (num_images/2)
-        bck_ground = calc_background(num_images, photo_path2)
-        mao = calc_m(num_images2, photo_path2)
-        for i in range (1, num_images):
-           
-            im1 = plt.imread(photo_path2)
-            print (photo_path2)
-            print(i)
-            im1 = np.asarray (im1)
-           
-            auxi1 = len(photo_path2)
-            auxi2 = photo_path2[auxi1-9:auxi1-4]
-            auxi3 = int (auxi2)
-            auxi4 = auxi3 +1
-            if (auxi4 < 10):
-                photo_path2 = photo_path2[:-5] + str(auxi4) + ".tif"
-            elif (auxi4 < 100):
-                photo_path2 = photo_path2[:-6] + str(auxi4) + ".tif"
-            elif (auxi4 < 1000):
-                photo_path2 = photo_path2[:-7] + str(auxi4) + ".tif"
-            elif (auxi4 < 10000):
-                photo_path2 = photo_path2[:-8] + str(auxi4) + ".tif"
-            elif (auxi4 < 100000):
-                photo_path2 = photo_path2[:-9] + str(auxi4) + ".tif"
-           
-            print(photo_path2)
-            im2 = plt.imread(photo_path2)
-            im2 = np.asarray (im2)
-           
-            auxi1 = len(photo_path2)
-            auxi2 = photo_path2[auxi1-9:auxi1-4]
-            auxi3 = int (auxi2)
-            auxi4 = auxi3 +1
-            if (auxi4 < 10):
-                photo_path2 = photo_path2[:-5] + str(auxi4) + ".tif"
-            elif (auxi4 < 100):
-                photo_path2 = photo_path2[:-6] + str(auxi4) + ".tif"
-            elif (auxi4 < 1000):
-                photo_path2 = photo_path2[:-7] + str(auxi4) + ".tif"
-            elif (auxi4 < 10000):
-                photo_path2 = photo_path2[:-8] + str(auxi4) + ".tif"
-            elif (auxi4 < 100000):
-                photo_path2 = photo_path2[:-9] + str(auxi4) + ".tif"
-           
-            if len (np.shape (im1)) > 2:
-                im1 = np.mean(im1, -1) #rgb to gray
-            if len (np.shape (im2)) > 2:
-                im2 = np.mean (im2, -1) #rgb to gray
-           
-            pr = image_par(im1, im2)
-           
-            pr.sobel_filter1 ()
-            pr.sobel_filter1 ()
-
-            pr.remove_background(bck_ground)
-            pr.homogenize_brightness(mao)
-            tam_x, tam_y = np.shape(im1)
-   
-            w_size = self.ui.form.WindowSize.text() #window size
-            w_size = int(w_size)
-            if w_size <16:
-                QtWidgets.QMessageBox.about (self, "Not valid", "Type another value for Window Size")
-                return
-            if w_size > tam_x:
-                QtWidgets.QMessageBox.about (self, "Not valid", "Type another value for Window Size")
-                return
-            ovl = self.ui.form.overlap.text()
-            ovl = int (ovl)
-            if ovl > w_size:
-                QtWidgets.QMessageBox.about (self, "Not valid", "Type another value for Overlap")
-                return
-            n_iterations = self.ui.form.number_iterations2.text()
-            n_iterations = int (n_iterations)
-            met = self.ui.form.write_method.currentText()
-       
-            if met == 'Multigrid':
-                par1 = normal_method(pr.im1, pr.im2, w_size, ovl)
-                r = par1.first_iteration()
-               
-                par2 = multigrid_method(im1, im2, w_size, ovl, n_iterations)
-                s = par2.multigrid_method1(r)
-                s.replacement3()
-                dpx_list1.append(s.dpx)
-                dpy_list1.append(s.dpy)
-                if i == (num_images -1):
-                    dpx_def = sum (dpx_list1)/len (dpx_list1)
-                    dpy_def = sum (dpy_list1)/len (dpx_list1)
-#                    plt.quiver(dpx_def, dpy_def)
-                     
-                    #saves the average of dpx and dpy results in two csv files
-                    dpx_csv = pd.DataFrame(dpx_def)
-                    pd.DataFrame(dpx_csv).to_csv("dpx_resultado_multigrid", sep='\t')
-                    dpy_csv = pd.DataFrame(dpy_def)
-                    pd.DataFrame(dpy_csv).to_csv("dpy_resultado_multigrid", sep='\t')
-               
-            if met == 'Normal':
-                par1 = normal_method(pr.im1, pr.im2, w_size, ovl)
-                r = par1.first_iteration()
-                dpx_list2.append(s.dpx)
-                dpy_list2.append(s.dpy)
-                
-                if i == (num_images -1):
-                    dpx_def2 = sum (dpx_list2)/len (dpx_list2)
-                    dpy_def2 = sum (dpy_list2)/len (dpx_list2)
-                
-                    #saves the average of dpx and dpy results in two csv files
-                    dpx_csv2 = pd.DataFrame(dpx_def2)
-                    pd.DataFrame(dpx_csv2).to_csv("dpx_resultado_multigrid", sep='\t')
-                    dpy_csv2 = pd.DataFrame(dpy_def2)
-                    pd.DataFrame(dpy_csv2).to_csv("dpy_resultado_multigrid", sep='\t')
-
-
-    
-app = QApplication([])
-application = mywindow()
-application.show()
-sys.exit(app.exec())
