@@ -19,5 +19,3 @@ b = entrada2.as_matrix()
 b = np.array(b)
 
 plt.quiver(a, b)
-
-teste remoto
