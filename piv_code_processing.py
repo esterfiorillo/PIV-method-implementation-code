@@ -6,11 +6,11 @@ Created on Sun Apr  5 10:26:17 2020
 @author: esterfiorillo
 """
 
-from teste_quarentena2 import calc_background
-from teste_quarentena2 import calc_m
-from teste_quarentena2 import image_par
-from teste_quarentena2 import normal_method
-from teste_quarentena2 import multigrid_method 
+from piv_code_classes import calc_background
+from piv_code_classes import calc_m
+from piv_code_classes import image_par
+from piv_code_classes import normal_method
+from piv_code_classes import multigrid_method 
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
