@@ -1,3 +1,11 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Sun Apr  5 10:26:17 2020
+
+@author: esterfiorillo
+"""
+
 from piv_code_classes import calc_background
 from piv_code_classes import calc_m
 from piv_code_classes import image_par
