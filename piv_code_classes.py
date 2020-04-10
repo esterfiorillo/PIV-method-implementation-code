@@ -31,7 +31,6 @@ def calc_background (n_im, dir, file_prefix, num_primeira):
     for i in range (0, n_im):            
         num_primeira = num_primeira + 1
         im2 = plt.imread(dir + "/" + file_prefix + str (num_primeira).zfill(5) + ".tif")
-        print (file_prefix + str (num_primeira).zfill(5) + ".tif")
         im2 = np.asarray (im2)
 
         if len (np.shape (im2)) > 2:
