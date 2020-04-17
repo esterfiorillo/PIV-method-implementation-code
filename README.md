@@ -4,21 +4,27 @@
  (               )     )   |
  )\ )  *   )  ( /(  ( /(   |
 (()/(` )  /(  )\()) )\())  |
- /(_))( )(_))((_)\ ((_)\   | LTHN PIV: In an opensource PIV toolbox
+ /(_))( )(_))((_)\ ((_)\   | 
 (_)) (_(_())  _((_) _((_)  |
 | |  |_   _| | || || \| |  |
-| |__  | |   | __ || .` |  | Website: https://github.com/esterfiorillo/PIV-method-implementation-code
+| |__  | |   | __ || .` |  | 
 |(___|(|_|   |_||_||_|\_|  |
                            | 
- )\ ) )\ )                 | CDTN - Centro de Desenvolvimento da Tecnologia Nuclear
-(()/((()/( (   (           | LTHN - Laboratório de Termo-Hidráulica e Neutrônica
- /(_))/(_)))\  )\          | Belo Horizonte, MG, Brasil
+ )\ ) )\ )                 | 
+(()/((()/( (   (           | 
+ /(_))/(_)))\  )\          | 
 (_)) (_)) ((_)((_)         |
-| _ \|_ _|\ \ / /          | @authors: esterfiorillo, acampagnole 
+| _ \|_ _|\ \ / /          | 
 |  _/ | |  \ V /           |
 |_|  |___|  \_/            |
 
+LTHN PIV: In an opensource PIV toolbox
+Website: https://github.com/esterfiorillo/PIV-method-implementation-code
+CDTN - Centro de Desenvolvimento da Tecnologia Nuclear
+LTHN - Laboratório de Termo-Hidráulica e Neutrônica
+Belo Horizonte, MG, Brasil
 
+@authors: esterfiorillo, acampagnole 
 
 This is a code written in Python 3, which determines the velocity fields from a pair of images using PIV (Particle Image Velocimetry) methods.
 The code has a Qt graphical user interface and it was written using object-oriented programming. 
