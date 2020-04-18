@@ -18,6 +18,7 @@ import os
 import time
 import concurrent.futures
 import threading
+import sys
 
 #If the user does not have the opencv library installed,
 #the modo_erro_cv variable will be equal to 1, and otherwise, it will be equal to 0. 
@@ -27,8 +28,12 @@ start = time.perf_counter()
 modo_erro_cv = 0
 try:
     import cv2
-except ModuleNotFoundError:
+except ModuleNotFoundError as ex:
     modo_erro_cv = 1
+    # Need OpenCV. If we don't find it, we exit now.
+    print('This program needs the OpenCV module. Please install it.')
+    print(ex)
+    sys.exit(1)
     
 #librarys from interface
 from PyQt5 import uic
@@ -116,7 +121,7 @@ def thread_processing (num_images, dir, file_prefix, num_primeira, bck_ground, m
                 print(f"execution time = {sec} seconds") 
     
 #Load interface
-Form, Window = uic.loadUiType("/home/esterfiorillo/python/interface5.4.ui")
+Form, Window = uic.loadUiType("interface5.4.ui")
 
 dpx_list1 = []
 dpy_list1 = []
