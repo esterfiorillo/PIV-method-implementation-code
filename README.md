@@ -18,7 +18,7 @@
 |  _/ | |  \ V /           |
 |_|  |___|  \_/            |
 
-LTHN PIV: In an opensource PIV toolbox
+LTHN PIV: Is an opensource PIV toolbox
 Website: https://github.com/esterfiorillo/PIV-method-implementation-code
 CDTN - Centro de Desenvolvimento da Tecnologia Nuclear
 LTHN - Laboratório de Termo-Hidráulica e Neutrônica

@@ -4,7 +4,7 @@
  (               )     )   |
  )\ )  *   )  ( /(  ( /(   |
 (()/(` )  /(  )\()) )\())  |
- /(_))( )(_))((_)\ ((_)\   | LTHN PIV: In an opensource PIV toolbox
+ /(_))( )(_))((_)\ ((_)\   | LTHN PIV: Is an opensource PIV toolbox
 (_)) (_(_())  _((_) _((_)  |
 | |  |_   _| | || || \| |  |
 | |__  | |   | __ || .` |  | Website: https://github.com/esterfiorillo/PIV-method-implementation-code
@@ -54,23 +54,23 @@ import sys
 # import os
 
 
-# """
-#    try to load fundamental modules
-# """
-# try:
-#     import numpy as np
-#     from numpy import log
-#     import matplotlib.pyplot as plt
-#     import pandas as pd
-#     import time
-#     import concurrent.futures
-#     import threading
-#     from scipy.signal import fftconvolve
-#     import cv2
-# except ModuleNotFoundError as E:
-#     print("Missing critical module. Please install module:")
-#     print(E)
-#     sys.exit()    
+"""
+    try to load fundamental modules
+"""
+try:
+    import numpy as np
+    from numpy import log
+    import matplotlib.pyplot as plt
+    import pandas as pd
+    import time
+    import concurrent.futures
+    import threading
+    from scipy.signal import fftconvolve
+    import cv2
+except ModuleNotFoundError as E:
+    print("Missing critical module. Please install module:")
+    print(E)
+    sys.exit()    
     
     
 """
