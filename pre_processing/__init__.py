@@ -4,7 +4,7 @@
  (               )     )   |
  )\ )  *   )  ( /(  ( /(   |
 (()/(` )  /(  )\()) )\())  |
- /(_))( )(_))((_)\ ((_)\   | LTHN PIV: In an opensource PIV toolbox
+ /(_))( )(_))((_)\ ((_)\   | LTHN PIV: Is an opensource PIV toolbox
 (_)) (_(_())  _((_) _((_)  |
 | |  |_   _| | || || \| |  |
 | |__  | |   | __ || .` |  | Website: https://github.com/esterfiorillo/PIV-method-implementation-code
