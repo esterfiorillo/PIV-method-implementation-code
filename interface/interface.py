@@ -55,7 +55,9 @@ import os
 try:
     from PyQt5 import uic
 #    from PyQt5.QtWidgets import QApplication
-    from PyQt5 import QtWidgets     
+    from PyQt5 import QtWidgets
+    from PyQt5.QtGui import QDesktopServices
+    from PyQt5.QtCore import QUrl
 except ModuleNotFoundError:
     print("PyQt5 missing. Please install module.")
     sys.exit()    
@@ -101,7 +103,7 @@ except Exception as E:
     print(E)
     sys.exit()     
 
-
+    
 Form, Window = uic.loadUiType("./interface/interface5.4.ui")
 
 dpx_list1 = []
@@ -119,8 +121,8 @@ class mywindow(QtWidgets.QMainWindow):
         self.ui.form.setupUi(self)
         self.ui.form.Ok_button2.clicked.connect(self.populate_im_lines)
         self.ui.form.image1_button.clicked.connect(self.select_images1)
-
-        
+        self.ui.form.actionUML_Diagram.triggered.connect(self.load_pdf)
+       
     def select_images1(self):
         #Function that takes the file address of the first image
         
@@ -184,3 +186,13 @@ class mywindow(QtWidgets.QMainWindow):
             bck_ground = f2.result()  
         x = threading.Thread(target = thread_processing, args = (num_images, dir, file_prefix, num_primeira, file_form, bck_ground, mao, met, w_size, ovl, n_iterations))
         x.start()
+
+    def load_pdf(self):
+
+        """
+        This function loads the pdf located at /docs and shows it to the user using
+        the system's default pdf reader
+        """
+        
+        QDesktopServices.openUrl(QUrl("docs/UML_diagram.pdf", mode=QUrl.TolerantMode));
+    
