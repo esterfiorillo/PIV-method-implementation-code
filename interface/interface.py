@@ -102,7 +102,7 @@ except Exception as E:
     sys.exit()     
 
 
-Form, Window = uic.loadUiType("./interface/interface5.4.ui")
+Form, Window = uic.loadUiType("./interface/interface5.5.ui")
 
 dpx_list1 = []
 dpy_list1 = []
@@ -119,6 +119,10 @@ class mywindow(QtWidgets.QMainWindow):
         self.ui.form.setupUi(self)
         self.ui.form.Ok_button2.clicked.connect(self.populate_im_lines)
         self.ui.form.image1_button.clicked.connect(self.select_images1)
+        self.ui.form.quit_button.clicked.connect(self.quit_interface)
+        
+    def quit_interface(self):
+        sys.exit(0)
 
         
     def select_images1(self):
