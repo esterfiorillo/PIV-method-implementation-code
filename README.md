@@ -29,4 +29,4 @@ This is a code written in Python 3, which determines the velocity fields from a 
 
 The code has a Qt graphical user interface and it was written using object-oriented programming. 
 
-**A better description of the program will be available soon.
+**A better description of the program will be available soon.**
