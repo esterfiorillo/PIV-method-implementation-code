@@ -103,8 +103,8 @@ except Exception as E:
     print(E)
     sys.exit()     
 
-    
-Form, Window = uic.loadUiType("./interface/interface5.4.ui")
+
+Form, Window = uic.loadUiType("./interface/interface5.5.ui")
 
 dpx_list1 = []
 dpy_list1 = []
@@ -123,6 +123,12 @@ class mywindow(QtWidgets.QMainWindow):
         self.ui.form.image1_button.clicked.connect(self.select_images1)
         self.ui.form.actionUML_Diagram.triggered.connect(self.load_pdf)
        
+        self.ui.form.quit_button.clicked.connect(self.quit_interface)
+        
+    def quit_interface(self):
+        sys.exit(0)
+
+        
     def select_images1(self):
         #Function that takes the file address of the first image
         
