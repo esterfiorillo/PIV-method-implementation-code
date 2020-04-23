@@ -59,9 +59,10 @@ import sys
 """
 try:
     import numpy as np
-    import matplotlib.pyplot as plt
+    #import matplotlib.pyplot as plt
     import pandas as pd
     import time
+    import cv2
 
 except ModuleNotFoundError as E:
     print("Missing critical module. Please install module:")
@@ -73,7 +74,7 @@ except ModuleNotFoundError as E:
     try to load pre processing functions
 """
 try:
-    from pre_processing.image_par import image_par 
+    from pre_processing.pre_processing_class import pre_processing
 except Exception as E:
     print("Missing critical pre processing module. Please install module:")
     print(E)
@@ -102,35 +103,46 @@ def thread_processing (num_images, dir, file_prefix, num_primeira, file_form, bc
     e = int(np.log10(num_images).round())
     
     for i in range (1, num_images):
-        im1 = plt.imread(dir + "/" + file_prefix + str (num_primeira).zfill(e) + file_form)
+        im1 = cv2.imread(dir + "/" + file_prefix + str (num_primeira).zfill(e) + file_form, 0)
         print (f'processing {file_prefix + str (num_primeira).zfill(5) + file_form}')
         im1 = np.asarray (im1)
         num_primeira = int(num_primeira) + 1
-        im2 = plt.imread(dir + "/" + file_prefix + str (num_primeira).zfill(e) + file_form)
+        im2 = cv2.imread(dir + "/" + file_prefix + str (num_primeira).zfill(e) + file_form, 0)
         print (f'processing {file_prefix + str (num_primeira).zfill(5) + file_form}')
         im2 = np.asarray (im2)
-        num_primeira = num_primeira + 1
+        num_primeira = int (num_primeira) + 1
        
         if len (np.shape (im1)) > 2:
             im1 = np.mean(im1, -1) #rgb to gray
         if len (np.shape (im2)) > 2:
             im2 = np.mean (im2, -1) #rgb to gray
+        
+        pre_function = pre_processing(mao, bck_ground)
+        
+        #pre process images:
+        pre_function = pre_processing(mao, bck_ground)
+        
+        im1 = pre_function.clahe_histogram_equalization(im1)
+        im2 = pre_function.clahe_histogram_equalization(im2)
        
-        pr = image_par(im1, im2)
-       
-        pr.sobel_filter1 ()
-        pr.sobel_filter1 ()
+        im1 = pre_function.sobel_filter1(im1)
+        im2 = pre_function.sobel_filter1(im2)
 
-        pr.remove_background(bck_ground)
-        pr.homogenize_brightness(mao)
+        im1 = pre_function.remove_background(im1)
+        im2 = pre_function.remove_background(im2)
+        im2 = pre_function.homogenize_brightness(im2)
+        
+
         tam_x, tam_y = np.shape(im1)
    
         if met == 'Multigrid':
-            par1 = normal_method(pr.im1, pr.im2, w_size, ovl)
+            
+            par1 = normal_method(im1, im2, w_size, ovl)
             r = par1.first_iteration()
            
             par2 = multigrid_method(im1, im2, w_size, ovl, n_iterations)
             s = par2.multigrid_method1(r)
+            
             s.replacement3()
             dpx_list1.append(s.dpx)
             dpy_list1.append(s.dpy)
@@ -149,10 +161,10 @@ def thread_processing (num_images, dir, file_prefix, num_primeira, file_form, bc
                 print(f"execution time = {sec} seconds") 
            
         if met == 'Normal':
-            par1 = normal_method(pr.im1, pr.im2, w_size, ovl)
+            par1 = normal_method(im1, im2, w_size, ovl)
             r = par1.first_iteration()
-            dpx_list2.append(s.dpx)
-            dpy_list2.append(s.dpy)
+            dpx_list2.append(r.dpx)
+            dpy_list2.append(r.dpy)
             
             if i == (num_images -1):
                 dpx_def2 = sum (dpx_list2)/len (dpx_list2)

@@ -47,17 +47,18 @@
 
 import sys
 import os
-
+from interface.interface5 import Ui_MainWindow
 
 """
    try to load interface modules
 """
 try:
     from PyQt5 import uic
-#    from PyQt5.QtWidgets import QApplication
+    from PyQt5.QtWidgets import QApplication
     from PyQt5 import QtWidgets
     from PyQt5.QtGui import QDesktopServices
     from PyQt5.QtCore import QUrl
+    #from interface5 import Ui_MainWindow
 except ModuleNotFoundError:
     print("PyQt5 missing. Please install module.")
     sys.exit()    
@@ -104,7 +105,7 @@ except Exception as E:
     sys.exit()     
 
 
-Form, Window = uic.loadUiType("./interface/interface5.5.ui")
+#Form, Window = uic.loadUiType("./interface/interface5.5.ui")
 
 dpx_list1 = []
 dpy_list1 = []
@@ -116,14 +117,14 @@ class mywindow(QtWidgets.QMainWindow):
 
     def __init__(self):
         super(mywindow, self).__init__()
-        self.ui = Window()
-        self.ui.form = Form()
-        self.ui.form.setupUi(self)
-        self.ui.form.Ok_button2.clicked.connect(self.populate_im_lines)
-        self.ui.form.image1_button.clicked.connect(self.select_images1)
-        self.ui.form.actionUML_Diagram.triggered.connect(self.load_pdf)
+
+        self.ui = Ui_MainWindow()
+        self.ui.setupUi(self)
+        self.ui.Ok_button2.clicked.connect(self.populate_im_lines)
+        self.ui.image1_button.clicked.connect(self.select_images1)
+        #self.ui.form.actionUML_Diagram.triggered.connect(self.load_pdf)
        
-        self.ui.form.quit_button.clicked.connect(self.quit_interface)
+        self.ui.quit_button.clicked.connect(self.quit_interface)
         
     def quit_interface(self):
         sys.exit(0)
@@ -134,7 +135,7 @@ class mywindow(QtWidgets.QMainWindow):
         
         photo_path1, ext1 = QtWidgets.QFileDialog.getOpenFileName(self, "Select Image, format xxxx0000.xxx, last numbers will define sequence")
         if photo_path1:
-            self.ui.form.image1.setText(photo_path1)
+            self.ui.image1.setText(photo_path1)
         self.string_photo = photo_path1
 
         
@@ -142,7 +143,7 @@ class mywindow(QtWidgets.QMainWindow):
         
         #Take the value entered by the user for the number of images
         
-        num_images = self.ui.form.Number_of_images.text()
+        num_images = self.ui.Number_of_images.text()
         num_images = int (num_images)
         photo_path2 = self.string_photo
         num_images2 = int (num_images/2)
@@ -170,19 +171,19 @@ class mywindow(QtWidgets.QMainWindow):
         # num_primeira = num_primeira.split(os.path.sep)[-1].split("_")[3]
         # num_primeira = int (num_primeira)
         
-        w_size = self.ui.form.WindowSize.text() #window size
+        w_size = self.ui.WindowSize.text() #window size
         w_size = int(w_size)
         if w_size <16:
             QtWidgets.QMessageBox.about (self, "Not valid", "Type another value for Window Size")
             return
-        ovl = self.ui.form.overlap.text()
+        ovl = self.ui.overlap.text()
         ovl = int (ovl)
         if ovl > w_size:
             QtWidgets.QMessageBox.about (self, "Not valid", "Type another value for Overlap")
             return
-        n_iterations = self.ui.form.number_iterations2.text()
+        n_iterations = self.ui.number_iterations2.text()
         n_iterations = int (n_iterations)
-        met = self.ui.form.write_method.currentText()
+        met = self.ui.write_method.currentText()
         
         
         with concurrent.futures.ThreadPoolExecutor() as executer:
@@ -193,12 +194,12 @@ class mywindow(QtWidgets.QMainWindow):
         x = threading.Thread(target = thread_processing, args = (num_images, dir, file_prefix, num_primeira, file_form, bck_ground, mao, met, w_size, ovl, n_iterations))
         x.start()
 
-    def load_pdf(self):
-
-        """
-        This function loads the pdf located at /docs and shows it to the user using
-        the system's default pdf reader
-        """
-        
-        QDesktopServices.openUrl(QUrl("docs/UML_diagram.pdf", mode=QUrl.TolerantMode));
+#    def load_pdf(self):
+#
+#        """
+#        This function loads the pdf located at /docs and shows it to the user using
+#        the system's default pdf reader
+#        """
+#        
+#        QDesktopServices.openUrl(QUrl("docs/UML_diagram.pdf", mode=QUrl.TolerantMode));
     

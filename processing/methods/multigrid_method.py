@@ -57,8 +57,8 @@
 #
 #------------------------------------------------------------------------------
 
-from pre_processing.image_par import image_par
 from processing.interrogation_window import interrogation_window
+from processing.methods.methods import Methods
 import sys
 
 try:
@@ -69,35 +69,15 @@ except ModuleNotFoundError as E:
     sys.exit() 
 
 
-class multigrid_method (image_par):
+class multigrid_method (Methods):
 # Method2
     def __init__ (self, im1, im2, w_size, ovl, n_passadas): #Constructor
-        image_par.__init__(self, im1, im2)
+        Methods.__init__(self, im1, im2)
         self.x_size = w_size
         self.y_size = w_size
         self.overlap = ovl
         self.num_passadas = n_passadas
 
-    def result_dimensions (self):
-    #Function used to find the dimensions of the result of applying cross correlation in the interrogation windows, according to the interrogation window size and overlap.
-    #In:
-    #    x_im: int
-    #        x-dimension of the image
-    #    y_im: int
-    #        y-dimension of the image
-    #    window_size: int
-    #        size of the interrogation window that will be used to go through the images
-    #    overlap: int
-    #        
-    #Out:
-    #    x_dimension: int
-    #        x-dimension of matrix resulting from applying cross-correlation between interrogation windows
-    #    y_dimension: int
-    #       y-dimension of matrix resulting from applying cross-correlation between interrogation windows
-   
-        x_dimension = (self.tam_x - self.x_size) // (self.x_size - self.overlap) + 1
-        y_dimension = (self.tam_y - self.y_size) // (self.y_size - self.overlap) + 1
-        return x_dimension, y_dimension
    
     def multigrid_method1 (self, dp_anterior):
     #Function that implements the Multigrid method, which is an iterative procedure for traversing images with interrogation windows while applying a cross correlation.

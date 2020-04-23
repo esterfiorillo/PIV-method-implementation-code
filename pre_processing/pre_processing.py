@@ -56,7 +56,8 @@ import sys
 """
 try:
     import numpy as np
-    import matplotlib.pyplot as plt
+    #import matplotlib.pyplot as plt
+    import cv2
 except ModuleNotFoundError as E:
     print("Missing critical module. Please install module:")
     print(E)
@@ -86,7 +87,7 @@ def calc_background (n_im, dir, file_prefix, num_primeira, file_form):
     
     for i in range (0, n_im):            
         num_primeira = int(num_primeira) + i
-        im2 = plt.imread(dir + "/" + file_prefix + str (num_primeira).zfill(e) + file_form)
+        im2 = cv2.imread(dir + "/" + file_prefix + str (num_primeira).zfill(e) + file_form, 0)
         im2 = np.asarray (im2)
 
         if len (np.shape (im2)) > 2:
@@ -109,7 +110,7 @@ def calc_m (n_im, dir, file_prefix, num_primeira, file_form):
     
     for i in range (0, n_im):
         num_primeira = int(num_primeira) + i
-        im1 = plt.imread(dir + "/" + file_prefix + str (num_primeira).zfill(e) + file_form)
+        im1 = cv2.imread(dir + "/" + file_prefix + str (num_primeira).zfill(e) + file_form, 0)
         im1 = np.asarray (im1)
         if len (np.shape (im1)) > 2:
             im1 = np.mean(im1, -1) #rgb to gray

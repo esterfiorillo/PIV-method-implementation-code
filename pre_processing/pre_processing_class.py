@@ -70,62 +70,70 @@ except ModuleNotFoundError as E:
     sys.exit()    
     
 
-class image_par:
-
-    
-    def __init__(self, image1, image2): #Constructor
-        self.im1 = image1
-        self.im2 = image2
-        self.tam_x, self.tam_y = np.shape(self.im1)
+class pre_processing:
+   
+    def __init__(self, mmao, bck_g): #Constructor
+        self.mmao = mmao
+        self.bckg = bck_g
  
     
-    def sobel_filter1(self):
+    def sobel_filter1(self, im):
     #Function that applies a Sobel filter to an image. This filter has the function
     #of detecting horizontal edges.
-        self.im1 = cv2.Sobel(self.im1, cv2.CV_64F,1,0,ksize=5)
-        self.im2 = cv2.Sobel(self.im2, cv2.CV_64F,1,0,ksize=5)
-        #return self.im1
+        im = cv2.Sobel(im, cv2.CV_64F,1,0,ksize=5)
+
+        return im
   
     
-    def sobel_filter2(self):
+    def sobel_filter2(self, im):
     #Function that applies a Sobel filter to an image. This filter has the function
     #of detecting vertical edges.
-        self.im1 = cv2.Sobel(self.im1, cv2.CV_64F,0,1,ksize=5)
-        self.im2 = cv2.Sobel(self.im2, cv2.CV_64F,0,1,ksize=5)
-
+        im = cv2.Sobel(im, cv2.CV_64F,0,1,ksize=5)
+        return im
         
-    def laplacian_filter(self):
+    def laplacian_filter(self, im):
     #Function that applies a Laplacian filter to an image. This filter has the function
     #of detecting vertical and horizontal edges.
-        self.im1 = cv2.Laplacian(self.im1,cv2.CV_64F)
-        self.im2 = cv2.Laplacian(self.im2,cv2.CV_64F)
+        im = cv2.Laplacian(im,cv2.CV_64F)
+        return im
+    
+    def clahe_histogram_equalization(self, im):
+    #Function that applies a CLAHE (contrast limited adaptative histogram equalization) to the images
+        clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8,8))
+        im = clahe.apply(im)
+        return im
  
         
-    def remove_background (self, res):
+    def remove_background (self, im):
     #Function that subtracts that average from the pair of images.
     #This is intended to remove the background from the images.
-        self.im1 = self.im1 - res
-        self.im2 = self.im2 - res
+        im = im - self.bckg
+        return im
         
     #The two functions below (calc_teta and homogenize_brightness) aim to 
     #homogenize the brightness of the second image according to that of the first
     #Brightness correction, homogenization and adjunstment of images for face recognition, Eduardo Machado Silva, UNESP, ISSN 2316-9664, Volume 14, fev. 2019, Edic ̧ao Ermac  
 
    
-    def calc_teta(self, mmao):
-        h,bins = np.histogram(self.im2.ravel(),256,[0,256])
+    def calc_teta(self, im2):
+    #This function was made to be apliyed to the second image of the par, not both of then
+        h,bins = np.histogram(im2.ravel(),256,[0,256])
         h_min = min(h)
         h_max = max(h)
         h_media = np.mean(h)
-        teta = (mmao - h_media)/(h_max - h_min)
+        teta = (self.mmao - h_media)/(h_max - h_min)
         return teta
  
     
-    def homogenize_brightness(self,  mmao):
-        teta = self.calc_teta(mmao)
-        tam_x = len(self.im2)
-        tam_y = len(self.im2[0])
+    def homogenize_brightness(self, im2):
+     #This function was made to be apliyed to the second image of the par, not both of then
+        teta = self.calc_teta(im2)
+        tam_x = len(im2)
+        tam_y = len(im2[0])
         for i in range(tam_x):
             for j in range (tam_y):
-                self.im2[i][j] = self.im2[i][j] - teta*self.im2[i][j]
+                im2[i][j] = im2[i][j] - teta*im2[i][j]
+        return im2
+
+
  

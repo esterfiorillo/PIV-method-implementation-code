@@ -79,6 +79,7 @@ except ModuleNotFoundError as E:
 try:
     # from PyQt5 import uic
     from PyQt5.QtWidgets import QApplication
+
     # from PyQt5 import QtWidgets
 except ModuleNotFoundError:
     print("PyQt5 missing. Please install module.")
