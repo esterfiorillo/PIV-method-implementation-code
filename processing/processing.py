@@ -137,13 +137,10 @@ def thread_processing (num_images, dir, file_prefix, num_primeira, file_form, bc
    
         if met == 'Multigrid':
             
-            par1 = normal_method(im1, im2, w_size, ovl)
-            r = par1.first_iteration()
-           
             par2 = multigrid_method(im1, im2, w_size, ovl, n_iterations)
-            s = par2.multigrid_method1(r)
-            
+            s = par2.multigrid_method1()
             s.replacement3()
+            
             dpx_list1.append(s.dpx)
             dpy_list1.append(s.dpy)
             if i == (num_images -1):

@@ -59,6 +59,7 @@
 
 from processing.interrogation_window import interrogation_window
 from processing.methods.methods import Methods
+from processing.methods.normal_method import normal_method
 import sys
 
 try:
@@ -69,17 +70,14 @@ except ModuleNotFoundError as E:
     sys.exit() 
 
 
-class multigrid_method (Methods):
+class multigrid_method (normal_method):
 # Method2
     def __init__ (self, im1, im2, w_size, ovl, n_passadas): #Constructor
-        Methods.__init__(self, im1, im2)
-        self.x_size = w_size
-        self.y_size = w_size
-        self.overlap = ovl
+        normal_method.__init__(self, im1, im2, w_size, ovl)
         self.num_passadas = n_passadas
 
    
-    def multigrid_method1 (self, dp_anterior):
+    def multigrid_method1 (self):
     #Function that implements the Multigrid method, which is an iterative procedure for traversing images with interrogation windows while applying a cross correlation.
     #It consists of moving windows according to the displacement map found in the previous iteration.
     #At the same time, the size of the interrogation windows is reduced between one iteration and another.
@@ -114,6 +112,7 @@ class multigrid_method (Methods):
     #F. Scarano & M. L. Riethmuller, Iterative multigrid approach in PIV image processing with discrete window offset, Experiments in Fluids 26 (1999)
         aux = 0
         while (aux != self.num_passadas):
+            dp_anterior = self.first_iteration()
             self.x_size = self.x_size//2
             self.y_size = self.y_size//2
             self.overlap = self.overlap//2
