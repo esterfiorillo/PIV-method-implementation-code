@@ -67,23 +67,84 @@ except ModuleNotFoundError as E:
 
 
 def thread_mmao(num_images2, dir, file_prefix, num_primeira, file_form):
+    """
+    Calls the function that calculates the value mmao, and prints that mmao was calculated
+    
+    Parameters
+    ----------
+    num_images2: int
+        Number of images in the image set divided by 2
+    dir: str
+        Image set directory name
+    file_prefix: str
+        Prefix name of the images names
+    num_primeira: int
+        Number of the first image
+    file_form
+        Format of the images in the image set
+    
+    Raises
+    ------
+    mao: float
+        Necessary value for the brightness homogenization
+    """
     mao = calc_m(num_images2, dir, file_prefix, num_primeira, file_form)
     print("finish calculating mmao")
     return mao
 
 
 def thread_bckg(num_images, dir, file_prefix, num_primeira, file_form):
+    """
+    Calls the function that calculates the value of the back ground of the images, and prints that this value was calculated
+    
+    Parameters
+    ----------
+    num_images: int
+        Number of images in the image set
+    dir: str
+        Image set directory name
+    file_prefix: str
+        Prefix name of the images names
+    num_primeira: int
+        Number of the first image
+    file_form
+        Format of the images in the image set
+    
+    Raises
+    ------
+    bck_ground: float
+        Value for the back ground of the image set
+    """
     bck_ground = calc_background(num_images, dir, file_prefix, num_primeira, file_form)
     print ("finish calculating bckg")
     return bck_ground
 
 
 def calc_background (n_im, dir, file_prefix, num_primeira, file_form):
+    """
+    #Function that calculates the average of all images to be processed
+    
+    Parameters
+    ----------
+    num_images: int
+        Number of images in the image set
+    dir: str
+        Image set directory name
+    file_prefix: str
+        Prefix name of the images names
+    num_primeira: int
+        Number of the first image
+    file_form
+        Format of the images in the image set
+    
+    Raises
+    ------
+    res: float
+        Value for the back ground of the image set
+    """
     
     # Order of magnitude of the number of images
     e = int(np.log10(n_im).round())
-    
-    #Function that calculates the average of all images to be processed
     
     for i in range (0, n_im):            
         num_primeira = int(num_primeira) + i
@@ -102,6 +163,27 @@ def calc_background (n_im, dir, file_prefix, num_primeira, file_form):
 
 
 def calc_m (n_im, dir, file_prefix, num_primeira, file_form):
+    """
+    Calculates the value mmao, which is the sum of the mean of the histograms of the images in the image set
+    
+    Parameters
+    ----------
+    num_images2: int
+        Number of images in the image set divided by 2
+    dir: str
+        Image set directory name
+    file_prefix: str
+        Prefix name of the images names
+    num_primeira: int
+        Number of the first image
+    file_form
+        Format of the images in the image set
+    
+    Raises
+    ------
+    mzao: float
+        Necessary value for the brightness homogenization
+    """
     
     aux = 0
     

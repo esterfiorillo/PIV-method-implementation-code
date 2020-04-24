@@ -122,7 +122,7 @@ class mywindow(QtWidgets.QMainWindow):
         self.ui.setupUi(self)
         self.ui.Ok_button2.clicked.connect(self.populate_im_lines)
         self.ui.image1_button.clicked.connect(self.select_images1)
-        #self.ui.form.actionUML_Diagram.triggered.connect(self.load_pdf)
+        self.ui.actionUML_Diagram.triggered.connect(self.load_pdf)
        
         self.ui.quit_button.clicked.connect(self.quit_interface)
         
@@ -194,12 +194,12 @@ class mywindow(QtWidgets.QMainWindow):
         x = threading.Thread(target = thread_processing, args = (num_images, dir, file_prefix, num_primeira, file_form, bck_ground, mao, met, w_size, ovl, n_iterations))
         x.start()
 
-#    def load_pdf(self):
-#
-#        """
-#        This function loads the pdf located at /docs and shows it to the user using
-#        the system's default pdf reader
-#        """
-#        
-#        QDesktopServices.openUrl(QUrl("docs/UML_diagram.pdf", mode=QUrl.TolerantMode));
+    def load_pdf(self):
+
+        """
+        This function loads the pdf located at /docs and shows it to the user using
+        the system's default pdf reader
+        """
+        
+        QDesktopServices.openUrl(QUrl("docs/UML_diagram.pdf", mode=QUrl.TolerantMode));
     

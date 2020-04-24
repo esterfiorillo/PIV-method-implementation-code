@@ -53,13 +53,21 @@
 #         sobel_filter1
 #         sobel_filter2
 #         laplacian_filter
+#         clahe_histogram_equalization  
 #         remove_background
 #         calc_teta
 #         homogenize_brightness
 #
 #------------------------------------------------------------------------------
+
+"""
+   load basic modules
+"""
 import sys
 
+"""
+   try to load fundamental modules
+"""
 
 try:
     import numpy as np
@@ -71,52 +79,153 @@ except ModuleNotFoundError as E:
     
 
 class pre_processing:
-   
-    def __init__(self, mmao, bck_g): #Constructor
+    """  
+    This is a class to represent the pre processing methods applied to the images
+    
+        ...
+        
+       Atributes
+       --------
+       ...
+       
+       Methods
+       -------
+       sobel_filter1
+       sobel_filter2
+       laplacian_filter
+       clahe_histogram_equalization  
+       remove_background
+       calc_teta
+       homogenize_brightness 
+    """    
+    
+    def __init__(self, mmao, bck_g):
+        """
+        Constructor
+        
+        Parameters
+        ---------
+        mmao : float
+            Necessary value for the brightness homogenization
+        bck_g : float
+            Value for the background of the images
+        """
         self.mmao = mmao
         self.bckg = bck_g
  
     
     def sobel_filter1(self, im):
-    #Function that applies a Sobel filter to an image. This filter has the function
-    #of detecting horizontal edges.
+        """
+        Function that applies a Sobel filter to an image. This filter has the function
+        of detecting horizontal edges.
+        
+        Parameters
+        ----------
+        im: 2d array
+            Input image
+        
+        Raises
+        ------
+        im: 2d array
+            Input image with a sobel filter
+        
+        """
         im = cv2.Sobel(im, cv2.CV_64F,1,0,ksize=5)
 
         return im
   
     
     def sobel_filter2(self, im):
-    #Function that applies a Sobel filter to an image. This filter has the function
-    #of detecting vertical edges.
+        """
+        Function that applies a Sobel filter to an image. This filter has the function
+        of detecting vertical edges.
+        
+        Parameters
+        ----------
+        im: 2d array
+            Input image
+        
+        Raises
+        ------
+        im: 2d array
+            Input image with a sobel filter
+        
+        """
         im = cv2.Sobel(im, cv2.CV_64F,0,1,ksize=5)
         return im
         
     def laplacian_filter(self, im):
-    #Function that applies a Laplacian filter to an image. This filter has the function
-    #of detecting vertical and horizontal edges.
+        """
+        Function that applies a Laplacian filter to an image. This filter has the function
+        of detecting horizontal and vertical edges.
+        
+        Parameters
+        ----------
+        im: 2d array
+            Input image
+        
+        Raises
+        ------
+        im: 2d array
+            Input image with a laplacian filter
+        
+        """
         im = cv2.Laplacian(im,cv2.CV_64F)
         return im
     
     def clahe_histogram_equalization(self, im):
-    #Function that applies a CLAHE (contrast limited adaptative histogram equalization) to the images
+        """
+        Function that applies a CLAHE (contrast limited adaptative histogram equalization) to an image. 
+        
+        Parameters
+        ----------
+        im: 2d array
+            Input image
+        
+        Raises
+        ------
+        im: 2d array
+            Input image after applied CLAHE 
+        
+        """
         clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8,8))
         im = clahe.apply(im)
         return im
  
         
     def remove_background (self, im):
-    #Function that subtracts that average from the pair of images.
-    #This is intended to remove the background from the images.
+        """
+        Function that subtracts the background from the image
+        
+        Parameters
+        ----------
+        im: 2d array
+            Input image
+        
+        Raises
+        ------
+        im: 2d array
+            Input image after having its background extracted
+        """
         im = im - self.bckg
         return im
         
-    #The two functions below (calc_teta and homogenize_brightness) aim to 
-    #homogenize the brightness of the second image according to that of the first
-    #Brightness correction, homogenization and adjunstment of images for face recognition, Eduardo Machado Silva, UNESP, ISSN 2316-9664, Volume 14, fev. 2019, Edic ̧ao Ermac  
-
-   
     def calc_teta(self, im2):
-    #This function was made to be apliyed to the second image of the par, not both of then
+        """
+        This function and homogenize_brightness function aim to homogenize the brightness of the second image according to that of the first.
+        It was made to be apliyed to the second image of the par, not both of then.
+        Reference : Brightness correction, homogenization and adjunstment of images for face recognition, Eduardo Machado Silva, UNESP, ISSN 2316-9664, Volume 14, fev. 2019, Edic ̧ao Ermac
+        
+        Parameters
+        ----------
+        im2: 2d array
+            Input image
+        
+        Raises
+        ------
+        teta: float
+            Value that will be used in homogenize_brightness function
+        """
         h,bins = np.histogram(im2.ravel(),256,[0,256])
         h_min = min(h)
         h_max = max(h)
@@ -126,7 +235,21 @@ class pre_processing:
  
     
     def homogenize_brightness(self, im2):
-     #This function was made to be apliyed to the second image of the par, not both of then
+        """
+        This function and homogenize_brightness function aim to homogenize the brightness of the second image according to that of the first.
+        It was made to be apliyed to the second image of the par, not both of then.
+        Reference : Brightness correction, homogenization and adjunstment of images for face recognition, Eduardo Machado Silva, UNESP, ISSN 2316-9664, Volume 14, fev. 2019, Edic ̧ao Ermac
+        
+        Parameters
+        ----------
+        im2: 2d array
+            Input image
+        
+        Raises
+        ------
+        im2: 2d array
+            Input image after brightness correction
+        """
         teta = self.calc_teta(im2)
         tam_x = len(im2)
         tam_y = len(im2[0])

@@ -197,7 +197,14 @@
     <addaction name="actionClose"/>
     <addaction name="actionLoad_Images"/>
    </widget>
+   <widget class="QMenu" name="menuHelp">
+    <property name="title">
+     <string>Help</string>
+    </property>
+    <addaction name="actionUML_Diagram"/>
+   </widget>
    <addaction name="menuFile"/>
+   <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionClose">
@@ -208,6 +215,11 @@
   <action name="actionLoad_Images">
    <property name="text">
     <string>Load Images</string>
+   </property>
+  </action>
+  <action name="actionUML_Diagram">
+   <property name="text">
+    <string>UML Diagram</string>
    </property>
   </action>
  </widget>
