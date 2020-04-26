@@ -82,9 +82,8 @@ class pre_processing:
     """  
     This is a class to represent the pre processing methods applied to the images
     
-        ...
         
-       Atributes
+       Attributes
        --------
        ...
        
@@ -109,6 +108,11 @@ class pre_processing:
             Necessary value for the brightness homogenization
         bck_g : float
             Value for the background of the images
+        
+        Raises
+        ------
+        .
+        
         """
         self.mmao = mmao
         self.bckg = bck_g
@@ -121,12 +125,12 @@ class pre_processing:
         
         Parameters
         ----------
-        im: 2d array
+        im: 2d np.array
             Input image
         
         Raises
         ------
-        im: 2d array
+        im: 2d np.array
             Input image with a sobel filter
         
         """
@@ -142,7 +146,7 @@ class pre_processing:
         
         Parameters
         ----------
-        im: 2d array
+        im: 2d np.array
             Input image
         
         Raises
@@ -161,12 +165,12 @@ class pre_processing:
         
         Parameters
         ----------
-        im: 2d array
+        im: 2d np.array
             Input image
         
         Raises
         ------
-        im: 2d array
+        im: 2d np.array
             Input image with a laplacian filter
         
         """
@@ -179,12 +183,12 @@ class pre_processing:
         
         Parameters
         ----------
-        im: 2d array
+        im: 2d np.array
             Input image
         
         Raises
         ------
-        im: 2d array
+        im: 2d np.array
             Input image after applied CLAHE 
         
         """
@@ -199,12 +203,12 @@ class pre_processing:
         
         Parameters
         ----------
-        im: 2d array
+        im: 2d np.array
             Input image
         
         Raises
         ------
-        im: 2d array
+        im: 2d np.array
             Input image after having its background extracted
         """
         im = im - self.bckg
@@ -218,7 +222,7 @@ class pre_processing:
         
         Parameters
         ----------
-        im2: 2d array
+        im2: 2d np.array
             Input image
         
         Raises
@@ -242,12 +246,12 @@ class pre_processing:
         
         Parameters
         ----------
-        im2: 2d array
+        im2: 2d np.array
             Input image
         
         Raises
         ------
-        im2: 2d array
+        im2: 2d np.array
             Input image after brightness correction
         """
         teta = self.calc_teta(im2)

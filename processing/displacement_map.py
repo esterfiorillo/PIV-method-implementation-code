@@ -75,16 +75,67 @@ except ModuleNotFoundError as E:
     
 
 class displacement_map:
-
+    """
+     Class that represents a vector field, which is the displacements of the particles between the time of capture of the pair of images.
+     This class also have the functions applied to vector field the for data validation.
+    
+        Attributes:
+        ---------
+        dpx: 2d np.narray
+            Matrix with the components of the displacement vectors on the x axis.
+        dpy: 2d np.narray
+            Matrix with the components of the displacement vectors on the y axis.
+            
+        Methods:
+        --------
+         neighborhood_median(int ii, int jj)
+         calculate_rm (int ii, int jj)
+         calculate_r (int ii, int jj)
+         neighborhood_median(int ii, int jj)
+         replacement3()
+         resize_dp
+         index_guard()
+    """ 
    
-    def __init__ (self, dp_x, dp_y): #Constructor
+    def __init__ (self, dp_x, dp_y): 
+        """
+        Constructor
+        
+        Parameters
+        ---------
+        dp_x : 2d np.array
+            Matrix with the components of the displacement vectors on the x axis.
+        dp_y : 2d np.array
+             Matrix with the components of the displacement vectors on the y axis.
+            
+        Raises
+        ------
+        .
+        
+        """
         self.dpx = dp_x
         self.dpy = dp_y
      
         
     def neighborhood_median (self, ii, jj):
-    # Function that calculates the median of the neighboorhood points (3x3) of a certain position (ii, jj) on the displacement map
-    
+        """
+        Function that calculates the median of the neighboorhood points (3x3) of a certain position (ii, jj) on the displacement vector field.
+        
+        Parameters
+        ----------
+        ii: int
+            x coordinate of the point at which the neighborhood(3x3) median is being calculated.
+        jj: int
+            y coordinate of the point at which the neighborhood(3x3) median is being calculated.
+            
+        Raises
+        ------
+        med1: float
+            Median of the neighboorhood points on dpx
+        med2: float
+            Median of the neighboorhood points on dpy
+        
+        """
         aux1 = np.array([[self.dpx[ii-1][jj-1], self.dpx[ii-1][jj], self.dpx[ii-1][jj+1], self.dpx[ii][jj-1], self.dpx[ii][jj+1], self.dpx[ii+1][jj-1], self.dpx[ii+1][jj], self.dpx[ii+1][jj+1]]])
         aux2 = np.array([[self.dpy[ii-1][jj-1], self.dpy[ii-1][jj], self.dpy[ii-1][jj+1], self.dpy[ii][jj-1], self.dpy[ii][jj+1], self.dpy[ii+1][jj-1], self.dpy[ii+1][jj], self.dpy[ii+1][jj+1]]])
         med1 = np.median(aux1)
@@ -93,7 +144,24 @@ class displacement_map:
 
 
     def calculate_rm (self, ii, jj):
-    # Function that calculates the median of the subtration of the neighborhood points (3x3) and the neighboorhood median
+        """
+        Function that calculates the median of the subtration of the neighborhood points (3x3) and the neighboorhood median of a certain position (ii, jj) on the displacement vector field.
+        
+        Parameters
+        ----------
+        ii: int
+            x coordinate of the point at which the neighborhood(3x3) median of subtraction is being calculated.
+        jj: int
+            y coordinate of the point at which the neighborhood(3x3) median of subtraction is being calculated.
+            
+        Raises
+        ------
+        rm1: float
+            Median of the subtration of the neighborhood points (3x3) and the neighboorhood median on dpx
+        rm2: float
+            Median of the subtration of the neighborhood points (3x3) and the neighboorhood median on dpy
+        
+        """        
     
         median1, median2 = self.neighborhood_median(ii, jj)
         aux1 = np.array([self.dpx[ii-1][jj-1] - median1, self.dpx[ii-1][jj]- median1, self.dpx[ii-1][jj+1]- median1, self.dpx[ii][jj-1]- median1, self.dpx[ii][jj+1]- median1, self.dpx[ii+1][jj-1]- median1, self.dpx[ii+1][jj]- median1, self.dpx[ii+1][jj+1]- median1])
@@ -104,7 +172,24 @@ class displacement_map:
 
 
     def calculate_r (self, ii, jj):
-    # Function that calculates: (point of the displacement map - median of the 3x3 neighborhood) / rm - 0.1
+        """ 
+        Function that calculates:r =  (point of the displacement vector field intensity value - median of the 3x3 neighborhood) / rm - 0.1
+        
+        Parameters
+        ----------
+        ii: int
+            x coordinate of the point at which the neighborhood(3x3) r is being calculated.
+        jj: int
+            y coordinate of the point at which the neighborhood(3x3) r is being calculated.
+            
+        Raises
+        ------
+        r1: float
+            r of the neighboorhood points on dpx
+        r2: float
+            r of the neighboorhood points on dpy
+        
+        """        
     
         median1, median2 = self.neighborhood_median(ii, jj)
         rm1, rm2 = self.calculate_rm (ii, jj)
@@ -114,6 +199,26 @@ class displacement_map:
 
 
     def neighborhood_mean (self, ii, jj):
+        """
+        Function that calculates the mean of the neighboorhood points (3x3) of a certain position (ii, jj) on the displacement vector field.
+        
+        Parameters
+        ----------
+        ii: int
+            x coordinate of the point at which the neighborhood(3x3) mean is being calculated.
+        jj: int
+            y coordinate of the point at which the neighborhood(3x3) mean is being calculated.
+            
+        Raises
+        ------
+        med1: float
+            Mean of the neighboorhood points on dpx
+        med2: float
+            Mean of the neighboorhood points on dpy
+        
+        """
+        
+        
     # Function that calculates the mean of the neighboorhood points (3x3) of a certain position (ii, jj) on the displacement map
     
         aux1 = np.array([self.dpx[ii-1][jj-1], self.dpx[ii-1][jj], self.dpx[ii-1][jj+1], self.dpx[ii][jj-1], self.dpx[ii][jj+1], self.dpx[ii+1][jj-1], self.dpx[ii+1][jj], self.dpx[ii+1][jj+1]])
@@ -124,12 +229,18 @@ class displacement_map:
 
 
     def replacement3(self):
-    # Function that calculates the value of r for all points on the displacement map
-    # and replaces the value of points with the neighborhood mean, if the value of r
-    # at this point is less than 2.
-    # Reference:
-    # F. Scarano & J. Westerweel, Universal Outlier detection for PIV data , Experiments in Fluids 39 (2005)
-    
+        """
+        Function that calculates the value of r for all points on the displacement vector field.
+        It also replaces the value of points with the neighborhood mean, if the value of r at this point is less than 2.
+        Reference: F. Scarano & J. Westerweel, Universal Outlier detection for PIV data , Experiments in Fluids 39 (2005).
+        
+        Parameters
+        ----------
+        
+        Raises
+        ------
+        
+        """
         ux_size = len (self.dpx)
         uy_size = len (self.dpx[0])
         for i in range (1, ux_size-1):
@@ -137,27 +248,52 @@ class displacement_map:
                 r1_value, r2_value = self.calculate_r(i, j)
                 if r1_value <=2:
                     self.dpx[i][j], al = self.neighborhood_mean (i, j)
-
-        ux_size = len (self.dpy)
-        uy_size = len (self.dpy[0])
-        for i in range (1, ux_size-1):
-            for j in range (1, uy_size-1):
-                r1_value, r2_value = self.calculate_r(i, j)
                 if r2_value <=2:
                     al, self.dpy[i][j] = self.neighborhood_mean (i, j)
 
+#        ux_size = len (self.dpy)
+#        uy_size = len (self.dpy[0])
+#        for i in range (1, ux_size-1):
+#            for j in range (1, uy_size-1):
+#                r1_value, r2_value = self.calculate_r(i, j)
+#                if r2_value <=2:
+#                    al, self.dpy[i][j] = self.neighborhood_mean (i, j)
+
 
     def resize_dp (self):
-    # Function that divides the values ​​of the displacement vectors by two
-    
+        """
+        Function that divides the values ​​of the displacement vectors by two.
+        
+        Parameters
+        ----------
+        
+        Raises
+        ------
+        
+        """
         self.dpx = self.dpx/2
         self.dpy = self.dpy/2
 
 
     def index_guard (self):
-    # function that stores in a vector twice the value of the indexes of 
-    # the displacement map of the previous iteration
-    
+        """
+         Function that stores in a list twice the value of the indexes of the displacement map of the previous iteration.
+         
+        Parameters
+        ----------
+        
+        Raises
+        ------
+        indices1_x: 1d np.array
+            Array with the indices of displacement vector field in x axis
+        indices1_y: 1d np.array
+            Array with the indices of displacement vector field in y axis
+        indices2_x: 1d np.array
+            Array with the indices of displacement vector field in x axis multiplied by 2
+        indices2_y: 1d np.array
+            Array with the indices of displacement vector field in y axis multiplied by 2
+         
+        """
         indices1_x = np.zeros((len(self.dpx)))
         indices1_y = np.zeros((len(self.dpx[0])))
         indices2_x = np.zeros((len(self.dpx)))

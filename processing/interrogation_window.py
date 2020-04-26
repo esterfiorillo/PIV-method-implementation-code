@@ -74,9 +74,42 @@ except ModuleNotFoundError as E:
 
 
 class interrogation_window:
-
+    """
+    Class that represents the interrogation windows and the functions applyed to then.
     
-    def __init__(self, w1, w2): #Constructor
+    
+        Attributes:
+        ---------
+        window1: 2d np.array
+            A interrogation window of image 1, from the pair of images
+        window2: 2d np.array
+             A interrogation window of image 2, from the pair of images
+        cross_corr: 2d np.array
+            The resulting matrix of the cross correlation between window 1 and window 2
+            
+        Methods:
+        --------
+        normxcorr2()
+        find_peak()
+        gauss_subpixel_peak_position()
+    """ 
+    
+    def __init__(self, w1, w2): 
+        """
+        Constructor
+        
+        Parameters
+        ---------
+        w1 : 2d np.array
+            Interrogation window from image 1
+        w2 : 2d np.array
+            Interrogation window from image 2
+            
+        Raises
+        ------
+        .
+        
+        """
         self.window1 = w1
         self.window2 = w2
 
@@ -102,7 +135,28 @@ class interrogation_window:
     #    valid: The output consists only of those elements that do not rely on the zero-padding.
     #    same: The output is the same size as image, centered with respect to the ‘full’ output.
     #    :return: N-D array of same dimensions as image. Size depends on mode parameter.
-   
+ 
+        """
+        This function is the implementation of the normalized cross-correlation.
+        This is a method that seeks to find the identification point of the first interrogation window in the second interrogation window.
+        The matrix value resulted from the method is assigned to the class attribute cross_cor.
+        
+        Parameters
+        ---------
+        mode : str, optional
+            full (Default): The output of fftconvolve is the full discrete linear convolution of the inputs.
+            Output size will be image size + 1/2 template size in each dimension.
+            valid: The output consists only of those elements that do not rely on the zero-padding.
+            same: The output is the same size as image, centered with respect to the ‘full’ output.
+        
+        Raises
+        ------
+        .
+        
+        """
+    
+    
+    
     # If this happens, it is probably a mistake
     
         if np.ndim(self.window1) > np.ndim(self.window2) or \
@@ -136,8 +190,21 @@ class interrogation_window:
 
         
     def find_peak (self):    
-        # Function that returns the coordinates in x and y of the biggest point (peak)
-        # in the 2d array resulted from the cross correlation.
+        """
+        Function that returns the coordinates in x and y axis of the point of greatest intensity (peak) in the cross_cor attribute.
+        
+        Parameters
+        ----------
+        .
+        
+        Raises
+        ------
+        xx_peak: int
+            Coordinate of the correlation peak on the x-axis
+        yy_peak: int
+            Coordinate of the correlation peak on the y-axis
+        
+        """
         
         ind = self.cross_corr.argmax()
         s = self.cross_corr.shape[1]
@@ -147,19 +214,24 @@ class interrogation_window:
 
 
     def gauss_subpixel_peak_position (self, x_pico, y_pico):
-        # Function that returns the gauss interpolation coordinates
-        #
-        # In:
-        #    x_pico: int
-        #         x-coordinate of the peak
-        #    y_pico: int
-        #         y-coordinate of the peak
-        # Out:
-        #    subp_peak_position[0]: int
-        #        x-coordinate in the cross-correlation matrix resulting from gauss interpolation
-        #    subp_peak_position[1]: int
-        #        y-coordinate in the cross-correlation matrix resulting from gauss interpolation
+        """
+         Function that returns the gauss interpolation coordinates, which finds a better estimate for the location of the correlation peak.
         
+         Parameters
+         ----------
+        x_pico: int
+             x-coordinate of the peak
+        y_pico: int
+             y-coordinate of the peak
+             
+        Raises
+        ------
+        subp_peak_position[0]: int
+            x-coordinate in the cross-correlation matrix resulting from gauss interpolation
+        subp_peak_position[1]: int
+            y-coordinate in the cross-correlation matrix resulting from gauss interpolation
+            
+        """
         if x_pico + 1 >= len(self.cross_corr):
             subp_peak_position = x_pico, y_pico
         elif y_pico +1 >= len(self.cross_corr[0]):

@@ -169,9 +169,9 @@ def thread_processing (num_images, dir, file_prefix, num_primeira, file_form, bc
             
                 #saves the average of dpx and dpy results in two csv files
                 dpx_csv2 = pd.DataFrame(dpx_def2)
-                pd.DataFrame(dpx_csv2).to_csv("dpx_resultado_multigrid", sep='\t')
+                pd.DataFrame(dpx_csv2).to_csv("dpx_resultado_normal", sep='\t')
                 dpy_csv2 = pd.DataFrame(dpy_def2)
-                pd.DataFrame(dpy_csv2).to_csv("dpy_resultado_multigrid", sep='\t')
+                pd.DataFrame(dpy_csv2).to_csv("dpy_resultado_normal", sep='\t')
                 print ("Process Finished")
                 finish = time.perf_counter()
                 sec = round (finish - start, 2)

@@ -45,13 +45,18 @@
 #
 #------------------------------------------------------------------------------
 
-
+"""
+   load basic modules
+"""
 from processing.interrogation_window import interrogation_window
 import sys
 from processing.displacement_map import displacement_map
 
 from processing.methods.methods import Methods
 
+"""
+   try to load fundamental modules
+"""
 try:
     import numpy as np
 except ModuleNotFoundError as E:
@@ -63,9 +68,52 @@ except ModuleNotFoundError as E:
 
 
 class normal_method(Methods):
-
+    """
+    Class that represents the first method of traversing the pair of images with the interrogation windows while the cross correlation between them is applyed.
+    In this case, the interrogation windows are moved with a constant displacement both horizontally and vertically, and they do not vary in size throughout the process.
+    This is a child class of the methods class.
     
-    def __init__ (self, im1, im2, w_size, ovl): #Constructor
+    Atributtes
+    ----------
+    im1: 2d np.array
+        Image 1
+    im2: 2d np.array
+        Image 2
+    tam_x, tam_y: int
+        Images dimensions
+    x_size: int
+        Interrogation window size in x axis
+    y_size: int
+        Interrogation window size in y axis
+    ovl: int
+        Size of the overlap
+        
+    Methods
+    -------
+    first_iteration()
+    
+    """
+    
+    def __init__ (self, im1, im2, w_size, ovl):
+        """
+        Constructor
+        
+        Parameters
+        ---------
+        im1 : 2d np.array
+            Image 1 of the par of images
+        im2 : 2d np.array
+             Image 2 of the par of images
+        w_size: int
+            Size of the interrogation window
+        ovl: int
+            Size of the overlap
+            
+        Raises
+        ------
+        .
+        
+        """
         Methods.__init__(self, im1, im2)
         self.x_size = w_size
         self.y_size = w_size
@@ -73,30 +121,22 @@ class normal_method(Methods):
 
 
     def first_iteration (self):
-    #Function in which the pair of images is traversed with the interrogation windows while applying the cross correlation between them.
-    #In this case, the windows will be shifted normally, with no method to make the process more efficient.
-    #This step is required to find the first displacement map that will be used in Multigrid.
-    #In:
-    #    im1: 2d array
-    #        first image
-    #    im2: 2d array
-    #        second image
-    #    tam_x: int
-    #        x-dimension of the images
-    #    tam_y: int
-    #        y-dimension of the images
-    #    x_size: int
-    #        interrogation window size in x axis
-    #    y_size: int
-    #        interrogation window size in y axis
-    #    overlap: int
-    #Out:
-    #    dpx1: 2d array
-    #        displacement in x
-    #    dpy1: 2d array
-    #        displacement in y    
+        """
+        Function that represents the normal method.
+        The normal method can be seen as a required step to find the first displacement vector map that will be used in Multigrid method.
     
-        size_r_x, size_r_y = self.result_dimensions()
+        Parameters
+        ----------
+        .
+        
+        Raises
+        ------
+        res: displacement_map object
+            displacement vector map resulting from the method
+  
+        """
+        
+        size_r_x, size_r_y = self.result_dimensions(self.x_size, self.y_size, self.overlap)
         #create matrix for substitute divisions of im1
         a = np.zeros ((self.x_size, self.y_size))
         #create matrix for substitute search window in im2
