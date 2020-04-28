@@ -89,16 +89,48 @@ except Exception as E:
 from processing.methods.normal_method import normal_method
 from processing.methods.multigrid_method import multigrid_method
 
-# Function:
-
-   
 
 def thread_processing (num_images, dir, file_prefix, num_primeira, file_form, bck_ground, mao, met, w_size, ovl, n_iterations):
+    """
+    Function that loads the set of images from the name of the directory, the prefix of the files, the number of the first image and the file type of the images received as parameters.
+    For this, a loop is made in which these images are opened and processed in pairs. Then, inside the loop, the pair is read, the pre-processing functions are applied and the processing method is applied (either multigrid or normal depending on the met variable received as a parameter).
+    Finally, the displacement vector maps found for each pair are saved in lists. In the end, the lists are averaged and saved in csv files.
+    
+    Parameters
+    ----------
+    num_images: int
+        Number of images in the image set
+    dir: str
+        Image set directory name
+    file_prefix: str
+        Prefix name of the images names
+    num_primeira: int
+        Number of the first image
+    file_form
+        Format of the images in the image set
+    bck_ground: float
+        Value for the back ground of the image set
+    mao: float
+        Necessary value for the brightness homogenization
+    met: str
+        Whether the method used in processing is normal or multigrid
+    w_size: int
+        Interrogation window size
+    ovl: int
+        Size of the overlap
+    n_iterations: int
+        Number of iterations of the method
+        
+    Raises
+    ------
+    .
+    """
     start = time.perf_counter()
     dpx_list1 = []
     dpy_list1 = []
     dpx_list2 = []
     dpy_list2 = [] 
+    
     # Order of magnitude of the number of images
     e = int(np.log10(num_images).round())
     

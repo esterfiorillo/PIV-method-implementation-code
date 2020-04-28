@@ -296,147 +296,130 @@ class multigrid_method (normal_method):
 
 #Second implementaton:
         
-#    def multigrid_method1 (self):
-#    #Function that implements the Multigrid method, which is an iterative procedure for traversing images with interrogation windows while applying a cross correlation.
-#    #It consists of moving windows according to the displacement map found in the previous iteration.
-#    #At the same time, the size of the interrogation windows is reduced between one iteration and another.
-#    #In addition, a data validation criterion is applied to the displacement maps.
-#    #In:
-#    #    num_passadas: int
-#    #        number of iterations
-#    #    x_size: int
-#    #        interrogation window size in x axis
-#    #    y_size: int
-#    #        interrogation window size in y axis
-#    #    overlap: int
-#    #    tam_x: int
-#    #        x-dimension of the images
-#    #    tam_y: int
-#    #        y-dimension of the images
-#    #    dpx_anterior: 2d array
-#    #        previous displacement in x axis found in the function fisrt_iteration
-#    #    dpy_anterior: 2d array
-#    #        previous displacement in y axis found in the function fisrt_iteration
-#    #    im1: 2d array
-#    #        first image
-#    #    im2: 2d array
-#    #        second image
-#    #Out:
-#    #    dpx_anterior: 2d array
-#    #        displacement in x
-#    #    dpy_anterior: 2d array
-#    #        displacement in y
-#    
-#    #Reference:
-#    #F. Scarano & M. L. Riethmuller, Iterative multigrid approach in PIV image processing with discrete window offset, Experiments in Fluids 26 (1999)
-#        aux = 0
-#        while (aux != self.num_passadas):
-#            dp_anterior = self.first_iteration()
-#            self.x_size = self.x_size//2
-#            self.y_size = self.y_size//2
-#            self.overlap = self.overlap//2
-#            size_r_x, size_r_y = self.result_dimensions()
-#            ind1_x, ind1_y, ind2_x, ind2_y = dp_anterior.index_guard()
-#   
-#            dp_anterior.resize_dp ()
-#
-#            dpx = np.zeros((size_r_x, size_r_y))
-#            dpy = np.zeros((size_r_x, size_r_y))
-#            c = np.zeros((size_r_x, size_r_y))
-#            d = np.zeros((size_r_x, size_r_y))
-#            cont1 = 0
-#            cont2 = 0
-#            for i in range (0, size_r_x):
-#                for j in range (0, size_r_y):
-#                    x1_min = i* (self.x_size - self.overlap)
-#                    y1_min = j* (self.x_size - self.overlap)
-#                    if i == ind2_x[cont1]:
-#                        if j == ind2_y[cont2]:
-#                            teste1_indice1 = int (ind1_x[cont1])
-#                            teste1_indice2 = int (ind1_y[cont2])
-#   
-#                            if (np.isnan(dp_anterior.dpx[teste1_indice1][teste1_indice2])):
-#                                auxliar1 = 0
-#                            else:
-#                                auxliar1 = dp_anterior.dpx[teste1_indice1][teste1_indice2]
-#                            if (np.isnan(dp_anterior.dpy[teste1_indice1][teste1_indice2])):
-#                                auxliar2 = 0
-#                            else:
-#                                auxliar2 = dp_anterior.dpy[teste1_indice1][teste1_indice2]
-#                            x2_min = int (i*(self.x_size - self.overlap) + auxliar1)
-#                            y2_min = int (j*(self.x_size - self.overlap) + auxliar2)
-#   
-#                            cont2 = cont2 + 1
-#                           
-#                            if cont1 >= (size_r_x/2):
-#                                cont1 = 0
-#                            if cont2 >= (size_r_y/2 - 1):
-#                                cont2 = 0
-#                    else:
-#                        x2_min = i*(self.x_size - self.overlap)
-#                        y2_min = j*(self.y_size - self.overlap)
-#                    x1_max = x1_min + self.x_size
-#                    y1_max = y1_min + self.y_size
-#                    x2_max = x2_min + self.x_size
-#                    y2_max = y2_min + self.y_size
-#                   
-#                    if x1_min > self.tam_x:
-#                        x1_min = int (i*(self.x_size - self.overlap))
-#                        x1_max = x1_min + self.x_size
-#                    if x2_min > self.tam_x:
-#                        x2_min = int (i*(self.x_size - self.overlap))
-#                        x2_max = x2_min + self.x_size
-#                    if x1_max > self.tam_x:
-#                        x1_min = int (i*(self.x_size - self.overlap))
-#                        x1_max = x1_min + self.x_size
-#                    if x2_max > self.tam_x:
-#                        x2_min = int (i*(self.x_size - self.overlap))
-#                        x2_max = x2_min + self.x_size
-#       
-#                    if y1_min >= self.tam_y:
-#                        y1_min = int (j*(self.y_size - self.overlap))
-#                        y1_max = y1_min + self.y_size
-#                    if y2_min >= self.tam_y:
-#                        y2_min = int (j*(self.y_size - self.overlap))
-#                        y2_max = y2_min + self.y_size
-#                    if y1_max >= self.tam_y:
-#                        y1_min = int (j*(self.y_size - self.overlap))
-#                        y1_max = y1_min + self.y_size
-#                    if y2_max >= self.tam_y:
-#                        y2_min = int (j*(self.y_size - self.overlap))
-#                        y2_max = y2_min + self.y_size
-#                   
-#                    c = np.copy (self.im1[x1_min:x1_max, y1_min:y1_max])
-#                    d = np.copy (self.im2[x2_min:x2_max, y2_min:y2_max])
-#                    
-#                    if c.size == 0:
-#                        x1_min = i* (self.x_size - self.overlap)
-#                        y1_min = j* (self.x_size - self.overlap)
-#                        x1_max = x1_min + self.x_size
-#                        y1_max = y1_min + self.y_size
-#                        c = np.copy (self.im1[x1_min:x1_max, y1_min:y1_max])
-#                    if d.size == 0:
-#                        x1_min = i* (self.x_size - self.overlap)
-#                        y1_min = j* (self.x_size - self.overlap)
-#                        x1_max = x1_min + self.x_size
-#                        y1_max = y1_min + self.y_size
-#                        d = np.copy (self.im1[x1_min:x1_max, y1_min:y1_max])
-#                        
-#                    janela = interrogation_window (c , d)
-#                   
-#                    janela.normxcorr2 ('same')
-#
-#                    xx, yy = janela.find_peak()
-#                    xx, yy = janela.gauss_subpixel_peak_position (xx, yy)
-#                    xx -= (self.x_size + self.x_size - 1)//2
-#                    yy -= (self.y_size + self.y_size - 1)//2
-#                       
-#                    dpx[i, j], dpy[i, j] = -xx, yy
-#            dp_anterior.dpx = np.zeros((size_r_x, size_r_y))
-#            dp_anterior.dpy = np.zeros((size_r_x, size_r_y))
-#            dp_anterior.dpx = dpx
-#            dp_anterior.dpy = dpy
-#            cont1 = cont1 +1
-#            cont2 = 0
-#            aux = aux +1
-#        return dp_anterior
+    def multigrid_method2 (self):
+        """
+        Function that is a second implementation of multigrid
+        Reference:
+        F. Scarano & M. L. Riethmuller, Iterative multigrid approach in PIV image processing with discrete window offset, Experiments in Fluids 26 (1999)
+        
+        Parameters
+        ----------
+        .
+        
+        Raises
+        ------
+        dp_anterior: displacement_map object
+            displacement vector map resulting from the method
+        
+        """
+        aux = 0
+        while (aux != self.num_passadas):
+            dp_anterior = self.first_iteration()
+            self.x_size = self.x_size//2
+            self.y_size = self.y_size//2
+            self.overlap = self.overlap//2
+            size_r_x, size_r_y = self.result_dimensions()
+            ind1_x, ind1_y, ind2_x, ind2_y = dp_anterior.index_guard()
+   
+            dp_anterior.resize_dp ()
+
+            dpx = np.zeros((size_r_x, size_r_y))
+            dpy = np.zeros((size_r_x, size_r_y))
+            c = np.zeros((size_r_x, size_r_y))
+            d = np.zeros((size_r_x, size_r_y))
+            cont1 = 0
+            cont2 = 0
+            for i in range (0, size_r_x):
+                for j in range (0, size_r_y):
+                    x1_min = i* (self.x_size - self.overlap)
+                    y1_min = j* (self.x_size - self.overlap)
+                    if i == ind2_x[cont1]:
+                        if j == ind2_y[cont2]:
+                            teste1_indice1 = int (ind1_x[cont1])
+                            teste1_indice2 = int (ind1_y[cont2])
+   
+                            if (np.isnan(dp_anterior.dpx[teste1_indice1][teste1_indice2])):
+                                auxliar1 = 0
+                            else:
+                                auxliar1 = dp_anterior.dpx[teste1_indice1][teste1_indice2]
+                            if (np.isnan(dp_anterior.dpy[teste1_indice1][teste1_indice2])):
+                                auxliar2 = 0
+                            else:
+                                auxliar2 = dp_anterior.dpy[teste1_indice1][teste1_indice2]
+                            x2_min = int (i*(self.x_size - self.overlap) + auxliar1)
+                            y2_min = int (j*(self.x_size - self.overlap) + auxliar2)
+   
+                            cont2 = cont2 + 1
+                           
+                            if cont1 >= (size_r_x/2):
+                                cont1 = 0
+                            if cont2 >= (size_r_y/2 - 1):
+                                cont2 = 0
+                    else:
+                        x2_min = i*(self.x_size - self.overlap)
+                        y2_min = j*(self.y_size - self.overlap)
+                    x1_max = x1_min + self.x_size
+                    y1_max = y1_min + self.y_size
+                    x2_max = x2_min + self.x_size
+                    y2_max = y2_min + self.y_size
+                   
+                    if x1_min > self.tam_x:
+                        x1_min = int (i*(self.x_size - self.overlap))
+                        x1_max = x1_min + self.x_size
+                    if x2_min > self.tam_x:
+                        x2_min = int (i*(self.x_size - self.overlap))
+                        x2_max = x2_min + self.x_size
+                    if x1_max > self.tam_x:
+                        x1_min = int (i*(self.x_size - self.overlap))
+                        x1_max = x1_min + self.x_size
+                    if x2_max > self.tam_x:
+                        x2_min = int (i*(self.x_size - self.overlap))
+                        x2_max = x2_min + self.x_size
+       
+                    if y1_min >= self.tam_y:
+                        y1_min = int (j*(self.y_size - self.overlap))
+                        y1_max = y1_min + self.y_size
+                    if y2_min >= self.tam_y:
+                        y2_min = int (j*(self.y_size - self.overlap))
+                        y2_max = y2_min + self.y_size
+                    if y1_max >= self.tam_y:
+                        y1_min = int (j*(self.y_size - self.overlap))
+                        y1_max = y1_min + self.y_size
+                    if y2_max >= self.tam_y:
+                        y2_min = int (j*(self.y_size - self.overlap))
+                        y2_max = y2_min + self.y_size
+                   
+                    c = np.copy (self.im1[x1_min:x1_max, y1_min:y1_max])
+                    d = np.copy (self.im2[x2_min:x2_max, y2_min:y2_max])
+                    
+                    if c.size == 0:
+                        x1_min = i* (self.x_size - self.overlap)
+                        y1_min = j* (self.x_size - self.overlap)
+                        x1_max = x1_min + self.x_size
+                        y1_max = y1_min + self.y_size
+                        c = np.copy (self.im1[x1_min:x1_max, y1_min:y1_max])
+                    if d.size == 0:
+                        x1_min = i* (self.x_size - self.overlap)
+                        y1_min = j* (self.x_size - self.overlap)
+                        x1_max = x1_min + self.x_size
+                        y1_max = y1_min + self.y_size
+                        d = np.copy (self.im1[x1_min:x1_max, y1_min:y1_max])
+                        
+                    janela = interrogation_window (c , d)
+                   
+                    janela.normxcorr2 ('same')
+
+                    xx, yy = janela.find_peak()
+                    xx, yy = janela.gauss_subpixel_peak_position (xx, yy)
+                    xx -= (self.x_size + self.x_size - 1)//2
+                    yy -= (self.y_size + self.y_size - 1)//2
+                       
+                    dpx[i, j], dpy[i, j] = -xx, yy
+            dp_anterior.dpx = np.zeros((size_r_x, size_r_y))
+            dp_anterior.dpy = np.zeros((size_r_x, size_r_y))
+            dp_anterior.dpx = dpx
+            dp_anterior.dpy = dpy
+            cont1 = cont1 +1
+            cont2 = 0
+            aux = aux +1
+        return dp_anterior
