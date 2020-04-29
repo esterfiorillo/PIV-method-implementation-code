@@ -1,25 +1,25 @@
-# -*- coding: utf-8 -*-
-"""
-
- (               )     )   |
- )\ )  *   )  ( /(  ( /(   |
-(()/(` )  /(  )\()) )\())  |
- /(_))( )(_))((_)\ ((_)\   | LTHN PIV: Is an opensource PIV toolbox
-(_)) (_(_())  _((_) _((_)  |
-| |  |_   _| | || || \| |  |
-| |__  | |   | __ || .` |  | Website: https://github.com/esterfiorillo/PIV-method-implementation-code
-|(___|(|_|   |_||_||_|\_|  |
-                           | 
- )\ ) )\ )                 | CDTN - Centro de Desenvolvimento da Tecnologia Nuclear
-(()/((()/( (   (           | LTHN - Laboratório de Termo-Hidráulica e Neutrônica
- /(_))/(_)))\  )\          | Belo Horizonte, MG, Brasil
-(_)) (_)) ((_)((_)         |
-| _ \|_ _|\ \ / /          | @authors: esterfiorillo, acampagnole 
-|  _/ | |  \ V /           |
-|_|  |___|  \_/            |
-
-
-"""
+## -*- coding: utf-8 -*-
+#"""
+#
+# (               )     )   |
+# )\ )  *   )  ( /(  ( /(   |
+#(()/(` )  /(  )\()) )\())  |
+# /(_))( )(_))((_)\ ((_)\   | LTHN PIV: Is an opensource PIV toolbox
+#(_)) (_(_())  _((_) _((_)  |
+#| |  |_   _| | || || \| |  |
+#| |__  | |   | __ || .` |  | Website: https://github.com/esterfiorillo/PIV-method-implementation-code
+#|(___|(|_|   |_||_||_|\_|  |
+#                           | 
+# )\ ) )\ )                 | CDTN - Centro de Desenvolvimento da Tecnologia Nuclear
+#(()/((()/( (   (           | LTHN - Laboratório de Termo-Hidráulica e Neutrônica
+# /(_))/(_)))\  )\          | Belo Horizonte, MG, Brasil
+#(_)) (_)) ((_)((_)         |
+#| _ \|_ _|\ \ / /          | @authors: esterfiorillo, acampagnole 
+#|  _/ | |  \ V /           |
+#|_|  |___|  \_/            |
+#
+#
+#"""
 
 # License
 #     This file is part of LTHN PIV.
@@ -44,6 +44,9 @@
 #     Method 1
 #
 #------------------------------------------------------------------------------
+"""
+This file contains the class that represents the implementation of the normal method
+"""
 
 """
    load basic modules
@@ -73,46 +76,20 @@ class normal_method(Methods):
     In this case, the interrogation windows are moved with a constant displacement both horizontally and vertically, and they do not vary in size throughout the process.
     This is a child class of the methods class.
     
-    Atributtes
-    ----------
-    im1: 2d np.array
-        Image 1
-    im2: 2d np.array
-        Image 2
-    tam_x, tam_y: int
-        Images dimensions
-    x_size: int
-        Interrogation window size in x axis
-    y_size: int
-        Interrogation window size in y axis
-    ovl: int
-        Size of the overlap
-        
-    Methods
-    -------
-    first_iteration()
-    
     """
     
     def __init__ (self, im1, im2, w_size, ovl):
         """
         Constructor
         
-        Parameters
-        ---------
-        im1 : 2d np.array
-            Image 1 of the par of images
-        im2 : 2d np.array
-             Image 2 of the par of images
-        w_size: int
-            Size of the interrogation window
-        ovl: int
-            Size of the overlap
-            
-        Raises
-        ------
-        .
-        
+        :type im1 : 2d np.array
+        :param im1: Image 1 of the par of images
+        :type im2 : 2d np.array
+        :param im2: Image 2 of the par of images
+        :type w_size: int
+        :param w_size: Size of the interrogation window
+        :type ovl: int
+        :param ovl: Size of the overlap
         """
         Methods.__init__(self, im1, im2)
         self.x_size = w_size
@@ -124,16 +101,10 @@ class normal_method(Methods):
         """
         Function that represents the normal method.
         The normal method can be seen as a required step to find the first displacement vector map that will be used in Multigrid method.
-    
-        Parameters
-        ----------
-        .
         
-        Raises
-        ------
-        res: displacement_map object
-            displacement vector map resulting from the method
-  
+        :rtype: displacement_map
+        :return: Displacement vector map resulting from the method
+      
         """
         
         size_r_x, size_r_y = self.result_dimensions(self.x_size, self.y_size, self.overlap)

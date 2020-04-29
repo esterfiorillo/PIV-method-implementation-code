@@ -56,3 +56,4 @@
 # from .pre_processing import thread_bckg as thread_bckg
 # from .image_par import image_par as image_par
 
+"""This is the Pre Processing package"""

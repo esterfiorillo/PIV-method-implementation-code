@@ -1,25 +1,25 @@
-# -*- coding: utf-8 -*-
-"""
-
- (               )     )   |
- )\ )  *   )  ( /(  ( /(   |
-(()/(` )  /(  )\()) )\())  |
- /(_))( )(_))((_)\ ((_)\   | LTHN PIV: Is an opensource PIV toolbox
-(_)) (_(_())  _((_) _((_)  |
-| |  |_   _| | || || \| |  |
-| |__  | |   | __ || .` |  | Website: https://github.com/esterfiorillo/PIV-method-implementation-code
-|(___|(|_|   |_||_||_|\_|  |
-                           | 
- )\ ) )\ )                 | CDTN - Centro de Desenvolvimento da Tecnologia Nuclear
-(()/((()/( (   (           | LTHN - Laboratório de Termo-Hidráulica e Neutrônica
- /(_))/(_)))\  )\          | Belo Horizonte, MG, Brasil
-(_)) (_)) ((_)((_)         |
-| _ \|_ _|\ \ / /          | @authors: esterfiorillo, acampagnole 
-|  _/ | |  \ V /           |
-|_|  |___|  \_/            |
-
-
-"""
+## -*- coding: utf-8 -*-
+#"""
+#
+# (               )     )   |
+# )\ )  *   )  ( /(  ( /(   |
+#(()/(` )  /(  )\()) )\())  |
+# /(_))( )(_))((_)\ ((_)\   | LTHN PIV: Is an opensource PIV toolbox
+#(_)) (_(_())  _((_) _((_)  |
+#| |  |_   _| | || || \| |  |
+#| |__  | |   | __ || .` |  | Website: https://github.com/esterfiorillo/PIV-method-implementation-code
+#|(___|(|_|   |_||_||_|\_|  |
+#                           | 
+# )\ ) )\ )                 | CDTN - Centro de Desenvolvimento da Tecnologia Nuclear
+#(()/((()/( (   (           | LTHN - Laboratório de Termo-Hidráulica e Neutrônica
+# /(_))/(_)))\  )\          | Belo Horizonte, MG, Brasil
+#(_)) (_)) ((_)((_)         |
+#| _ \|_ _|\ \ / /          | @authors: esterfiorillo, acampagnole 
+#|  _/ | |  \ V /           |
+#|_|  |___|  \_/            |
+#
+#
+#"""
 
 # License
 #     This file is part of LTHN PIV.
@@ -44,10 +44,9 @@
 #     Function that processes the image pair.
 #
 #------------------------------------------------------------------------------
-
-
-
-
+"""
+This file contains the function responsible for joining all parts of the processing
+"""
 """
    load basic modules
 """
@@ -85,7 +84,6 @@ except Exception as E:
 """
     try to load processing methods
 """
-
 from processing.methods.normal_method import normal_method
 from processing.methods.multigrid_method import multigrid_method
 
@@ -96,34 +94,39 @@ def thread_processing (num_images, dir, file_prefix, num_primeira, file_form, bc
     For this, a loop is made in which these images are opened and processed in pairs. Then, inside the loop, the pair is read, the pre-processing functions are applied and the processing method is applied (either multigrid or normal depending on the met variable received as a parameter).
     Finally, the displacement vector maps found for each pair are saved in lists. In the end, the lists are averaged and saved in csv files.
     
-    Parameters
-    ----------
-    num_images: int
-        Number of images in the image set
-    dir: str
-        Image set directory name
-    file_prefix: str
-        Prefix name of the images names
-    num_primeira: int
-        Number of the first image
-    file_form
-        Format of the images in the image set
-    bck_ground: float
-        Value for the back ground of the image set
-    mao: float
-        Necessary value for the brightness homogenization
-    met: str
-        Whether the method used in processing is normal or multigrid
-    w_size: int
-        Interrogation window size
-    ovl: int
-        Size of the overlap
-    n_iterations: int
-        Number of iterations of the method
+    :type num_images: int
+    :param num_images: Number of images in the image set
+    
+    :type dir: str
+    :param dir: Image set directory name
         
-    Raises
-    ------
-    .
+    :type file_prefix: str
+    :param file_prefix: Prefix name of the images names
+        
+    :type num_primeira: int
+    :param num_primeira: Number of the first image
+        
+    :type file_form: str
+    :param file_form: Format of the images in the image set
+        
+    :type bck_ground: float
+    :param bck_ground: Value for the back ground of the image set
+        
+    :type mao: float
+    :param mao: Necessary value for the brightness homogenization
+        
+    :type met: str
+    :param met: Whether the method used in processing is normal or multigrid
+        
+    :type w_size: int
+    :param w_size: Interrogation window size
+    
+    :type ovl: int
+    :param ovl: Size of the overlap
+        
+    :type n_iterations: int
+    :param n_iterations: Number of iterations of the method
+        
     """
     start = time.perf_counter()
     dpx_list1 = []

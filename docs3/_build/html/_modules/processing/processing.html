@@ -1,0 +1,309 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>processing.processing &#8212; PIV-LTHN  documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for processing.processing</h1><div class="highlight"><pre>
+<span></span><span class="c1">## -*- coding: utf-8 -*-</span>
+<span class="c1">#&quot;&quot;&quot;</span>
+<span class="c1">#</span>
+<span class="c1"># (               )     )   |</span>
+<span class="c1"># )\ )  *   )  ( /(  ( /(   |</span>
+<span class="c1">#(()/(` )  /(  )\()) )\())  |</span>
+<span class="c1"># /(_))( )(_))((_)\ ((_)\   | LTHN PIV: Is an opensource PIV toolbox</span>
+<span class="c1">#(_)) (_(_())  _((_) _((_)  |</span>
+<span class="c1">#| |  |_   _| | || || \| |  |</span>
+<span class="c1">#| |__  | |   | __ || .` |  | Website: https://github.com/esterfiorillo/PIV-method-implementation-code</span>
+<span class="c1">#|(___|(|_|   |_||_||_|\_|  |</span>
+<span class="c1">#                           | </span>
+<span class="c1"># )\ ) )\ )                 | CDTN - Centro de Desenvolvimento da Tecnologia Nuclear</span>
+<span class="c1">#(()/((()/( (   (           | LTHN - Laboratório de Termo-Hidráulica e Neutrônica</span>
+<span class="c1"># /(_))/(_)))\  )\          | Belo Horizonte, MG, Brasil</span>
+<span class="c1">#(_)) (_)) ((_)((_)         |</span>
+<span class="c1">#| _ \|_ _|\ \ / /          | @authors: esterfiorillo, acampagnole </span>
+<span class="c1">#|  _/ | |  \ V /           |</span>
+<span class="c1">#|_|  |___|  \_/            |</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1">#&quot;&quot;&quot;</span>
+
+<span class="c1"># License</span>
+<span class="c1">#     This file is part of LTHN PIV.</span>
+<span class="c1">#</span>
+<span class="c1">#     LTHN PIV is free software: you can redistribute it and/or modify it</span>
+<span class="c1">#     under the terms of the GNU General Public License as published by</span>
+<span class="c1">#     the Free Software Foundation, either version 3 of the License, or</span>
+<span class="c1">#     (at your option) any later version.</span>
+<span class="c1">#</span>
+<span class="c1">#     LTHN PIV is distributed in the hope that it will be useful, but WITHOUT</span>
+<span class="c1">#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or</span>
+<span class="c1">#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License</span>
+<span class="c1">#     for more details.</span>
+<span class="c1">#</span>
+<span class="c1">#     You should have received a copy of the GNU General Public License</span>
+<span class="c1">#     along with LTHN PIV.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
+<span class="c1">#</span>
+<span class="c1"># File</span>
+<span class="c1">#     ./processing/processing.py</span>
+<span class="c1">#</span>
+<span class="c1"># Description</span>
+<span class="c1">#     Function that processes the image pair.</span>
+<span class="c1">#</span>
+<span class="c1">#------------------------------------------------------------------------------</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This file contains the function responsible for joining all parts of the processing</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">   load basic modules</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">   try to load fundamental modules</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+    <span class="c1">#import matplotlib.pyplot as plt</span>
+    <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+    <span class="kn">import</span> <span class="nn">time</span>
+    <span class="kn">import</span> <span class="nn">cv2</span>
+
+<span class="k">except</span> <span class="n">ModuleNotFoundError</span> <span class="k">as</span> <span class="n">E</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Missing critical module. Please install module:&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">E</span><span class="p">)</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>    
+ 
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    try to load pre processing functions</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">pre_processing.pre_processing_class</span> <span class="k">import</span> <span class="n">pre_processing</span>
+<span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">E</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Missing critical pre processing module. Please install module:&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">E</span><span class="p">)</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>   
+
+
+    
+<span class="c1">#&quot;&quot;&quot;</span>
+<span class="c1">#    try to load processing methods</span>
+<span class="c1">#&quot;&quot;&quot;</span>
+<span class="c1">#from methods.normal_method import normal_method</span>
+<span class="c1">#from methods.multigrid_method import multigrid_method</span>
+
+
+<div class="viewcode-block" id="thread_processing"><a class="viewcode-back" href="../../processing.html#processing.processing.thread_processing">[docs]</a><span class="k">def</span> <span class="nf">thread_processing</span> <span class="p">(</span><span class="n">num_images</span><span class="p">,</span> <span class="nb">dir</span><span class="p">,</span> <span class="n">file_prefix</span><span class="p">,</span> <span class="n">num_primeira</span><span class="p">,</span> <span class="n">file_form</span><span class="p">,</span> <span class="n">bck_ground</span><span class="p">,</span> <span class="n">mao</span><span class="p">,</span> <span class="n">met</span><span class="p">,</span> <span class="n">w_size</span><span class="p">,</span> <span class="n">ovl</span><span class="p">,</span> <span class="n">n_iterations</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function that loads the set of images from the name of the directory, the prefix of the files, the number of the first image and the file type of the images received as parameters.</span>
+<span class="sd">    For this, a loop is made in which these images are opened and processed in pairs. Then, inside the loop, the pair is read, the pre-processing functions are applied and the processing method is applied (either multigrid or normal depending on the met variable received as a parameter).</span>
+<span class="sd">    Finally, the displacement vector maps found for each pair are saved in lists. In the end, the lists are averaged and saved in csv files.</span>
+<span class="sd">    </span>
+<span class="sd">    :type num_images: int</span>
+<span class="sd">    :param num_images: Number of images in the image set</span>
+<span class="sd">    </span>
+<span class="sd">    :type dir: str</span>
+<span class="sd">    :param dir: Image set directory name</span>
+<span class="sd">        </span>
+<span class="sd">    :type file_prefix: str</span>
+<span class="sd">    :param file_prefix: Prefix name of the images names</span>
+<span class="sd">        </span>
+<span class="sd">    :type num_primeira: int</span>
+<span class="sd">    :param num_primeira: Number of the first image</span>
+<span class="sd">        </span>
+<span class="sd">    :type file_form: str</span>
+<span class="sd">    :param file_form: Format of the images in the image set</span>
+<span class="sd">        </span>
+<span class="sd">    :type bck_ground: float</span>
+<span class="sd">    :param bck_ground: Value for the back ground of the image set</span>
+<span class="sd">        </span>
+<span class="sd">    :type mao: float</span>
+<span class="sd">    :param mao: Necessary value for the brightness homogenization</span>
+<span class="sd">        </span>
+<span class="sd">    :type met: str</span>
+<span class="sd">    :param met: Whether the method used in processing is normal or multigrid</span>
+<span class="sd">        </span>
+<span class="sd">    :type w_size: int</span>
+<span class="sd">    :param w_size: Interrogation window size</span>
+<span class="sd">    </span>
+<span class="sd">    :type ovl: int</span>
+<span class="sd">    :param ovl: Size of the overlap</span>
+<span class="sd">        </span>
+<span class="sd">    :type n_iterations: int</span>
+<span class="sd">    :param n_iterations: Number of iterations of the method</span>
+<span class="sd">        </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
+    <span class="n">dpx_list1</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">dpy_list1</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">dpx_list2</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">dpy_list2</span> <span class="o">=</span> <span class="p">[]</span> 
+    
+    <span class="c1"># Order of magnitude of the number of images</span>
+    <span class="n">e</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">num_images</span><span class="p">)</span><span class="o">.</span><span class="n">round</span><span class="p">())</span>
+    
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_images</span><span class="p">):</span>
+        <span class="n">im1</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="nb">dir</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">file_prefix</span> <span class="o">+</span> <span class="nb">str</span> <span class="p">(</span><span class="n">num_primeira</span><span class="p">)</span><span class="o">.</span><span class="n">zfill</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="o">+</span> <span class="n">file_form</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="c1">#print (f&#39;processing {file_prefix + str (num_primeira).zfill(5) + file_form}&#39;)</span>
+        <span class="n">im1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span> <span class="p">(</span><span class="n">im1</span><span class="p">)</span>
+        <span class="n">num_primeira</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">num_primeira</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="n">im2</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="nb">dir</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">file_prefix</span> <span class="o">+</span> <span class="nb">str</span> <span class="p">(</span><span class="n">num_primeira</span><span class="p">)</span><span class="o">.</span><span class="n">zfill</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="o">+</span> <span class="n">file_form</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="c1">#print (f&#39;processing {file_prefix + str (num_primeira).zfill(5) + file_form}&#39;)</span>
+        <span class="n">im2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span> <span class="p">(</span><span class="n">im2</span><span class="p">)</span>
+        <span class="n">num_primeira</span> <span class="o">=</span> <span class="nb">int</span> <span class="p">(</span><span class="n">num_primeira</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+       
+        <span class="k">if</span> <span class="nb">len</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">shape</span> <span class="p">(</span><span class="n">im1</span><span class="p">))</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">im1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">im1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="c1">#rgb to gray</span>
+        <span class="k">if</span> <span class="nb">len</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">shape</span> <span class="p">(</span><span class="n">im2</span><span class="p">))</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">im2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span> <span class="p">(</span><span class="n">im2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="c1">#rgb to gray</span>
+        
+        <span class="n">pre_function</span> <span class="o">=</span> <span class="n">pre_processing</span><span class="p">(</span><span class="n">mao</span><span class="p">,</span> <span class="n">bck_ground</span><span class="p">)</span>
+        
+        <span class="c1">#pre process images:</span>
+        <span class="n">pre_function</span> <span class="o">=</span> <span class="n">pre_processing</span><span class="p">(</span><span class="n">mao</span><span class="p">,</span> <span class="n">bck_ground</span><span class="p">)</span>
+        
+        <span class="n">im1</span> <span class="o">=</span> <span class="n">pre_function</span><span class="o">.</span><span class="n">clahe_histogram_equalization</span><span class="p">(</span><span class="n">im1</span><span class="p">)</span>
+        <span class="n">im2</span> <span class="o">=</span> <span class="n">pre_function</span><span class="o">.</span><span class="n">clahe_histogram_equalization</span><span class="p">(</span><span class="n">im2</span><span class="p">)</span>
+       
+        <span class="n">im1</span> <span class="o">=</span> <span class="n">pre_function</span><span class="o">.</span><span class="n">sobel_filter1</span><span class="p">(</span><span class="n">im1</span><span class="p">)</span>
+        <span class="n">im2</span> <span class="o">=</span> <span class="n">pre_function</span><span class="o">.</span><span class="n">sobel_filter1</span><span class="p">(</span><span class="n">im2</span><span class="p">)</span>
+
+        <span class="n">im1</span> <span class="o">=</span> <span class="n">pre_function</span><span class="o">.</span><span class="n">remove_background</span><span class="p">(</span><span class="n">im1</span><span class="p">)</span>
+        <span class="n">im2</span> <span class="o">=</span> <span class="n">pre_function</span><span class="o">.</span><span class="n">remove_background</span><span class="p">(</span><span class="n">im2</span><span class="p">)</span>
+        <span class="n">im2</span> <span class="o">=</span> <span class="n">pre_function</span><span class="o">.</span><span class="n">homogenize_brightness</span><span class="p">(</span><span class="n">im2</span><span class="p">)</span>
+        
+
+        <span class="n">tam_x</span><span class="p">,</span> <span class="n">tam_y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">im1</span><span class="p">)</span>
+   
+        <span class="k">if</span> <span class="n">met</span> <span class="o">==</span> <span class="s1">&#39;Multigrid&#39;</span><span class="p">:</span>
+            
+            <span class="n">par2</span> <span class="o">=</span> <span class="n">multigrid_method</span><span class="p">(</span><span class="n">im1</span><span class="p">,</span> <span class="n">im2</span><span class="p">,</span> <span class="n">w_size</span><span class="p">,</span> <span class="n">ovl</span><span class="p">,</span> <span class="n">n_iterations</span><span class="p">)</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="n">par2</span><span class="o">.</span><span class="n">multigrid_method1</span><span class="p">()</span>
+            <span class="n">s</span><span class="o">.</span><span class="n">replacement3</span><span class="p">()</span>
+            
+            <span class="n">dpx_list1</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">dpx</span><span class="p">)</span>
+            <span class="n">dpy_list1</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">dpy</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="p">(</span><span class="n">num_images</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+                <span class="n">dpx_def</span> <span class="o">=</span> <span class="nb">sum</span> <span class="p">(</span><span class="n">dpx_list1</span><span class="p">)</span><span class="o">/</span><span class="nb">len</span> <span class="p">(</span><span class="n">dpx_list1</span><span class="p">)</span>
+                <span class="n">dpy_def</span> <span class="o">=</span> <span class="nb">sum</span> <span class="p">(</span><span class="n">dpy_list1</span><span class="p">)</span><span class="o">/</span><span class="nb">len</span> <span class="p">(</span><span class="n">dpx_list1</span><span class="p">)</span>
+                 
+                <span class="c1">#saves the average of dpx and dpy results in two csv files</span>
+                <span class="n">dpx_csv</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">dpx_def</span><span class="p">)</span>
+                <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">dpx_csv</span><span class="p">)</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s2">&quot;dpx_resultado_multigrid&quot;</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">header</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+                <span class="n">dpy_csv</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">dpy_def</span><span class="p">)</span>
+                <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">dpy_csv</span><span class="p">)</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s2">&quot;dpy_resultado_multigrid&quot;</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">header</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+                <span class="c1">#print (&quot;Process Finished&quot;)</span>
+                <span class="n">finish</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
+                <span class="n">sec</span> <span class="o">=</span> <span class="nb">round</span> <span class="p">(</span><span class="n">finish</span> <span class="o">-</span> <span class="n">start</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+                <span class="c1">#print(f&quot;execution time = {sec} seconds&quot;) </span>
+           
+        <span class="k">if</span> <span class="n">met</span> <span class="o">==</span> <span class="s1">&#39;Normal&#39;</span><span class="p">:</span>
+            <span class="n">par1</span> <span class="o">=</span> <span class="n">normal_method</span><span class="p">(</span><span class="n">im1</span><span class="p">,</span> <span class="n">im2</span><span class="p">,</span> <span class="n">w_size</span><span class="p">,</span> <span class="n">ovl</span><span class="p">)</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="n">par1</span><span class="o">.</span><span class="n">first_iteration</span><span class="p">()</span>
+            <span class="n">dpx_list2</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">dpx</span><span class="p">)</span>
+            <span class="n">dpy_list2</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">dpy</span><span class="p">)</span>
+            
+            <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="p">(</span><span class="n">num_images</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+                <span class="n">dpx_def2</span> <span class="o">=</span> <span class="nb">sum</span> <span class="p">(</span><span class="n">dpx_list2</span><span class="p">)</span><span class="o">/</span><span class="nb">len</span> <span class="p">(</span><span class="n">dpx_list2</span><span class="p">)</span>
+                <span class="n">dpy_def2</span> <span class="o">=</span> <span class="nb">sum</span> <span class="p">(</span><span class="n">dpy_list2</span><span class="p">)</span><span class="o">/</span><span class="nb">len</span> <span class="p">(</span><span class="n">dpx_list2</span><span class="p">)</span>
+            
+                <span class="c1">#saves the average of dpx and dpy results in two csv files</span>
+                <span class="n">dpx_csv2</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">dpx_def2</span><span class="p">)</span>
+                <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">dpx_csv2</span><span class="p">)</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s2">&quot;dpx_resultado_normal&quot;</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">dpy_csv2</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">dpy_def2</span><span class="p">)</span>
+                <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">dpy_csv2</span><span class="p">)</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s2">&quot;dpy_resultado_normal&quot;</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="c1">#print (&quot;Process Finished&quot;)</span>
+                <span class="n">finish</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
+                <span class="n">sec</span> <span class="o">=</span> <span class="nb">round</span> <span class="p">(</span><span class="n">finish</span> <span class="o">-</span> <span class="n">start</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span></div>
+                <span class="c1">#print(f&quot;execution time = {sec} seconds&quot;) </span>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">PIV-LTHN</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">PIV-method-implementation-code</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Ester Fiorillo, André Santos, Vitor Silva.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.11</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

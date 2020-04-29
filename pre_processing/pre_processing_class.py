@@ -1,25 +1,25 @@
 # -*- coding: utf-8 -*-
-"""
-
- (               )     )   |
- )\ )  *   )  ( /(  ( /(   |
-(()/(` )  /(  )\()) )\())  |
- /(_))( )(_))((_)\ ((_)\   | LTHN PIV: Is an opensource PIV toolbox
-(_)) (_(_())  _((_) _((_)  |
-| |  |_   _| | || || \| |  |
-| |__  | |   | __ || .` |  | Website: https://github.com/esterfiorillo/PIV-method-implementation-code
-|(___|(|_|   |_||_||_|\_|  |
-                           | 
- )\ ) )\ )                 | CDTN - Centro de Desenvolvimento da Tecnologia Nuclear
-(()/((()/( (   (           | LTHN - Laboratório de Termo-Hidráulica e Neutrônica
- /(_))/(_)))\  )\          | Belo Horizonte, MG, Brasil
-(_)) (_)) ((_)((_)         |
-| _ \|_ _|\ \ / /          | @authors: esterfiorillo, acampagnole 
-|  _/ | |  \ V /           |
-|_|  |___|  \_/            |
-
-
-"""
+#"""
+#
+# (               )     )   |
+# )\ )  *   )  ( /(  ( /(   |
+#(()/(` )  /(  )\()) )\())  |
+# /(_))( )(_))((_)\ ((_)\   | LTHN PIV: Is an opensource PIV toolbox
+#(_)) (_(_())  _((_) _((_)  |
+#| |  |_   _| | || || \| |  |
+#| |__  | |   | __ || .` |  | Website: https://github.com/esterfiorillo/PIV-method-implementation-code
+#|(___|(|_|   |_||_||_|\_|  |
+#                           | 
+# )\ ) )\ )                 | CDTN - Centro de Desenvolvimento da Tecnologia Nuclear
+#(()/((()/( (   (           | LTHN - Laboratório de Termo-Hidráulica e Neutrônica
+# /(_))/(_)))\  )\          | Belo Horizonte, MG, Brasil
+#(_)) (_)) ((_)((_)         |
+#| _ \|_ _|\ \ / /          | @authors: esterfiorillo, acampagnole 
+#|  _/ | |  \ V /           |
+#|_|  |___|  \_/            |
+#
+#
+#"""
 
 # License
 #     This file is part of LTHN PIV.
@@ -39,26 +39,11 @@
 #
 # File
 #     ./processing/image_par.py
-#
-# Description
-#     Base class of normal_method class and multigrid_method class,
-#     which represents the methods of traversing the pair of images
-#     with the interrogation windows while the cross correlation between them is applyed.
-#     The advantage of using inheritance in this case is the possibility
-#     of adding more methods without having to change anything in the code
-#     Atributes:
-#         image1: 2d np.narray
-#         image2: 2d np.narray
-#     Functions:
-#         sobel_filter1
-#         sobel_filter2
-#         laplacian_filter
-#         clahe_histogram_equalization  
-#         remove_background
-#         calc_teta
-#         homogenize_brightness
-#
-#------------------------------------------------------------------------------
+#-----------------------------------------------------------------------------
+
+"""
+This file represents the class that has the pre processing functions, which aims to make corrections and improve the quality of the images
+"""
 
 """
    load basic modules
@@ -81,37 +66,18 @@ except ModuleNotFoundError as E:
 class pre_processing:
     """  
     This is a class to represent the pre processing methods applied to the images
-    
-        
-       Attributes
-       --------
-       ...
-       
-       Methods
-       -------
-       sobel_filter1
-       sobel_filter2
-       laplacian_filter
-       clahe_histogram_equalization  
-       remove_background
-       calc_teta
-       homogenize_brightness 
+
     """    
     
     def __init__(self, mmao, bck_g):
         """
         Constructor
         
-        Parameters
-        ---------
-        mmao : float
-            Necessary value for the brightness homogenization
-        bck_g : float
-            Value for the background of the images
+        :type mmao : float
+        :param mmao: Necessary value for the brightness homogenization
         
-        Raises
-        ------
-        .
+        :type bck_g : float
+        :param bck_g: Value for the background of the images
         
         """
         self.mmao = mmao
@@ -123,15 +89,11 @@ class pre_processing:
         Function that applies a Sobel filter to an image. This filter has the function
         of detecting horizontal edges.
         
-        Parameters
-        ----------
-        im: 2d np.array
-            Input image
+        :type im: 2d np.array
+        :param im: Input image
         
-        Raises
-        ------
-        im: 2d np.array
-            Input image with a sobel filter
+        :rtype: 2d np.array
+        :return: Input image with a sobel filter
         
         """
         im = cv2.Sobel(im, cv2.CV_64F,1,0,ksize=5)
@@ -144,15 +106,11 @@ class pre_processing:
         Function that applies a Sobel filter to an image. This filter has the function
         of detecting vertical edges.
         
-        Parameters
-        ----------
-        im: 2d np.array
-            Input image
+        :type im: 2d np.array
+        :param im: Input image
         
-        Raises
-        ------
-        im: 2d array
-            Input image with a sobel filter
+        :rtype: 2d np.array
+        :return: Input image with a sobel filter
         
         """
         im = cv2.Sobel(im, cv2.CV_64F,0,1,ksize=5)
@@ -163,15 +121,11 @@ class pre_processing:
         Function that applies a Laplacian filter to an image. This filter has the function
         of detecting horizontal and vertical edges.
         
-        Parameters
-        ----------
-        im: 2d np.array
-            Input image
+        :type im: 2d np.array
+        :param im: Input image
         
-        Raises
-        ------
-        im: 2d np.array
-            Input image with a laplacian filter
+        :rtype: 2d np.array
+        :return: Input image with a laplacian filter
         
         """
         im = cv2.Laplacian(im,cv2.CV_64F)
@@ -181,15 +135,11 @@ class pre_processing:
         """
         Function that applies a CLAHE (contrast limited adaptative histogram equalization) to an image. 
         
-        Parameters
-        ----------
-        im: 2d np.array
-            Input image
+        :type im: 2d np.array
+        :param im: Input image
         
-        Raises
-        ------
-        im: 2d np.array
-            Input image after applied CLAHE 
+        :rtype: 2d np.array
+        :return: Input image after CLAHE been apliyed
         
         """
         clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8,8))
@@ -201,15 +151,11 @@ class pre_processing:
         """
         Function that subtracts the background from the image
         
-        Parameters
-        ----------
-        im: 2d np.array
-            Input image
+        :type im: 2d np.array
+        :param im: Input image
         
-        Raises
-        ------
-        im: 2d np.array
-            Input image after having its background extracted
+        :rtype: 2d np.array
+        :return: Input image after having its background extracted
         """
         im = im - self.bckg
         return im
@@ -220,15 +166,11 @@ class pre_processing:
         It was made to be apliyed to the second image of the par, not both of then.
         Reference : Brightness correction, homogenization and adjunstment of images for face recognition, Eduardo Machado Silva, UNESP, ISSN 2316-9664, Volume 14, fev. 2019, Edic ̧ao Ermac
         
-        Parameters
-        ----------
-        im2: 2d np.array
-            Input image
+        :type im: 2d np.array
+        :param im: Input image
         
-        Raises
-        ------
-        teta: float
-            Value that will be used in homogenize_brightness function
+        :rtype: float
+        :return: Value that will be used in homogenize_brightness function
         """
         h,bins = np.histogram(im2.ravel(),256,[0,256])
         h_min = min(h)
@@ -244,15 +186,11 @@ class pre_processing:
         It was made to be apliyed to the second image of the par, not both of then.
         Reference : Brightness correction, homogenization and adjunstment of images for face recognition, Eduardo Machado Silva, UNESP, ISSN 2316-9664, Volume 14, fev. 2019, Edic ̧ao Ermac
         
-        Parameters
-        ----------
-        im2: 2d np.array
-            Input image
+        :type im: 2d np.array
+        :param im: Input image
         
-        Raises
-        ------
-        im2: 2d np.array
-            Input image after brightness correction
+        :rtype: 2d np.array
+        :return: Input image after brightness correction
         """
         teta = self.calc_teta(im2)
         tam_x = len(im2)

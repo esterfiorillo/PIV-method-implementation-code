@@ -1,25 +1,25 @@
-# -*- coding: utf-8 -*-
-"""
-
- (               )     )   |
- )\ )  *   )  ( /(  ( /(   |
-(()/(` )  /(  )\()) )\())  |
- /(_))( )(_))((_)\ ((_)\   | LTHN PIV: Is an opensource PIV toolbox
-(_)) (_(_())  _((_) _((_)  |
-| |  |_   _| | || || \| |  |
-| |__  | |   | __ || .` |  | Website: https://github.com/esterfiorillo/PIV-method-implementation-code
-|(___|(|_|   |_||_||_|\_|  |
-                           | 
- )\ ) )\ )                 | CDTN - Centro de Desenvolvimento da Tecnologia Nuclear
-(()/((()/( (   (           | LTHN - Laboratório de Termo-Hidráulica e Neutrônica
- /(_))/(_)))\  )\          | Belo Horizonte, MG, Brasil
-(_)) (_)) ((_)((_)         |
-| _ \|_ _|\ \ / /          | @authors: esterfiorillo, acampagnole 
-|  _/ | |  \ V /           |
-|_|  |___|  \_/            |
-
-
-"""
+## -*- coding: utf-8 -*-
+#"""
+#
+# (               )     )   |
+# )\ )  *   )  ( /(  ( /(   |
+#(()/(` )  /(  )\()) )\())  |
+# /(_))( )(_))((_)\ ((_)\   | LTHN PIV: Is an opensource PIV toolbox
+#(_)) (_(_())  _((_) _((_)  |
+#| |  |_   _| | || || \| |  |
+#| |__  | |   | __ || .` |  | Website: https://github.com/esterfiorillo/PIV-method-implementation-code
+#|(___|(|_|   |_||_||_|\_|  |
+#                           | 
+# )\ ) )\ )                 | CDTN - Centro de Desenvolvimento da Tecnologia Nuclear
+#(()/((()/( (   (           | LTHN - Laboratório de Termo-Hidráulica e Neutrônica
+# /(_))/(_)))\  )\          | Belo Horizonte, MG, Brasil
+#(_)) (_)) ((_)((_)         |
+#| _ \|_ _|\ \ / /          | @authors: esterfiorillo, acampagnole 
+#|  _/ | |  \ V /           |
+#|_|  |___|  \_/            |
+#
+#
+#"""
 
 # License
 #     This file is part of LTHN PIV.
@@ -40,6 +40,9 @@
 # File
 #     ./processing/multigrid_method.py
 #------------------------------------------------------------------------------
+"""
+This file contains the class that represents the implementation of the multigrid method, proposed by F. Scarano & J. Westerweel (1999)
+"""
 
 """
    load basic modules
@@ -66,49 +69,25 @@ class multigrid_method (normal_method):
     It uses the vector map found in the normal method, so this class is a child class of normal_method class.
     The multigrid method is an iterative method, in which the size of the interrogation windows is reduced throughout the process. In addition, the interrogation windows are shifted in the images according to the displacement map found in the previous iteration.
     
-    Attributes
-    ----------
-    im1: 2d np.array
-        Image 1
-    im2: 2d np.array
-        Image 2
-    tam_x, tam_y: int
-        Images dimensions
-    x_size: int
-        Interrogation window size in x axis
-    y_size: int
-        Interrogation window size in y axis
-    ovl: int
-        Size of the overlap
-    n_passadas: int
-        Number of iterations of the method
-    
-    Methods
-    -------
-    resize_to_input_shape (map_a, dpx_map, dpy_map)
-    multigrid_method1()
-    
     """
     def __init__ (self, im1, im2, w_size, ovl, n_passadas):
         """
         Constructor
         
-        Parameters
-        ---------
-        im1 : 2d np.array
-            Image 1 of the par of images
-        im2 : 2d np.array
-             Image 2 of the par of images
-        w_size: int
-            Size of the interrogation window
-        ovl: int
-            Size of the overlap
-        n_passadas: int
+        :type im1 : 2d np.array
+        :param im1: Image 1 of the par of images
             
-        Raises
-        ------
-        .
-        
+        :type im2 : 2d np.array
+        :param im2: Image 2 of the par of images
+             
+        :type w_size: int
+        :param w_size: Size of the interrogation window
+            
+        :type ovl: int
+        :param ovl: Size of the overlap
+            
+        :type n_passadas: int
+        :param n_passadas: Number of iterations
         """
         normal_method.__init__(self, im1, im2, w_size, ovl)
         self.num_passadas = n_passadas
@@ -118,21 +97,17 @@ class multigrid_method (normal_method):
         """
         Function that takes an object of the type displacement_map and doubles its dimensions. It will be used to add the displacements of the previous vector map.
         
-        Parameters
-        ----------
-        map_a : diplacement_map object
-            Input displacement vector map
-        dpx_map: 2d np.array
-            Displacement vector map in x axis
-        dpy_map: 2d np.array
-            Displacement vector map in y axis
+        :type map_a : diplacement_map object
+        :param map_a: Input displacement vector map
+            
+        :type dpx_map: 2d np.array
+        :param dpx_map: Displacement vector map in x axis
+            
+        :type dpy_map: 2d np.array
+        :param dpy_map: Displacement vector map in y axis
         
-        Raises
-        ------
-        dpx_map: 2d np.array
-            Output displacement vector map in x axis
-        dpy_map: 2d np.array
-            Output displacement vector map in y axis 
+        :rtype: displacement_map
+        :return: displacement_map object with double dimensions
         
         """
         c = np.zeros((2, 2))
@@ -167,17 +142,9 @@ class multigrid_method (normal_method):
     def multigrid_method1 (self):
         """
         Function that implements the Multigrid method.
-        Reference:
-        F. Scarano & M. L. Riethmuller, Iterative multigrid approach in PIV image processing with discrete window offset, Experiments in Fluids 26 (1999)
         
-        Parameters
-        ----------
-        .
-        
-        Raises
-        ------
-        dp_anterior: displacement_map object
-            displacement vector map resulting from the method
+        :rtype: displacement_map
+        :return: Displacement vector map resulting from the method
         
         """
     
@@ -298,18 +265,10 @@ class multigrid_method (normal_method):
         
     def multigrid_method2 (self):
         """
-        Function that is a second implementation of multigrid
-        Reference:
-        F. Scarano & M. L. Riethmuller, Iterative multigrid approach in PIV image processing with discrete window offset, Experiments in Fluids 26 (1999)
+        Function that is a second implementation of Multigrid method
         
-        Parameters
-        ----------
-        .
-        
-        Raises
-        ------
-        dp_anterior: displacement_map object
-            displacement vector map resulting from the method
+        :rtype: displacement_map
+        :return: Displacement vector map resulting from the method
         
         """
         aux = 0

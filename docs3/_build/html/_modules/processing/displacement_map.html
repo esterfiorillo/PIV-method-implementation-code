@@ -1,0 +1,333 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>processing.displacement_map &#8212; PIV-LTHN  documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for processing.displacement_map</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="c1">#&quot;&quot;&quot;</span>
+<span class="c1">#</span>
+<span class="c1"># (               )     )   |</span>
+<span class="c1"># )\ )  *   )  ( /(  ( /(   |</span>
+<span class="c1">#(()/(` )  /(  )\()) )\())  |</span>
+<span class="c1"># /(_))( )(_))((_)\ ((_)\   | LTHN PIV: Is an opensource PIV toolbox</span>
+<span class="c1">#(_)) (_(_())  _((_) _((_)  |</span>
+<span class="c1">#| |  |_   _| | || || \| |  |</span>
+<span class="c1">#| |__  | |   | __ || .` |  | Website: https://github.com/esterfiorillo/PIV-method-implementation-code</span>
+<span class="c1">#|(___|(|_|   |_||_||_|\_|  |</span>
+<span class="c1">#                           | </span>
+<span class="c1"># )\ ) )\ )                 | CDTN - Centro de Desenvolvimento da Tecnologia Nuclear</span>
+<span class="c1">#(()/((()/( (   (           | LTHN - Laboratório de Termo-Hidráulica e Neutrônica</span>
+<span class="c1"># /(_))/(_)))\  )\          | Belo Horizonte, MG, Brasil</span>
+<span class="c1">#(_)) (_)) ((_)((_)         |</span>
+<span class="c1">#| _ \|_ _|\ \ / /          | @authors: esterfiorillo, acampagnole </span>
+<span class="c1">#|  _/ | |  \ V /           |</span>
+<span class="c1">#|_|  |___|  \_/            |</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1">#&quot;&quot;&quot;</span>
+
+<span class="c1"># License</span>
+<span class="c1">#     This file is part of LTHN PIV.</span>
+<span class="c1">#</span>
+<span class="c1">#     LTHN PIV is free software: you can redistribute it and/or modify it</span>
+<span class="c1">#     under the terms of the GNU General Public License as published by</span>
+<span class="c1">#     the Free Software Foundation, either version 3 of the License, or</span>
+<span class="c1">#     (at your option) any later version.</span>
+<span class="c1">#</span>
+<span class="c1">#     LTHN PIV is distributed in the hope that it will be useful, but WITHOUT</span>
+<span class="c1">#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or</span>
+<span class="c1">#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License</span>
+<span class="c1">#     for more details.</span>
+<span class="c1">#</span>
+<span class="c1">#     You should have received a copy of the GNU General Public License</span>
+<span class="c1">#     along with LTHN PIV.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
+<span class="c1">#</span>
+<span class="c1"># File</span>
+<span class="c1">#     ./processing/displacement_map.py</span>
+<span class="c1">#</span>
+<span class="c1"># Description</span>
+<span class="c1">#     Class that represents the displacement map resulting from the methods.</span>
+<span class="c1">#     It also have the functions applied to the map for the data validation.</span>
+<span class="c1">#     Atributes:</span>
+<span class="c1">#         dp_x: 2d np.narray</span>
+<span class="c1">#         dp_y: 2d np.narray</span>
+<span class="c1">#     Functions:</span>
+<span class="c1">#         neighborhood_median(int ii, int jj)</span>
+<span class="c1">#         calculate_rm (int ii, int jj)</span>
+<span class="c1">#         calculate_r (int ii, int jj)</span>
+<span class="c1">#         neighborhood_median(int ii, int jj)</span>
+<span class="c1">#         replacement3()</span>
+<span class="c1">#         resize_dp</span>
+<span class="c1">#         index_guard()</span>
+<span class="c1">#</span>
+<span class="c1">#------------------------------------------------------------------------------</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This file contains the displacement_map class.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">   load basic modules</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">   try to load fundamental modules</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="k">except</span> <span class="n">ModuleNotFoundError</span> <span class="k">as</span> <span class="n">E</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Missing critical module. Please install module:&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">E</span><span class="p">)</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>    
+    
+
+<div class="viewcode-block" id="displacement_map"><a class="viewcode-back" href="../../processing.html#processing.displacement_map.displacement_map">[docs]</a><span class="k">class</span> <span class="nc">displacement_map</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">     Class that represents a vector field, which is the displacements of the particles between the time of capture of the pair of images.</span>
+<span class="sd">     This class also have the functions applied to vector field the for data validation.</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span> 
+   
+    <span class="k">def</span> <span class="nf">__init__</span> <span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dp_x</span><span class="p">,</span> <span class="n">dp_y</span><span class="p">):</span> 
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Constructor</span>
+<span class="sd">        </span>
+<span class="sd">        :type dp_x : 2d np.array</span>
+<span class="sd">        :param dp_x: Matrix with the components of the displacement vectors on the x axis.</span>
+<span class="sd">        </span>
+<span class="sd">        :type dp_y : 2d np.array</span>
+<span class="sd">        :param dp_y: Matrix with the components of the displacement vectors on the y axis.</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dpx</span> <span class="o">=</span> <span class="n">dp_x</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dpy</span> <span class="o">=</span> <span class="n">dp_y</span>
+     
+        
+<div class="viewcode-block" id="displacement_map.neighborhood_median"><a class="viewcode-back" href="../../processing.html#processing.displacement_map.displacement_map.neighborhood_median">[docs]</a>    <span class="k">def</span> <span class="nf">neighborhood_median</span> <span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ii</span><span class="p">,</span> <span class="n">jj</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Function that calculates the median of the neighboorhood points (3x3) of a certain position (ii, jj) on the displacement vector field.</span>
+<span class="sd">        </span>
+<span class="sd">        :type ii: int</span>
+<span class="sd">        :param ii: x coordinate of the point at which the neighborhood(3x3) median is being calculated.</span>
+<span class="sd">       </span>
+<span class="sd">        :type jj: int</span>
+<span class="sd">        :param jj: y coordinate of the point at which the neighborhood(3x3) median is being calculated.</span>
+<span class="sd">            </span>
+<span class="sd">        :rtype: float</span>
+<span class="sd">        :return: Median of the neighboorhood points on dpx and dpy</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">aux1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="bp">self</span><span class="o">.</span><span class="n">dpx</span><span class="p">[</span><span class="n">ii</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">jj</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">dpx</span><span class="p">[</span><span class="n">ii</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">jj</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">dpx</span><span class="p">[</span><span class="n">ii</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">jj</span><span class="o">+</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">dpx</span><span class="p">[</span><span class="n">ii</span><span class="p">][</span><span class="n">jj</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">dpx</span><span class="p">[</span><span class="n">ii</span><span class="p">][</span><span class="n">jj</span><span class="o">+</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">dpx</span><span class="p">[</span><span class="n">ii</span><span class="o">+</span><span class="mi">1</span><span class="p">][</span><span class="n">jj</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">dpx</span><span class="p">[</span><span class="n">ii</span><span class="o">+</span><span class="mi">1</span><span class="p">][</span><span class="n">jj</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">dpx</span><span class="p">[</span><span class="n">ii</span><span class="o">+</span><span class="mi">1</span><span class="p">][</span><span class="n">jj</span><span class="o">+</span><span class="mi">1</span><span class="p">]]])</span>
+        <span class="n">aux2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="bp">self</span><span class="o">.</span><span class="n">dpy</span><span class="p">[</span><span class="n">ii</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">jj</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">dpy</span><span class="p">[</span><span class="n">ii</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">jj</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">dpy</span><span class="p">[</span><span class="n">ii</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">jj</span><span class="o">+</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">dpy</span><span class="p">[</span><span class="n">ii</span><span class="p">][</span><span class="n">jj</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">dpy</span><span class="p">[</span><span class="n">ii</span><span class="p">][</span><span class="n">jj</span><span class="o">+</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">dpy</span><span class="p">[</span><span class="n">ii</span><span class="o">+</span><span class="mi">1</span><span class="p">][</span><span class="n">jj</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">dpy</span><span class="p">[</span><span class="n">ii</span><span class="o">+</span><span class="mi">1</span><span class="p">][</span><span class="n">jj</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">dpy</span><span class="p">[</span><span class="n">ii</span><span class="o">+</span><span class="mi">1</span><span class="p">][</span><span class="n">jj</span><span class="o">+</span><span class="mi">1</span><span class="p">]]])</span>
+        <span class="n">med1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">aux1</span><span class="p">)</span>
+        <span class="n">med2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">aux2</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">med1</span><span class="p">,</span> <span class="n">med2</span></div>
+
+
+<div class="viewcode-block" id="displacement_map.calculate_rm"><a class="viewcode-back" href="../../processing.html#processing.displacement_map.displacement_map.calculate_rm">[docs]</a>    <span class="k">def</span> <span class="nf">calculate_rm</span> <span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ii</span><span class="p">,</span> <span class="n">jj</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Function that calculates the median of the subtration of the neighborhood points (3x3) and the neighboorhood median of a certain position (ii, jj) on the displacement vector field.</span>
+<span class="sd">        </span>
+<span class="sd">        :type ii: int</span>
+<span class="sd">        :param ii: x coordinate of the point at which the neighborhood(3x3) median of subtraction is being calculated.</span>
+<span class="sd">        :type jj: int</span>
+<span class="sd">        :param jj:y coordinate of the point at which the neighborhood(3x3) median of subtraction is being calculated.</span>
+<span class="sd">            </span>
+<span class="sd">        :rtype: float</span>
+<span class="sd">        :return: Median of the subtration of the neighborhood points (3x3) and the neighboorhood median on dpx and dpy        </span>
+<span class="sd">        &quot;&quot;&quot;</span>        
+    
+        <span class="n">median1</span><span class="p">,</span> <span class="n">median2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">neighborhood_median</span><span class="p">(</span><span class="n">ii</span><span class="p">,</span> <span class="n">jj</span><span class="p">)</span>
+        <span class="n">aux1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">dpx</span><span class="p">[</span><span class="n">ii</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">jj</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">median1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dpx</span><span class="p">[</span><span class="n">ii</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">jj</span><span class="p">]</span><span class="o">-</span> <span class="n">median1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dpx</span><span class="p">[</span><span class="n">ii</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">jj</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span> <span class="n">median1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dpx</span><span class="p">[</span><span class="n">ii</span><span class="p">][</span><span class="n">jj</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span> <span class="n">median1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dpx</span><span class="p">[</span><span class="n">ii</span><span class="p">][</span><span class="n">jj</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span> <span class="n">median1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dpx</span><span class="p">[</span><span class="n">ii</span><span class="o">+</span><span class="mi">1</span><span class="p">][</span><span class="n">jj</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span> <span class="n">median1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dpx</span><span class="p">[</span><span class="n">ii</span><span class="o">+</span><span class="mi">1</span><span class="p">][</span><span class="n">jj</span><span class="p">]</span><span class="o">-</span> <span class="n">median1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dpx</span><span class="p">[</span><span class="n">ii</span><span class="o">+</span><span class="mi">1</span><span class="p">][</span><span class="n">jj</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span> <span class="n">median1</span><span class="p">])</span>
+        <span class="n">aux2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">dpy</span><span class="p">[</span><span class="n">ii</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">jj</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">median2</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dpy</span><span class="p">[</span><span class="n">ii</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">jj</span><span class="p">]</span><span class="o">-</span> <span class="n">median2</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dpy</span><span class="p">[</span><span class="n">ii</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">jj</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span> <span class="n">median2</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dpy</span><span class="p">[</span><span class="n">ii</span><span class="p">][</span><span class="n">jj</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span> <span class="n">median2</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dpy</span><span class="p">[</span><span class="n">ii</span><span class="p">][</span><span class="n">jj</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span> <span class="n">median2</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dpy</span><span class="p">[</span><span class="n">ii</span><span class="o">+</span><span class="mi">1</span><span class="p">][</span><span class="n">jj</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span> <span class="n">median2</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dpy</span><span class="p">[</span><span class="n">ii</span><span class="o">+</span><span class="mi">1</span><span class="p">][</span><span class="n">jj</span><span class="p">]</span><span class="o">-</span> <span class="n">median2</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dpy</span><span class="p">[</span><span class="n">ii</span><span class="o">+</span><span class="mi">1</span><span class="p">][</span><span class="n">jj</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span> <span class="n">median2</span><span class="p">])</span>
+        <span class="n">rm1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span> <span class="p">(</span><span class="n">aux1</span><span class="p">)</span>
+        <span class="n">rm2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span> <span class="p">(</span><span class="n">aux2</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">rm1</span><span class="p">,</span> <span class="n">rm2</span></div>
+
+
+<div class="viewcode-block" id="displacement_map.calculate_r"><a class="viewcode-back" href="../../processing.html#processing.displacement_map.displacement_map.calculate_r">[docs]</a>    <span class="k">def</span> <span class="nf">calculate_r</span> <span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ii</span><span class="p">,</span> <span class="n">jj</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">        Function that calculates:r =  (point of the displacement vector field intensity value - median of the 3x3 neighborhood) / rm - 0.1</span>
+<span class="sd">        </span>
+<span class="sd">        :type ii: int</span>
+<span class="sd">        :param ii: x coordinate of the point at which the neighborhood(3x3) r is being calculated.</span>
+<span class="sd">        :type jj: int</span>
+<span class="sd">        :param jj: y coordinate of the point at which the neighborhood(3x3) r is being calculated.</span>
+<span class="sd">            </span>
+<span class="sd">        :rtype: float</span>
+<span class="sd">        :return: r of the neighboorhood points on dpx and dpy</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>        
+    
+        <span class="n">median1</span><span class="p">,</span> <span class="n">median2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">neighborhood_median</span><span class="p">(</span><span class="n">ii</span><span class="p">,</span> <span class="n">jj</span><span class="p">)</span>
+        <span class="n">rm1</span><span class="p">,</span> <span class="n">rm2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calculate_rm</span> <span class="p">(</span><span class="n">ii</span><span class="p">,</span> <span class="n">jj</span><span class="p">)</span>
+        <span class="n">r1</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dpx</span><span class="p">[</span><span class="n">ii</span><span class="p">][</span><span class="n">jj</span><span class="p">]</span> <span class="o">-</span> <span class="n">median1</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">rm1</span> <span class="o">-</span> <span class="mf">0.1</span><span class="p">)</span>
+        <span class="n">r2</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dpy</span><span class="p">[</span><span class="n">ii</span><span class="p">][</span><span class="n">jj</span><span class="p">]</span> <span class="o">-</span> <span class="n">median2</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">rm2</span> <span class="o">-</span> <span class="mf">0.1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">r1</span><span class="p">,</span> <span class="n">r2</span></div>
+
+
+<div class="viewcode-block" id="displacement_map.neighborhood_mean"><a class="viewcode-back" href="../../processing.html#processing.displacement_map.displacement_map.neighborhood_mean">[docs]</a>    <span class="k">def</span> <span class="nf">neighborhood_mean</span> <span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ii</span><span class="p">,</span> <span class="n">jj</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Function that calculates the mean of the neighboorhood points (3x3) of a certain position (ii, jj) on the displacement vector field.</span>
+<span class="sd">        </span>
+<span class="sd">        :type ii: int</span>
+<span class="sd">        :param ii: x coordinate of the point at which the neighborhood(3x3) mean is being calculated.</span>
+<span class="sd">        :type jj: int</span>
+<span class="sd">        :param jj: y coordinate of the point at which the neighborhood(3x3) mean is being calculated.</span>
+<span class="sd">            </span>
+<span class="sd">        :rtype: float</span>
+<span class="sd">        :return:  Mean of the neighboorhood points on dpx and dpy</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+    
+        <span class="n">aux1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">dpx</span><span class="p">[</span><span class="n">ii</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">jj</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">dpx</span><span class="p">[</span><span class="n">ii</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">jj</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">dpx</span><span class="p">[</span><span class="n">ii</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">jj</span><span class="o">+</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">dpx</span><span class="p">[</span><span class="n">ii</span><span class="p">][</span><span class="n">jj</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">dpx</span><span class="p">[</span><span class="n">ii</span><span class="p">][</span><span class="n">jj</span><span class="o">+</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">dpx</span><span class="p">[</span><span class="n">ii</span><span class="o">+</span><span class="mi">1</span><span class="p">][</span><span class="n">jj</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">dpx</span><span class="p">[</span><span class="n">ii</span><span class="o">+</span><span class="mi">1</span><span class="p">][</span><span class="n">jj</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">dpx</span><span class="p">[</span><span class="n">ii</span><span class="o">+</span><span class="mi">1</span><span class="p">][</span><span class="n">jj</span><span class="o">+</span><span class="mi">1</span><span class="p">]])</span>
+        <span class="n">aux2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">dpy</span><span class="p">[</span><span class="n">ii</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">jj</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">dpy</span><span class="p">[</span><span class="n">ii</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">jj</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">dpy</span><span class="p">[</span><span class="n">ii</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">jj</span><span class="o">+</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">dpy</span><span class="p">[</span><span class="n">ii</span><span class="p">][</span><span class="n">jj</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">dpy</span><span class="p">[</span><span class="n">ii</span><span class="p">][</span><span class="n">jj</span><span class="o">+</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">dpy</span><span class="p">[</span><span class="n">ii</span><span class="o">+</span><span class="mi">1</span><span class="p">][</span><span class="n">jj</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">dpy</span><span class="p">[</span><span class="n">ii</span><span class="o">+</span><span class="mi">1</span><span class="p">][</span><span class="n">jj</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">dpy</span><span class="p">[</span><span class="n">ii</span><span class="o">+</span><span class="mi">1</span><span class="p">][</span><span class="n">jj</span><span class="o">+</span><span class="mi">1</span><span class="p">]])</span>
+        <span class="n">med1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">aux1</span><span class="p">)</span>
+        <span class="n">med2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">aux2</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">med1</span><span class="p">,</span> <span class="n">med2</span></div>
+
+
+<div class="viewcode-block" id="displacement_map.replacement3"><a class="viewcode-back" href="../../processing.html#processing.displacement_map.displacement_map.replacement3">[docs]</a>    <span class="k">def</span> <span class="nf">replacement3</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Function that calculates the value of r for all points on the displacement vector field.</span>
+<span class="sd">        It also replaces the value of points with the neighborhood mean, if the value of r at this point is less than 2.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ux_size</span> <span class="o">=</span> <span class="nb">len</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dpx</span><span class="p">)</span>
+        <span class="n">uy_size</span> <span class="o">=</span> <span class="nb">len</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dpx</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">ux_size</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">uy_size</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+                <span class="n">r1_value</span><span class="p">,</span> <span class="n">r2_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calculate_r</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">r1_value</span> <span class="o">&lt;=</span><span class="mi">2</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">dpx</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">],</span> <span class="n">al</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">neighborhood_mean</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">r2_value</span> <span class="o">&lt;=</span><span class="mi">2</span><span class="p">:</span>
+                    <span class="n">al</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dpy</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">neighborhood_mean</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span></div>
+
+<span class="c1">#        ux_size = len (self.dpy)</span>
+<span class="c1">#        uy_size = len (self.dpy[0])</span>
+<span class="c1">#        for i in range (1, ux_size-1):</span>
+<span class="c1">#            for j in range (1, uy_size-1):</span>
+<span class="c1">#                r1_value, r2_value = self.calculate_r(i, j)</span>
+<span class="c1">#                if r2_value &lt;=2:</span>
+<span class="c1">#                    al, self.dpy[i][j] = self.neighborhood_mean (i, j)</span>
+
+
+<div class="viewcode-block" id="displacement_map.resize_dp"><a class="viewcode-back" href="../../processing.html#processing.displacement_map.displacement_map.resize_dp">[docs]</a>    <span class="k">def</span> <span class="nf">resize_dp</span> <span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Function that divides the values ​​of the displacement vectors by two.</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dpx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dpx</span><span class="o">/</span><span class="mi">2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dpy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dpy</span><span class="o">/</span><span class="mi">2</span></div>
+
+
+<div class="viewcode-block" id="displacement_map.index_guard"><a class="viewcode-back" href="../../processing.html#processing.displacement_map.displacement_map.index_guard">[docs]</a>    <span class="k">def</span> <span class="nf">index_guard</span> <span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">         Function that stores in a list twice the value of the indexes of the displacement map of the previous iteration.</span>
+<span class="sd">         </span>
+<span class="sd">        :rtype: 1d np.array</span>
+<span class="sd">        :return: Arrays with the indices of displacement vector field and arrays with the indices of displacement vector field in x axis multiplied by 2</span>
+<span class="sd">         </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">indices1_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dpx</span><span class="p">)))</span>
+        <span class="n">indices1_y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dpx</span><span class="p">[</span><span class="mi">0</span><span class="p">])))</span>
+        <span class="n">indices2_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dpx</span><span class="p">)))</span>
+        <span class="n">indices2_y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dpx</span><span class="p">[</span><span class="mi">0</span><span class="p">])))</span>
+        <span class="n">indices1_x</span> <span class="o">=</span> <span class="nb">list</span> <span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dpx</span><span class="p">)))</span>
+        <span class="n">indices1_y</span> <span class="o">=</span> <span class="nb">list</span> <span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dpx</span><span class="p">[</span><span class="mi">0</span><span class="p">])))</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dpx</span><span class="p">)):</span>
+            <span class="n">indices2_x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">indices1_x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dpx</span><span class="p">[</span><span class="mi">0</span><span class="p">])):</span>
+            <span class="n">indices2_y</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">indices1_y</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">indices1_x</span><span class="p">,</span> <span class="n">indices1_y</span><span class="p">,</span> <span class="n">indices2_x</span><span class="p">,</span> <span class="n">indices2_y</span></div></div>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">PIV-LTHN</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">PIV-method-implementation-code</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Ester Fiorillo, André Santos, Vitor Silva.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.11</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

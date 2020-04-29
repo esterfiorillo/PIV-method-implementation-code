@@ -1,0 +1,421 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>pre_processing package &#8212; PIV-LTHN  documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="processing package" href="processing.html" />
+    <link rel="prev" title="post_processing package" href="post_processing.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="pre-processing-package">
+<h1>pre_processing package<a class="headerlink" href="#pre-processing-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-pre_processing.pre_processing">
+<span id="pre-processing-pre-processing-module"></span><h2>pre_processing.pre_processing module<a class="headerlink" href="#module-pre_processing.pre_processing" title="Permalink to this headline">¶</a></h2>
+<p>This file contains functions that calculate values necessary for pre-processing methods (background removal and brightness homogenization)</p>
+<dl class="function">
+<dt id="pre_processing.pre_processing.calc_background">
+<code class="descclassname">pre_processing.pre_processing.</code><code class="descname">calc_background</code><span class="sig-paren">(</span><em>n_im</em>, <em>dir</em>, <em>file_prefix</em>, <em>num_primeira</em>, <em>file_form</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pre_processing/pre_processing.html#calc_background"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pre_processing.pre_processing.calc_background" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function that calculates the average of all images to be processed</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>num_images</strong> (<em>int</em>) – Number of images in the image set</td>
+</tr>
+</tbody>
+</table>
+<p>:param dir:Image set directory name</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>file_prefix</strong> (<em>str</em>) – Prefix name of the images names</li>
+<li><strong>num_primeira</strong> (<em>int</em>) – Number of the first image</li>
+<li><strong>file_form</strong> (<em>str</em>) – Format of the images in the image set</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Value for the back ground of the image set</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">float</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pre_processing.pre_processing.calc_m">
+<code class="descclassname">pre_processing.pre_processing.</code><code class="descname">calc_m</code><span class="sig-paren">(</span><em>n_im</em>, <em>dir</em>, <em>file_prefix</em>, <em>num_primeira</em>, <em>file_form</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pre_processing/pre_processing.html#calc_m"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pre_processing.pre_processing.calc_m" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the value mmao, which is the sum of the mean of the histograms of the images in the image set</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>num_images2</strong> (<em>int</em>) – Number of images in the image set divided by 2</li>
+<li><strong>dir</strong> (<em>str</em>) – Image set directory name</li>
+<li><strong>file_prefix</strong> (<em>str</em>) – Prefix name of the images names</li>
+<li><strong>num_primeira</strong> (<em>int</em>) – Number of the first image</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>:param file_form:Format of the images in the image set</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Necessary value for the brightness homogenization</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pre_processing.pre_processing.thread_bckg">
+<code class="descclassname">pre_processing.pre_processing.</code><code class="descname">thread_bckg</code><span class="sig-paren">(</span><em>num_images</em>, <em>dir</em>, <em>file_prefix</em>, <em>num_primeira</em>, <em>file_form</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pre_processing/pre_processing.html#thread_bckg"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pre_processing.pre_processing.thread_bckg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calls the function that calculates the value of the back ground of the images, and prints that this value was calculated</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>num_images</strong> (<em>int</em>) – Number of images in the image set</td>
+</tr>
+</tbody>
+</table>
+<p>:type dir : str
+:param dir: Image set directory name</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>file_prefix</strong> (<em>str</em>) – Prefix name of the images names</li>
+<li><strong>num_primeira</strong> (<em>int</em>) – Number of the first image</li>
+<li><strong>file_form</strong> (<em>str</em>) – Format of the images in the image set</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Value for the back ground of the image set</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">float</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pre_processing.pre_processing.thread_mmao">
+<code class="descclassname">pre_processing.pre_processing.</code><code class="descname">thread_mmao</code><span class="sig-paren">(</span><em>num_images2</em>, <em>dir</em>, <em>file_prefix</em>, <em>num_primeira</em>, <em>file_form</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pre_processing/pre_processing.html#thread_mmao"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pre_processing.pre_processing.thread_mmao" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calls the function that calculates the value mmao, and prints that mmao was calculated</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>num_images2</strong> (<em>int</em>) – Number of images in the image set divided by 2</li>
+<li><strong>dir</strong> (<em>str</em>) – Image set directory name</li>
+<li><strong>file_prefix</strong> (<em>str</em>) – Prefix name of the images names</li>
+<li><strong>num_primeira</strong> (<em>int</em>) – Number of the first image</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>:param file_form:Format of the images in the image set</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Necessary value for the brightness homogenization</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-pre_processing.pre_processing_class">
+<span id="pre-processing-pre-processing-class-module"></span><h2>pre_processing.pre_processing_class module<a class="headerlink" href="#module-pre_processing.pre_processing_class" title="Permalink to this headline">¶</a></h2>
+<p>This file represents the class that has the pre processing functions, which aims to make corrections and improve the quality of the images</p>
+<dl class="class">
+<dt id="pre_processing.pre_processing_class.pre_processing">
+<em class="property">class </em><code class="descclassname">pre_processing.pre_processing_class.</code><code class="descname">pre_processing</code><span class="sig-paren">(</span><em>mmao</em>, <em>bck_g</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pre_processing/pre_processing_class.html#pre_processing"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pre_processing.pre_processing_class.pre_processing" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is a class to represent the pre processing methods applied to the images</p>
+<dl class="method">
+<dt id="pre_processing.pre_processing_class.pre_processing.calc_teta">
+<code class="descname">calc_teta</code><span class="sig-paren">(</span><em>im2</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pre_processing/pre_processing_class.html#pre_processing.calc_teta"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pre_processing.pre_processing_class.pre_processing.calc_teta" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function and homogenize_brightness function aim to homogenize the brightness of the second image according to that of the first.
+It was made to be apliyed to the second image of the par, not both of then.
+Reference : Brightness correction, homogenization and adjunstment of images for face recognition, Eduardo Machado Silva, UNESP, ISSN 2316-9664, Volume 14, fev. 2019, Edic ̧ao Ermac</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>im</strong> (<em>2d np.array</em>) – Input image</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Value that will be used in homogenize_brightness function</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pre_processing.pre_processing_class.pre_processing.clahe_histogram_equalization">
+<code class="descname">clahe_histogram_equalization</code><span class="sig-paren">(</span><em>im</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pre_processing/pre_processing_class.html#pre_processing.clahe_histogram_equalization"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pre_processing.pre_processing_class.pre_processing.clahe_histogram_equalization" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function that applies a CLAHE (contrast limited adaptative histogram equalization) to an image.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>im</strong> (<em>2d np.array</em>) – Input image</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">2d np.array</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Input image after CLAHE been apliyed</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pre_processing.pre_processing_class.pre_processing.homogenize_brightness">
+<code class="descname">homogenize_brightness</code><span class="sig-paren">(</span><em>im2</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pre_processing/pre_processing_class.html#pre_processing.homogenize_brightness"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pre_processing.pre_processing_class.pre_processing.homogenize_brightness" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function and homogenize_brightness function aim to homogenize the brightness of the second image according to that of the first.
+It was made to be apliyed to the second image of the par, not both of then.
+Reference : Brightness correction, homogenization and adjunstment of images for face recognition, Eduardo Machado Silva, UNESP, ISSN 2316-9664, Volume 14, fev. 2019, Edic ̧ao Ermac</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>im</strong> (<em>2d np.array</em>) – Input image</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">2d np.array</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Input image after brightness correction</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pre_processing.pre_processing_class.pre_processing.laplacian_filter">
+<code class="descname">laplacian_filter</code><span class="sig-paren">(</span><em>im</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pre_processing/pre_processing_class.html#pre_processing.laplacian_filter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pre_processing.pre_processing_class.pre_processing.laplacian_filter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function that applies a Laplacian filter to an image. This filter has the function
+of detecting horizontal and vertical edges.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>im</strong> (<em>2d np.array</em>) – Input image</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">2d np.array</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Input image with a laplacian filter</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pre_processing.pre_processing_class.pre_processing.remove_background">
+<code class="descname">remove_background</code><span class="sig-paren">(</span><em>im</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pre_processing/pre_processing_class.html#pre_processing.remove_background"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pre_processing.pre_processing_class.pre_processing.remove_background" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function that subtracts the background from the image</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>im</strong> (<em>2d np.array</em>) – Input image</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">2d np.array</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Input image after having its background extracted</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pre_processing.pre_processing_class.pre_processing.sobel_filter1">
+<code class="descname">sobel_filter1</code><span class="sig-paren">(</span><em>im</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pre_processing/pre_processing_class.html#pre_processing.sobel_filter1"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pre_processing.pre_processing_class.pre_processing.sobel_filter1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function that applies a Sobel filter to an image. This filter has the function
+of detecting horizontal edges.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>im</strong> (<em>2d np.array</em>) – Input image</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">2d np.array</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Input image with a sobel filter</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pre_processing.pre_processing_class.pre_processing.sobel_filter2">
+<code class="descname">sobel_filter2</code><span class="sig-paren">(</span><em>im</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pre_processing/pre_processing_class.html#pre_processing.sobel_filter2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pre_processing.pre_processing_class.pre_processing.sobel_filter2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function that applies a Sobel filter to an image. This filter has the function
+of detecting vertical edges.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>im</strong> (<em>2d np.array</em>) – Input image</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">2d np.array</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Input image with a sobel filter</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-contents">
+<h2>Module contents<a class="headerlink" href="#module-contents" title="Permalink to this headline">¶</a></h2>
+<dl class="docutils">
+<dt>(()/(` )  /(  )()) )())  |</dt>
+<dd>/(_))( )(_))((_)((_)  | LTHN PIV: Is an opensource PIV toolbox</dd>
+</dl>
+<p>(_)) (_(_())  _((_) _((_)  |
+| |  <a href="#id1"><span class="problematic" id="id2">|_   _|</span></a> | || || | |  |
+| <a href="#id3"><span class="problematic" id="id4">|__  | |   | __ ||</span></a> .` |  | Website: <a class="reference external" href="https://github.com/esterfiorillo/PIV-method-implementation-code">https://github.com/esterfiorillo/PIV-method-implementation-code</a>
+<a href="#id5"><span class="problematic" id="id6">|(___|(|_|</span></a>   <a href="#id7"><span class="problematic" id="id8">|_||_||_|</span></a>_|  |</p>
+<blockquote>
+<div><blockquote>
+<div><div class="line-block">
+<div class="line"><br /></div>
+</div>
+</div></blockquote>
+<p>)) ))                 | CDTN - Centro de Desenvolvimento da Tecnologia Nuclear</p>
+</div></blockquote>
+<dl class="docutils">
+<dt>(()/((()/( (   (           | LTHN - Laboratório de Termo-Hidráulica e Neutrônica</dt>
+<dd>/(_))/(_))) )         | Belo Horizonte, MG, Brasil</dd>
+</dl>
+<p>(_)) (_)) ((_)((_)         |
+| _ |_ _|/ /          | &#64;authors: esterfiorillo, acampagnole 
+|  _/ | |  V /           |
+<a href="#id9"><span class="problematic" id="id10">|_|</span></a>  <a href="#id11"><span class="problematic" id="id12">|___|</span></a>  _/            |</p>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">PIV-LTHN</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">PIV-method-implementation-code</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="LTHN_PIV.html">LTHN_PIV module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interface.html">interface package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plotter.html">plotter module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="post_processing.html">post_processing package</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">pre_processing package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="processing.html">processing package</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="modules.html">PIV-method-implementation-code</a><ul>
+      <li>Previous: <a href="post_processing.html" title="previous chapter">post_processing package</a></li>
+      <li>Next: <a href="processing.html" title="next chapter">processing package</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Ester Fiorillo, André Santos, Vitor Silva.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.11</a>
+      
+      |
+      <a href="_sources/pre_processing.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

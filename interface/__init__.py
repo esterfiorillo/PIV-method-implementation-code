@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+#-*- coding: utf-8 -*-
 """
 
  (               )     )   |
@@ -44,13 +44,6 @@
 #     indicates that folder has modules for python.
 #
 #------------------------------------------------------------------------------
-
-# #Load interface
-# Form, Window = uic.loadUiType("interface5.4.ui")
-
-# dpx_list1 = []
-# dpy_list1 = []
-# dpx_list2 = []
-# dpy_list2 = []
-
-# from .interface import mywindow as mywindow
+"""
+This is the Interface package
+"""

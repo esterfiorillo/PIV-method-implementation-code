@@ -1,25 +1,25 @@
-# -*- coding: utf-8 -*-
-"""
-
- (               )     )   |
- )\ )  *   )  ( /(  ( /(   |
-(()/(` )  /(  )\()) )\())  |
- /(_))( )(_))((_)\ ((_)\   | LTHN PIV: Is an opensource PIV toolbox
-(_)) (_(_())  _((_) _((_)  |
-| |  |_   _| | || || \| |  |
-| |__  | |   | __ || .` |  | Website: https://github.com/esterfiorillo/PIV-method-implementation-code
-|(___|(|_|   |_||_||_|\_|  |
-                           | 
- )\ ) )\ )                 | CDTN - Centro de Desenvolvimento da Tecnologia Nuclear
-(()/((()/( (   (           | LTHN - Laboratório de Termo-Hidráulica e Neutrônica
- /(_))/(_)))\  )\          | Belo Horizonte, MG, Brasil
-(_)) (_)) ((_)((_)         |
-| _ \|_ _|\ \ / /          | @authors: esterfiorillo, acampagnole 
-|  _/ | |  \ V /           |
-|_|  |___|  \_/            |
-
-
-"""
+## -*- coding: utf-8 -*-
+#"""
+#
+# (               )     )   |
+# )\ )  *   )  ( /(  ( /(   |
+#(()/(` )  /(  )\()) )\())  |
+# /(_))( )(_))((_)\ ((_)\   | LTHN PIV: Is an opensource PIV toolbox
+#(_)) (_(_())  _((_) _((_)  |
+#| |  |_   _| | || || \| |  |
+#| |__  | |   | __ || .` |  | Website: https://github.com/esterfiorillo/PIV-method-implementation-code
+#|(___|(|_|   |_||_||_|\_|  |
+#                           | 
+# )\ ) )\ )                 | CDTN - Centro de Desenvolvimento da Tecnologia Nuclear
+#(()/((()/( (   (           | LTHN - Laboratório de Termo-Hidráulica e Neutrônica
+# /(_))/(_)))\  )\          | Belo Horizonte, MG, Brasil
+#(_)) (_)) ((_)((_)         |
+#| _ \|_ _|\ \ / /          | @authors: esterfiorillo, acampagnole 
+#|  _/ | |  \ V /           |
+#|_|  |___|  \_/            |
+#
+#
+#"""
 
 # License
 #     This file is part of LTHN PIV.
@@ -44,6 +44,9 @@
 #     Function that pre processes the images for PIV.
 #
 #------------------------------------------------------------------------------
+"""
+This file contains functions that calculate values necessary for pre-processing methods (background removal and brightness homogenization)
+"""
 
 """
    load basic modules
@@ -70,23 +73,24 @@ def thread_mmao(num_images2, dir, file_prefix, num_primeira, file_form):
     """
     Calls the function that calculates the value mmao, and prints that mmao was calculated
     
-    Parameters
-    ----------
-    num_images2: int
-        Number of images in the image set divided by 2
-    dir: str
-        Image set directory name
-    file_prefix: str
-        Prefix name of the images names
-    num_primeira: int
-        Number of the first image
-    file_form
-        Format of the images in the image set
+    :type num_images2: int
+    :param num_images2: Number of images in the image set divided by 2
     
-    Raises
-    ------
-    mao: float
-        Necessary value for the brightness homogenization
+    :type dir: str
+    :param dir: Image set directory name
+    
+    :type file_prefix: str
+    :param file_prefix: Prefix name of the images names
+    
+    :type num_primeira: int
+    :param num_primeira: Number of the first image
+    
+    :type file_form: str
+    :param file_form:Format of the images in the image set
+    
+    :return: Necessary value for the brightness homogenization
+    :rtype: float
+        
     """
     mao = calc_m(num_images2, dir, file_prefix, num_primeira, file_form)
     print("finish calculating mmao")
@@ -97,23 +101,23 @@ def thread_bckg(num_images, dir, file_prefix, num_primeira, file_form):
     """
     Calls the function that calculates the value of the back ground of the images, and prints that this value was calculated
     
-    Parameters
-    ----------
-    num_images: int
-        Number of images in the image set
-    dir: str
-        Image set directory name
-    file_prefix: str
-        Prefix name of the images names
-    num_primeira: int
-        Number of the first image
-    file_form
-        Format of the images in the image set
+    :type num_images: int
+    :param num_images: Number of images in the image set
+        
+    :type dir : str
+    :param dir: Image set directory name
     
-    Raises
-    ------
-    bck_ground: float
-        Value for the back ground of the image set
+    :type file_prefix: str
+    :param file_prefix: Prefix name of the images names
+    
+    :type num_primeira: int
+    :param num_primeira: Number of the first image
+    
+    :type file_form: str
+    :param file_form: Format of the images in the image set
+    
+    :return: Value for the back ground of the image set
+    :rtype: float
     """
     bck_ground = calc_background(num_images, dir, file_prefix, num_primeira, file_form)
     print ("finish calculating bckg")
@@ -122,25 +126,25 @@ def thread_bckg(num_images, dir, file_prefix, num_primeira, file_form):
 
 def calc_background (n_im, dir, file_prefix, num_primeira, file_form):
     """
-    #Function that calculates the average of all images to be processed
+    Function that calculates the average of all images to be processed
     
-    Parameters
-    ----------
-    num_images: int
-        Number of images in the image set
-    dir: str
-        Image set directory name
-    file_prefix: str
-        Prefix name of the images names
-    num_primeira: int
-        Number of the first image
-    file_form
-        Format of the images in the image set
+    :type num_images: int
+    :param num_images: Number of images in the image set
     
-    Raises
-    ------
-    res: float
-        Value for the back ground of the image set
+    :type dir: str
+    :param dir:Image set directory name
+    
+    :type file_prefix: str
+    :param file_prefix: Prefix name of the images names
+    
+    :type num_primeira: int
+    :param num_primeira: Number of the first image
+    
+    :type file_form: str
+    :param file_form: Format of the images in the image set
+
+    :return: Value for the back ground of the image set
+    :rtype: float
     """
     
     # Order of magnitude of the number of images
@@ -166,23 +170,23 @@ def calc_m (n_im, dir, file_prefix, num_primeira, file_form):
     """
     Calculates the value mmao, which is the sum of the mean of the histograms of the images in the image set
     
-    Parameters
-    ----------
-    num_images2: int
-        Number of images in the image set divided by 2
-    dir: str
-        Image set directory name
-    file_prefix: str
-        Prefix name of the images names
-    num_primeira: int
-        Number of the first image
-    file_form
-        Format of the images in the image set
+    :type num_images2: int
+    :param num_images2: Number of images in the image set divided by 2
     
-    Raises
-    ------
-    mzao: float
-        Necessary value for the brightness homogenization
+    :type dir: str
+    :param dir: Image set directory name
+    
+    :type file_prefix: str
+    :param file_prefix: Prefix name of the images names
+    
+    :type num_primeira: int
+    :param num_primeira: Number of the first image
+    
+    :type file_form: str
+    :param file_form:Format of the images in the image set
+    
+    :rtype: float
+    :return: Necessary value for the brightness homogenization
     """
     
     aux = 0

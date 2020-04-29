@@ -1,0 +1,393 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>processing package &#8212; PIV-LTHN  documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="processing.methods package" href="processing.methods.html" />
+    <link rel="prev" title="pre_processing package" href="pre_processing.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="processing-package">
+<h1>processing package<a class="headerlink" href="#processing-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="processing.methods.html">processing.methods package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="processing.methods.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="processing.methods.html#module-processing.methods.methods">processing.methods.methods module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="processing.methods.html#module-processing.methods.multigrid_method">processing.methods.multigrid_method module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="processing.methods.html#module-processing.methods.normal_method">processing.methods.normal_method module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="processing.methods.html#module-contents">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-processing.displacement_map">
+<span id="processing-displacement-map-module"></span><h2>processing.displacement_map module<a class="headerlink" href="#module-processing.displacement_map" title="Permalink to this headline">¶</a></h2>
+<p>This file contains the displacement_map class.</p>
+<dl class="class">
+<dt id="processing.displacement_map.displacement_map">
+<em class="property">class </em><code class="descclassname">processing.displacement_map.</code><code class="descname">displacement_map</code><span class="sig-paren">(</span><em>dp_x</em>, <em>dp_y</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/processing/displacement_map.html#displacement_map"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#processing.displacement_map.displacement_map" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class that represents a vector field, which is the displacements of the particles between the time of capture of the pair of images.
+This class also have the functions applied to vector field the for data validation.</p>
+<dl class="method">
+<dt id="processing.displacement_map.displacement_map.calculate_r">
+<code class="descname">calculate_r</code><span class="sig-paren">(</span><em>ii</em>, <em>jj</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/processing/displacement_map.html#displacement_map.calculate_r"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#processing.displacement_map.displacement_map.calculate_r" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function that calculates:r =  (point of the displacement vector field intensity value - median of the 3x3 neighborhood) / rm - 0.1</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>ii</strong> (<em>int</em>) – x coordinate of the point at which the neighborhood(3x3) r is being calculated.</li>
+<li><strong>jj</strong> (<em>int</em>) – y coordinate of the point at which the neighborhood(3x3) r is being calculated.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">float</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">r of the neighboorhood points on dpx and dpy</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="processing.displacement_map.displacement_map.calculate_rm">
+<code class="descname">calculate_rm</code><span class="sig-paren">(</span><em>ii</em>, <em>jj</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/processing/displacement_map.html#displacement_map.calculate_rm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#processing.displacement_map.displacement_map.calculate_rm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function that calculates the median of the subtration of the neighborhood points (3x3) and the neighboorhood median of a certain position (ii, jj) on the displacement vector field.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>ii</strong> (<em>int</em>) – x coordinate of the point at which the neighborhood(3x3) median of subtraction is being calculated.</td>
+</tr>
+</tbody>
+</table>
+<p>:param jj:y coordinate of the point at which the neighborhood(3x3) median of subtraction is being calculated.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Median of the subtration of the neighborhood points (3x3) and the neighboorhood median on dpx and dpy</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="processing.displacement_map.displacement_map.index_guard">
+<code class="descname">index_guard</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/processing/displacement_map.html#displacement_map.index_guard"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#processing.displacement_map.displacement_map.index_guard" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div>Function that stores in a list twice the value of the indexes of the displacement map of the previous iteration.</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">1d np.array</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Arrays with the indices of displacement vector field and arrays with the indices of displacement vector field in x axis multiplied by 2</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="processing.displacement_map.displacement_map.neighborhood_mean">
+<code class="descname">neighborhood_mean</code><span class="sig-paren">(</span><em>ii</em>, <em>jj</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/processing/displacement_map.html#displacement_map.neighborhood_mean"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#processing.displacement_map.displacement_map.neighborhood_mean" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function that calculates the mean of the neighboorhood points (3x3) of a certain position (ii, jj) on the displacement vector field.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>ii</strong> (<em>int</em>) – x coordinate of the point at which the neighborhood(3x3) mean is being calculated.</li>
+<li><strong>jj</strong> (<em>int</em>) – y coordinate of the point at which the neighborhood(3x3) mean is being calculated.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">float</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Mean of the neighboorhood points on dpx and dpy</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="processing.displacement_map.displacement_map.neighborhood_median">
+<code class="descname">neighborhood_median</code><span class="sig-paren">(</span><em>ii</em>, <em>jj</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/processing/displacement_map.html#displacement_map.neighborhood_median"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#processing.displacement_map.displacement_map.neighborhood_median" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function that calculates the median of the neighboorhood points (3x3) of a certain position (ii, jj) on the displacement vector field.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>ii</strong> (<em>int</em>) – x coordinate of the point at which the neighborhood(3x3) median is being calculated.</li>
+<li><strong>jj</strong> (<em>int</em>) – y coordinate of the point at which the neighborhood(3x3) median is being calculated.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">float</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Median of the neighboorhood points on dpx and dpy</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="processing.displacement_map.displacement_map.replacement3">
+<code class="descname">replacement3</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/processing/displacement_map.html#displacement_map.replacement3"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#processing.displacement_map.displacement_map.replacement3" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function that calculates the value of r for all points on the displacement vector field.
+It also replaces the value of points with the neighborhood mean, if the value of r at this point is less than 2.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="processing.displacement_map.displacement_map.resize_dp">
+<code class="descname">resize_dp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/processing/displacement_map.html#displacement_map.resize_dp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#processing.displacement_map.displacement_map.resize_dp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function that divides the values ​​of the displacement vectors by two.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-processing.interrogation_window">
+<span id="processing-interrogation-window-module"></span><h2>processing.interrogation_window module<a class="headerlink" href="#module-processing.interrogation_window" title="Permalink to this headline">¶</a></h2>
+<p>This file contains the interrogation_window class</p>
+<dl class="class">
+<dt id="processing.interrogation_window.interrogation_window">
+<em class="property">class </em><code class="descclassname">processing.interrogation_window.</code><code class="descname">interrogation_window</code><span class="sig-paren">(</span><em>w1</em>, <em>w2</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/processing/interrogation_window.html#interrogation_window"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#processing.interrogation_window.interrogation_window" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class that represents the interrogation windows and the functions applyed to then.</p>
+<dl class="method">
+<dt id="processing.interrogation_window.interrogation_window.find_peak">
+<code class="descname">find_peak</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/processing/interrogation_window.html#interrogation_window.find_peak"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#processing.interrogation_window.interrogation_window.find_peak" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function that returns the coordinates in x and y axis of the point of greatest intensity (peak) in the cross_cor attribute.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">int</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Coordinates of the correlation peak</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="processing.interrogation_window.interrogation_window.gauss_subpixel_peak_position">
+<code class="descname">gauss_subpixel_peak_position</code><span class="sig-paren">(</span><em>x_pico</em>, <em>y_pico</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/processing/interrogation_window.html#interrogation_window.gauss_subpixel_peak_position"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#processing.interrogation_window.interrogation_window.gauss_subpixel_peak_position" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div>Function that returns the gauss interpolation coordinates, which finds a better estimate for the location of the correlation peak.</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>x_pico</strong> (<em>int</em>) – x-coordinate of the peak</li>
+<li><strong>y_pico</strong> (<em>int</em>) – y-coordinate of the peak</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">int</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Coordenates in the cross-correlation matrix resulting from gauss interpolation</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="processing.interrogation_window.interrogation_window.normxcorr2">
+<code class="descname">normxcorr2</code><span class="sig-paren">(</span><em>mode='full'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/processing/interrogation_window.html#interrogation_window.normxcorr2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#processing.interrogation_window.interrogation_window.normxcorr2" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function is the implementation of the normalized cross-correlation.
+This is a method that seeks to find the identification point of the first interrogation window in the second interrogation window.
+The matrix value resulted from the method is assigned to the class attribute cross_cor.</p>
+<p>:type mode : str, optional
+:param mode: full (Default): The output of fftconvolve is the full discrete linear convolution of the inputs.
+Output size will be image size + 1/2 template size in each dimension.
+valid: The output consists only of those elements that do not rely on the zero-padding.
+same: The output is the same size as image, centered with respect to the ‘full’ output.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-processing.processing">
+<span id="processing-processing-module"></span><h2>processing.processing module<a class="headerlink" href="#module-processing.processing" title="Permalink to this headline">¶</a></h2>
+<p>This file contains the function responsible for joining all parts of the processing</p>
+<dl class="function">
+<dt id="processing.processing.thread_processing">
+<code class="descclassname">processing.processing.</code><code class="descname">thread_processing</code><span class="sig-paren">(</span><em>num_images</em>, <em>dir</em>, <em>file_prefix</em>, <em>num_primeira</em>, <em>file_form</em>, <em>bck_ground</em>, <em>mao</em>, <em>met</em>, <em>w_size</em>, <em>ovl</em>, <em>n_iterations</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/processing/processing.html#thread_processing"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#processing.processing.thread_processing" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function that loads the set of images from the name of the directory, the prefix of the files, the number of the first image and the file type of the images received as parameters.
+For this, a loop is made in which these images are opened and processed in pairs. Then, inside the loop, the pair is read, the pre-processing functions are applied and the processing method is applied (either multigrid or normal depending on the met variable received as a parameter).
+Finally, the displacement vector maps found for each pair are saved in lists. In the end, the lists are averaged and saved in csv files.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>num_images</strong> (<em>int</em>) – Number of images in the image set</li>
+<li><strong>dir</strong> (<em>str</em>) – Image set directory name</li>
+<li><strong>file_prefix</strong> (<em>str</em>) – Prefix name of the images names</li>
+<li><strong>num_primeira</strong> (<em>int</em>) – Number of the first image</li>
+<li><strong>file_form</strong> (<em>str</em>) – Format of the images in the image set</li>
+<li><strong>bck_ground</strong> (<em>float</em>) – Value for the back ground of the image set</li>
+<li><strong>mao</strong> (<em>float</em>) – Necessary value for the brightness homogenization</li>
+<li><strong>met</strong> (<em>str</em>) – Whether the method used in processing is normal or multigrid</li>
+<li><strong>w_size</strong> (<em>int</em>) – Interrogation window size</li>
+<li><strong>ovl</strong> (<em>int</em>) – Size of the overlap</li>
+<li><strong>n_iterations</strong> (<em>int</em>) – Number of iterations of the method</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-contents">
+<h2>Module contents<a class="headerlink" href="#module-contents" title="Permalink to this headline">¶</a></h2>
+<dl class="docutils">
+<dt>(()/(` )  /(  )()) )())  |</dt>
+<dd>/(_))( )(_))((_)((_)  | LTHN PIV: Is an opensource PIV toolbox</dd>
+</dl>
+<p>(_)) (_(_())  _((_) _((_)  |
+| |  <a href="#id1"><span class="problematic" id="id2">|_   _|</span></a> | || || | |  |
+| <a href="#id3"><span class="problematic" id="id4">|__  | |   | __ ||</span></a> .` |  | Website: <a class="reference external" href="https://github.com/esterfiorillo/PIV-method-implementation-code">https://github.com/esterfiorillo/PIV-method-implementation-code</a>
+<a href="#id5"><span class="problematic" id="id6">|(___|(|_|</span></a>   <a href="#id7"><span class="problematic" id="id8">|_||_||_|</span></a>_|  |</p>
+<blockquote>
+<div><blockquote>
+<div><div class="line-block">
+<div class="line"><br /></div>
+</div>
+</div></blockquote>
+<p>)) ))                 | CDTN - Centro de Desenvolvimento da Tecnologia Nuclear</p>
+</div></blockquote>
+<dl class="docutils">
+<dt>(()/((()/( (   (           | LTHN - Laboratório de Termo-Hidráulica e Neutrônica</dt>
+<dd>/(_))/(_))) )         | Belo Horizonte, MG, Brasil</dd>
+</dl>
+<p>(_)) (_)) ((_)((_)         |
+| _ |_ _|/ /          | &#64;authors: esterfiorillo, acampagnole 
+|  _/ | |  V /           |
+<a href="#id9"><span class="problematic" id="id10">|_|</span></a>  <a href="#id11"><span class="problematic" id="id12">|___|</span></a>  _/            |</p>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">PIV-LTHN</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">PIV-method-implementation-code</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="LTHN_PIV.html">LTHN_PIV module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interface.html">interface package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plotter.html">plotter module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="post_processing.html">post_processing package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pre_processing.html">pre_processing package</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">processing package</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="modules.html">PIV-method-implementation-code</a><ul>
+      <li>Previous: <a href="pre_processing.html" title="previous chapter">pre_processing package</a></li>
+      <li>Next: <a href="processing.methods.html" title="next chapter">processing.methods package</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Ester Fiorillo, André Santos, Vitor Silva.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.11</a>
+      
+      |
+      <a href="_sources/processing.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

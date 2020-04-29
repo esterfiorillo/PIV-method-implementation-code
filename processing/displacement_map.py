@@ -1,25 +1,25 @@
 # -*- coding: utf-8 -*-
-"""
-
- (               )     )   |
- )\ )  *   )  ( /(  ( /(   |
-(()/(` )  /(  )\()) )\())  |
- /(_))( )(_))((_)\ ((_)\   | LTHN PIV: Is an opensource PIV toolbox
-(_)) (_(_())  _((_) _((_)  |
-| |  |_   _| | || || \| |  |
-| |__  | |   | __ || .` |  | Website: https://github.com/esterfiorillo/PIV-method-implementation-code
-|(___|(|_|   |_||_||_|\_|  |
-                           | 
- )\ ) )\ )                 | CDTN - Centro de Desenvolvimento da Tecnologia Nuclear
-(()/((()/( (   (           | LTHN - Laboratório de Termo-Hidráulica e Neutrônica
- /(_))/(_)))\  )\          | Belo Horizonte, MG, Brasil
-(_)) (_)) ((_)((_)         |
-| _ \|_ _|\ \ / /          | @authors: esterfiorillo, acampagnole 
-|  _/ | |  \ V /           |
-|_|  |___|  \_/            |
-
-
-"""
+#"""
+#
+# (               )     )   |
+# )\ )  *   )  ( /(  ( /(   |
+#(()/(` )  /(  )\()) )\())  |
+# /(_))( )(_))((_)\ ((_)\   | LTHN PIV: Is an opensource PIV toolbox
+#(_)) (_(_())  _((_) _((_)  |
+#| |  |_   _| | || || \| |  |
+#| |__  | |   | __ || .` |  | Website: https://github.com/esterfiorillo/PIV-method-implementation-code
+#|(___|(|_|   |_||_||_|\_|  |
+#                           | 
+# )\ ) )\ )                 | CDTN - Centro de Desenvolvimento da Tecnologia Nuclear
+#(()/((()/( (   (           | LTHN - Laboratório de Termo-Hidráulica e Neutrônica
+# /(_))/(_)))\  )\          | Belo Horizonte, MG, Brasil
+#(_)) (_)) ((_)((_)         |
+#| _ \|_ _|\ \ / /          | @authors: esterfiorillo, acampagnole 
+#|  _/ | |  \ V /           |
+#|_|  |___|  \_/            |
+#
+#
+#"""
 
 # License
 #     This file is part of LTHN PIV.
@@ -56,6 +56,9 @@
 #         index_guard()
 #
 #------------------------------------------------------------------------------
+"""
+This file contains the displacement_map class.
+"""
 
 """
    load basic modules
@@ -79,38 +82,17 @@ class displacement_map:
      Class that represents a vector field, which is the displacements of the particles between the time of capture of the pair of images.
      This class also have the functions applied to vector field the for data validation.
     
-        Attributes:
-        ---------
-        dpx: 2d np.narray
-            Matrix with the components of the displacement vectors on the x axis.
-        dpy: 2d np.narray
-            Matrix with the components of the displacement vectors on the y axis.
-            
-        Methods:
-        --------
-         neighborhood_median(int ii, int jj)
-         calculate_rm (int ii, int jj)
-         calculate_r (int ii, int jj)
-         neighborhood_median(int ii, int jj)
-         replacement3()
-         resize_dp
-         index_guard()
     """ 
    
     def __init__ (self, dp_x, dp_y): 
         """
         Constructor
         
-        Parameters
-        ---------
-        dp_x : 2d np.array
-            Matrix with the components of the displacement vectors on the x axis.
-        dp_y : 2d np.array
-             Matrix with the components of the displacement vectors on the y axis.
-            
-        Raises
-        ------
-        .
+        :type dp_x : 2d np.array
+        :param dp_x: Matrix with the components of the displacement vectors on the x axis.
+        
+        :type dp_y : 2d np.array
+        :param dp_y: Matrix with the components of the displacement vectors on the y axis.
         
         """
         self.dpx = dp_x
@@ -121,19 +103,14 @@ class displacement_map:
         """
         Function that calculates the median of the neighboorhood points (3x3) of a certain position (ii, jj) on the displacement vector field.
         
-        Parameters
-        ----------
-        ii: int
-            x coordinate of the point at which the neighborhood(3x3) median is being calculated.
-        jj: int
-            y coordinate of the point at which the neighborhood(3x3) median is being calculated.
+        :type ii: int
+        :param ii: x coordinate of the point at which the neighborhood(3x3) median is being calculated.
+       
+        :type jj: int
+        :param jj: y coordinate of the point at which the neighborhood(3x3) median is being calculated.
             
-        Raises
-        ------
-        med1: float
-            Median of the neighboorhood points on dpx
-        med2: float
-            Median of the neighboorhood points on dpy
+        :rtype: float
+        :return: Median of the neighboorhood points on dpx and dpy
         
         """
         aux1 = np.array([[self.dpx[ii-1][jj-1], self.dpx[ii-1][jj], self.dpx[ii-1][jj+1], self.dpx[ii][jj-1], self.dpx[ii][jj+1], self.dpx[ii+1][jj-1], self.dpx[ii+1][jj], self.dpx[ii+1][jj+1]]])
@@ -147,20 +124,13 @@ class displacement_map:
         """
         Function that calculates the median of the subtration of the neighborhood points (3x3) and the neighboorhood median of a certain position (ii, jj) on the displacement vector field.
         
-        Parameters
-        ----------
-        ii: int
-            x coordinate of the point at which the neighborhood(3x3) median of subtraction is being calculated.
-        jj: int
-            y coordinate of the point at which the neighborhood(3x3) median of subtraction is being calculated.
+        :type ii: int
+        :param ii: x coordinate of the point at which the neighborhood(3x3) median of subtraction is being calculated.
+        :type jj: int
+        :param jj:y coordinate of the point at which the neighborhood(3x3) median of subtraction is being calculated.
             
-        Raises
-        ------
-        rm1: float
-            Median of the subtration of the neighborhood points (3x3) and the neighboorhood median on dpx
-        rm2: float
-            Median of the subtration of the neighborhood points (3x3) and the neighboorhood median on dpy
-        
+        :rtype: float
+        :return: Median of the subtration of the neighborhood points (3x3) and the neighboorhood median on dpx and dpy        
         """        
     
         median1, median2 = self.neighborhood_median(ii, jj)
@@ -175,19 +145,13 @@ class displacement_map:
         """ 
         Function that calculates:r =  (point of the displacement vector field intensity value - median of the 3x3 neighborhood) / rm - 0.1
         
-        Parameters
-        ----------
-        ii: int
-            x coordinate of the point at which the neighborhood(3x3) r is being calculated.
-        jj: int
-            y coordinate of the point at which the neighborhood(3x3) r is being calculated.
+        :type ii: int
+        :param ii: x coordinate of the point at which the neighborhood(3x3) r is being calculated.
+        :type jj: int
+        :param jj: y coordinate of the point at which the neighborhood(3x3) r is being calculated.
             
-        Raises
-        ------
-        r1: float
-            r of the neighboorhood points on dpx
-        r2: float
-            r of the neighboorhood points on dpy
+        :rtype: float
+        :return: r of the neighboorhood points on dpx and dpy
         
         """        
     
@@ -202,24 +166,15 @@ class displacement_map:
         """
         Function that calculates the mean of the neighboorhood points (3x3) of a certain position (ii, jj) on the displacement vector field.
         
-        Parameters
-        ----------
-        ii: int
-            x coordinate of the point at which the neighborhood(3x3) mean is being calculated.
-        jj: int
-            y coordinate of the point at which the neighborhood(3x3) mean is being calculated.
+        :type ii: int
+        :param ii: x coordinate of the point at which the neighborhood(3x3) mean is being calculated.
+        :type jj: int
+        :param jj: y coordinate of the point at which the neighborhood(3x3) mean is being calculated.
             
-        Raises
-        ------
-        med1: float
-            Mean of the neighboorhood points on dpx
-        med2: float
-            Mean of the neighboorhood points on dpy
+        :rtype: float
+        :return:  Mean of the neighboorhood points on dpx and dpy
         
         """
-        
-        
-    # Function that calculates the mean of the neighboorhood points (3x3) of a certain position (ii, jj) on the displacement map
     
         aux1 = np.array([self.dpx[ii-1][jj-1], self.dpx[ii-1][jj], self.dpx[ii-1][jj+1], self.dpx[ii][jj-1], self.dpx[ii][jj+1], self.dpx[ii+1][jj-1], self.dpx[ii+1][jj], self.dpx[ii+1][jj+1]])
         aux2 = np.array([self.dpy[ii-1][jj-1], self.dpy[ii-1][jj], self.dpy[ii-1][jj+1], self.dpy[ii][jj-1], self.dpy[ii][jj+1], self.dpy[ii+1][jj-1], self.dpy[ii+1][jj], self.dpy[ii+1][jj+1]])
@@ -232,14 +187,6 @@ class displacement_map:
         """
         Function that calculates the value of r for all points on the displacement vector field.
         It also replaces the value of points with the neighborhood mean, if the value of r at this point is less than 2.
-        Reference: F. Scarano & J. Westerweel, Universal Outlier detection for PIV data , Experiments in Fluids 39 (2005).
-        
-        Parameters
-        ----------
-        
-        Raises
-        ------
-        
         """
         ux_size = len (self.dpx)
         uy_size = len (self.dpx[0])
@@ -264,12 +211,6 @@ class displacement_map:
         """
         Function that divides the values ​​of the displacement vectors by two.
         
-        Parameters
-        ----------
-        
-        Raises
-        ------
-        
         """
         self.dpx = self.dpx/2
         self.dpy = self.dpy/2
@@ -279,19 +220,8 @@ class displacement_map:
         """
          Function that stores in a list twice the value of the indexes of the displacement map of the previous iteration.
          
-        Parameters
-        ----------
-        
-        Raises
-        ------
-        indices1_x: 1d np.array
-            Array with the indices of displacement vector field in x axis
-        indices1_y: 1d np.array
-            Array with the indices of displacement vector field in y axis
-        indices2_x: 1d np.array
-            Array with the indices of displacement vector field in x axis multiplied by 2
-        indices2_y: 1d np.array
-            Array with the indices of displacement vector field in y axis multiplied by 2
+        :rtype: 1d np.array
+        :return: Arrays with the indices of displacement vector field and arrays with the indices of displacement vector field in x axis multiplied by 2
          
         """
         indices1_x = np.zeros((len(self.dpx)))

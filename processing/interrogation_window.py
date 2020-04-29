@@ -1,25 +1,25 @@
 # -*- coding: utf-8 -*-
-"""
-
- (               )     )   |
- )\ )  *   )  ( /(  ( /(   |
-(()/(` )  /(  )\()) )\())  |
- /(_))( )(_))((_)\ ((_)\   | LTHN PIV: Is an opensource PIV toolbox
-(_)) (_(_())  _((_) _((_)  |
-| |  |_   _| | || || \| |  |
-| |__  | |   | __ || .` |  | Website: https://github.com/esterfiorillo/PIV-method-implementation-code
-|(___|(|_|   |_||_||_|\_|  |
-                           | 
- )\ ) )\ )                 | CDTN - Centro de Desenvolvimento da Tecnologia Nuclear
-(()/((()/( (   (           | LTHN - Laboratório de Termo-Hidráulica e Neutrônica
- /(_))/(_)))\  )\          | Belo Horizonte, MG, Brasil
-(_)) (_)) ((_)((_)         |
-| _ \|_ _|\ \ / /          | @authors: esterfiorillo, acampagnole 
-|  _/ | |  \ V /           |
-|_|  |___|  \_/            |
-
-
-"""
+#"""
+#
+# (               )     )   |
+# )\ )  *   )  ( /(  ( /(   |
+#(()/(` )  /(  )\()) )\())  |
+# /(_))( )(_))((_)\ ((_)\   | LTHN PIV: Is an opensource PIV toolbox
+#(_)) (_(_())  _((_) _((_)  |
+#| |  |_   _| | || || \| |  |
+#| |__  | |   | __ || .` |  | Website: https://github.com/esterfiorillo/PIV-method-implementation-code
+#|(___|(|_|   |_||_||_|\_|  |
+#                           | 
+# )\ ) )\ )                 | CDTN - Centro de Desenvolvimento da Tecnologia Nuclear
+#(()/((()/( (   (           | LTHN - Laboratório de Termo-Hidráulica e Neutrônica
+# /(_))/(_)))\  )\          | Belo Horizonte, MG, Brasil
+#(_)) (_)) ((_)((_)         |
+#| _ \|_ _|\ \ / /          | @authors: esterfiorillo, acampagnole 
+#|  _/ | |  \ V /           |
+#|_|  |___|  \_/            |
+#
+#
+#"""
 
 # License
 #     This file is part of LTHN PIV.
@@ -52,6 +52,9 @@
 #         gauss_subpixel_peak_position
 #
 #------------------------------------------------------------------------------
+"""
+This file contains the interrogation_window class
+"""
 
 """
    load basic modules
@@ -76,38 +79,17 @@ except ModuleNotFoundError as E:
 class interrogation_window:
     """
     Class that represents the interrogation windows and the functions applyed to then.
-    
-    
-        Attributes:
-        ---------
-        window1: 2d np.array
-            A interrogation window of image 1, from the pair of images
-        window2: 2d np.array
-             A interrogation window of image 2, from the pair of images
-        cross_corr: 2d np.array
-            The resulting matrix of the cross correlation between window 1 and window 2
-            
-        Methods:
-        --------
-        normxcorr2()
-        find_peak()
-        gauss_subpixel_peak_position()
+
     """ 
     
     def __init__(self, w1, w2): 
         """
         Constructor
         
-        Parameters
-        ---------
-        w1 : 2d np.array
-            Interrogation window from image 1
-        w2 : 2d np.array
-            Interrogation window from image 2
-            
-        Raises
-        ------
-        .
+        :type w1 : 2d np.array
+        :param w1: Interrogation window from image 1
+        :type w2 : 2d np.array
+        :param w2: Interrogation window from image 2
         
         """
         self.window1 = w1
@@ -141,21 +123,13 @@ class interrogation_window:
         This is a method that seeks to find the identification point of the first interrogation window in the second interrogation window.
         The matrix value resulted from the method is assigned to the class attribute cross_cor.
         
-        Parameters
-        ---------
-        mode : str, optional
-            full (Default): The output of fftconvolve is the full discrete linear convolution of the inputs.
-            Output size will be image size + 1/2 template size in each dimension.
-            valid: The output consists only of those elements that do not rely on the zero-padding.
-            same: The output is the same size as image, centered with respect to the ‘full’ output.
-        
-        Raises
-        ------
-        .
-        
+
+        :type mode : str, optional
+        :param mode: full (Default): The output of fftconvolve is the full discrete linear convolution of the inputs.
+        Output size will be image size + 1/2 template size in each dimension.
+        valid: The output consists only of those elements that do not rely on the zero-padding.
+        same: The output is the same size as image, centered with respect to the ‘full’ output.
         """
-    
-    
     
     # If this happens, it is probably a mistake
     
@@ -193,16 +167,8 @@ class interrogation_window:
         """
         Function that returns the coordinates in x and y axis of the point of greatest intensity (peak) in the cross_cor attribute.
         
-        Parameters
-        ----------
-        .
-        
-        Raises
-        ------
-        xx_peak: int
-            Coordinate of the correlation peak on the x-axis
-        yy_peak: int
-            Coordinate of the correlation peak on the y-axis
+        :rtype: int
+        :return: Coordinates of the correlation peak
         
         """
         
@@ -217,19 +183,14 @@ class interrogation_window:
         """
          Function that returns the gauss interpolation coordinates, which finds a better estimate for the location of the correlation peak.
         
-         Parameters
-         ----------
-        x_pico: int
-             x-coordinate of the peak
-        y_pico: int
-             y-coordinate of the peak
-             
-        Raises
-        ------
-        subp_peak_position[0]: int
-            x-coordinate in the cross-correlation matrix resulting from gauss interpolation
-        subp_peak_position[1]: int
-            y-coordinate in the cross-correlation matrix resulting from gauss interpolation
+        :type x_pico: int
+        :param x_pico: x-coordinate of the peak
+        
+        :type y_pico: int
+        :param y_pico: y-coordinate of the peak
+        
+        :rtype: int
+        :return: Coordenates in the cross-correlation matrix resulting from gauss interpolation
             
         """
         if x_pico + 1 >= len(self.cross_corr):

@@ -1,25 +1,25 @@
 # -*- coding: utf-8 -*-
-"""
-
- (               )     )   |
- )\ )  *   )  ( /(  ( /(   |
-(()/(` )  /(  )\()) )\())  |
- /(_))( )(_))((_)\ ((_)\   | LTHN PIV: Is an opensource PIV toolbox
-(_)) (_(_())  _((_) _((_)  |
-| |  |_   _| | || || \| |  |
-| |__  | |   | __ || .` |  | Website: https://github.com/esterfiorillo/PIV-method-implementation-code
-|(___|(|_|   |_||_||_|\_|  |
-                           | 
- )\ ) )\ )                 | CDTN - Centro de Desenvolvimento da Tecnologia Nuclear
-(()/((()/( (   (           | LTHN - Laboratório de Termo-Hidráulica e Neutrônica
- /(_))/(_)))\  )\          | Belo Horizonte, MG, Brasil
-(_)) (_)) ((_)((_)         |
-| _ \|_ _|\ \ / /          | @authors: esterfiorillo, acampagnole 
-|  _/ | |  \ V /           |
-|_|  |___|  \_/            |
-
-
-"""
+#"""
+#
+# (               )     )   |
+# )\ )  *   )  ( /(  ( /(   |
+#(()/(` )  /(  )\()) )\())  |
+# /(_))( )(_))((_)\ ((_)\   | LTHN PIV: Is an opensource PIV toolbox
+#(_)) (_(_())  _((_) _((_)  |
+#| |  |_   _| | || || \| |  |
+#| |__  | |   | __ || .` |  | Website: https://github.com/esterfiorillo/PIV-method-implementation-code
+#|(___|(|_|   |_||_||_|\_|  |
+#                           | 
+# )\ ) )\ )                 | CDTN - Centro de Desenvolvimento da Tecnologia Nuclear
+#(()/((()/( (   (           | LTHN - Laboratório de Termo-Hidráulica e Neutrônica
+# /(_))/(_)))\  )\          | Belo Horizonte, MG, Brasil
+#(_)) (_)) ((_)((_)         |
+#| _ \|_ _|\ \ / /          | @authors: esterfiorillo, acampagnole 
+#|  _/ | |  \ V /           |
+#|_|  |___|  \_/            |
+#
+#
+#"""
 # License
 #     This file is part of LTHN PIV.
 #
@@ -39,7 +39,9 @@
 # File
 #     ./processing/Methods/methods.py
 
-
+"""
+This file contains the base class for the processing methods.
+"""
 
 
 """
@@ -66,36 +68,18 @@ class Methods():
     Base class of normal_method class and multigrid_method class, which represents the methods of traversing the pair of images with the interrogation windows while the cross correlation between them is applyed.   
     Since this is the base class of the methods, it stores the pair of images being processed.
     
-    Atributtes
-    ----------
-    im1: 2d np.array
-        Image 1
-    im2: 2d np.array
-        Image 2
-    tam_x, tam_y: int
-        Images dimensions
-    
-    Methods
-    -------
-    result_dimensions()
-    
     """
     
     def __init__(self, image1, image2): 
         """
         Constructor
         
-        Parameters
-        ---------
-        im1 : 2d np.array
-            Image 1 of the par of images
-        im2 : 2d np.array
-             Image 2 of the par of images
-            
-        Raises
-        ------
-        .
+        :type image1 : 2d np.array
+        :param image1: Image 1 of the par of images
         
+        :type image2 : 2d np.array
+        :param image2: Image 2 of the par of images
+            
         """
         
         self.im1 = image1
@@ -107,22 +91,15 @@ class Methods():
         """
         Function used to find the dimensions of the result of applying cross correlation in the interrogation windows, according to the interrogation window size and overlap.
         
-        Parameters
-        ----------
-        x_size: int
-            Size of the interrogation window that will be used to go through the images in x axis
-        y_size: int 
-            Size of the interrogation window that will be used to go through the images in y axis
-        overlap: int
-            How much overlap
-            
-        Raises
-        ------
-            x_dimension: int
-                x-dimension of matrix resulting from applying cross-correlation between interrogation windows
-            y_dimension: int
-               y-dimension of matrix resulting from applying cross-correlation between interrogation windows
-               
+        :type x_size: int
+        param x_size: Size of the interrogation window that will be used to go through the images in x axis
+        :type y_size: int 
+        :param y_size: Size of the interrogation window that will be used to go through the images in y axis
+        :type overlap: int
+        :param overlap: How much overlap
+        
+        :rtype: int
+        :return: Dimensions of matrix resulting from applying cross-correlation between interrogation windows
         """
         x_dimension = (self.tam_x - x_size) // (x_size - overlap) + 1
         y_dimension = (self.tam_y - y_size) // (y_size - overlap) + 1

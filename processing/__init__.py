@@ -50,9 +50,9 @@
     load processing functions
 """
 
-# from .processing import thread_processing 
-# from .displacement_map import displacement_map 
-# from .interrogation_window import interrogation_window
+from .processing import thread_processing 
+from .displacement_map import displacement_map 
+from .interrogation_window import interrogation_window
 
 
 """
@@ -61,3 +61,4 @@
 """
 
 
+"""This is the Processing packege"""

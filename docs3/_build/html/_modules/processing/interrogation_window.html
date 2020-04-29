@@ -1,0 +1,309 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>processing.interrogation_window &#8212; PIV-LTHN  documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for processing.interrogation_window</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="c1">#&quot;&quot;&quot;</span>
+<span class="c1">#</span>
+<span class="c1"># (               )     )   |</span>
+<span class="c1"># )\ )  *   )  ( /(  ( /(   |</span>
+<span class="c1">#(()/(` )  /(  )\()) )\())  |</span>
+<span class="c1"># /(_))( )(_))((_)\ ((_)\   | LTHN PIV: Is an opensource PIV toolbox</span>
+<span class="c1">#(_)) (_(_())  _((_) _((_)  |</span>
+<span class="c1">#| |  |_   _| | || || \| |  |</span>
+<span class="c1">#| |__  | |   | __ || .` |  | Website: https://github.com/esterfiorillo/PIV-method-implementation-code</span>
+<span class="c1">#|(___|(|_|   |_||_||_|\_|  |</span>
+<span class="c1">#                           | </span>
+<span class="c1"># )\ ) )\ )                 | CDTN - Centro de Desenvolvimento da Tecnologia Nuclear</span>
+<span class="c1">#(()/((()/( (   (           | LTHN - Laboratório de Termo-Hidráulica e Neutrônica</span>
+<span class="c1"># /(_))/(_)))\  )\          | Belo Horizonte, MG, Brasil</span>
+<span class="c1">#(_)) (_)) ((_)((_)         |</span>
+<span class="c1">#| _ \|_ _|\ \ / /          | @authors: esterfiorillo, acampagnole </span>
+<span class="c1">#|  _/ | |  \ V /           |</span>
+<span class="c1">#|_|  |___|  \_/            |</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1">#&quot;&quot;&quot;</span>
+
+<span class="c1"># License</span>
+<span class="c1">#     This file is part of LTHN PIV.</span>
+<span class="c1">#</span>
+<span class="c1">#     LTHN PIV is free software: you can redistribute it and/or modify it</span>
+<span class="c1">#     under the terms of the GNU General Public License as published by</span>
+<span class="c1">#     the Free Software Foundation, either version 3 of the License, or</span>
+<span class="c1">#     (at your option) any later version.</span>
+<span class="c1">#</span>
+<span class="c1">#     LTHN PIV is distributed in the hope that it will be useful, but WITHOUT</span>
+<span class="c1">#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or</span>
+<span class="c1">#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License</span>
+<span class="c1">#     for more details.</span>
+<span class="c1">#</span>
+<span class="c1">#     You should have received a copy of the GNU General Public License</span>
+<span class="c1">#     along with LTHN PIV.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
+<span class="c1">#</span>
+<span class="c1"># File</span>
+<span class="c1">#     ./processing/interrogation_window.py</span>
+<span class="c1">#</span>
+<span class="c1"># Description</span>
+<span class="c1">#     Class that represents the interrogation windows and the functions applyed to then.</span>
+<span class="c1">#     Atributes:</span>
+<span class="c1">#         window1: 2d np_array</span>
+<span class="c1">#         window2: 2d np_array</span>
+<span class="c1">#         cross_corr: 2d np_array</span>
+<span class="c1">#     Functions:</span>
+<span class="c1">#         normxcorr2()</span>
+<span class="c1">#         find_peak()</span>
+<span class="c1">#         gauss_subpixel_peak_position</span>
+<span class="c1">#</span>
+<span class="c1">#------------------------------------------------------------------------------</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This file contains the interrogation_window class</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">   load basic modules</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">   try to load fundamental modules</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+    <span class="kn">from</span> <span class="nn">numpy</span> <span class="k">import</span> <span class="n">log</span>
+    <span class="kn">from</span> <span class="nn">scipy.signal</span> <span class="k">import</span> <span class="n">fftconvolve</span>
+<span class="k">except</span> <span class="n">ModuleNotFoundError</span> <span class="k">as</span> <span class="n">E</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Missing critical module. Please install module:&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">E</span><span class="p">)</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>    
+ 
+
+
+<div class="viewcode-block" id="interrogation_window"><a class="viewcode-back" href="../../processing.html#processing.interrogation_window.interrogation_window">[docs]</a><span class="k">class</span> <span class="nc">interrogation_window</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class that represents the interrogation windows and the functions applyed to then.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span> 
+    
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">w1</span><span class="p">,</span> <span class="n">w2</span><span class="p">):</span> 
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Constructor</span>
+<span class="sd">        </span>
+<span class="sd">        :type w1 : 2d np.array</span>
+<span class="sd">        :param w1: Interrogation window from image 1</span>
+<span class="sd">        :type w2 : 2d np.array</span>
+<span class="sd">        :param w2: Interrogation window from image 2</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">window1</span> <span class="o">=</span> <span class="n">w1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">window2</span> <span class="o">=</span> <span class="n">w2</span>
+
+    
+<div class="viewcode-block" id="interrogation_window.normxcorr2"><a class="viewcode-back" href="../../processing.html#processing.interrogation_window.interrogation_window.normxcorr2">[docs]</a>    <span class="k">def</span> <span class="nf">normxcorr2</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;full&quot;</span><span class="p">):</span>
+    <span class="c1">########################################################################################</span>
+    <span class="c1"># Author: Ujash Joshi, University of Toronto, 2017                                     #</span>
+    <span class="c1"># Based on Octave implementation by: Benjamin Eltzner, 2014 &lt;b.eltzner@gmx.de&gt;         #</span>
+    <span class="c1"># Octave/Matlab normxcorr2 implementation in python 3.5                                #</span>
+    <span class="c1"># Details:                                                                             #</span>
+    <span class="c1"># Normalized cross-correlation. Similiar results upto 3 significant digits.            #</span>
+    <span class="c1"># https://github.com/Sabrewarrior/normxcorr2-python/master/norxcorr2.py                #</span>
+    <span class="c1"># http://lordsabre.blogspot.ca/2017/09/matlab-normxcorr2-implemented-in-python.html    #</span>
+    <span class="c1">########################################################################################  </span>
+    <span class="c1">#    Input arrays should be floating point numbers.</span>
+    <span class="c1">#    :param template: N-D array, of template or filter you are using for cross-correlation.</span>
+    <span class="c1">#    Must be less or equal dimensions to image.</span>
+    <span class="c1">#    Length of each dimension must be less than length of image.</span>
+    <span class="c1">#    :param image: N-D array</span>
+    <span class="c1">#    :param mode: Options, &quot;full&quot;, &quot;valid&quot;, &quot;same&quot;</span>
+    <span class="c1">#    full (Default): The output of fftconvolve is the full discrete linear convolution of the inputs.</span>
+    <span class="c1">#    Output size will be image size + 1/2 template size in each dimension.</span>
+    <span class="c1">#    valid: The output consists only of those elements that do not rely on the zero-padding.</span>
+    <span class="c1">#    same: The output is the same size as image, centered with respect to the ‘full’ output.</span>
+    <span class="c1">#    :return: N-D array of same dimensions as image. Size depends on mode parameter.</span>
+ 
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This function is the implementation of the normalized cross-correlation.</span>
+<span class="sd">        This is a method that seeks to find the identification point of the first interrogation window in the second interrogation window.</span>
+<span class="sd">        The matrix value resulted from the method is assigned to the class attribute cross_cor.</span>
+<span class="sd">        </span>
+
+<span class="sd">        :type mode : str, optional</span>
+<span class="sd">        :param mode: full (Default): The output of fftconvolve is the full discrete linear convolution of the inputs.</span>
+<span class="sd">        Output size will be image size + 1/2 template size in each dimension.</span>
+<span class="sd">        valid: The output consists only of those elements that do not rely on the zero-padding.</span>
+<span class="sd">        same: The output is the same size as image, centered with respect to the ‘full’ output.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+    
+    <span class="c1"># If this happens, it is probably a mistake</span>
+    
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">ndim</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">window1</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndim</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">window2</span><span class="p">)</span> <span class="ow">or</span> \
+                <span class="nb">len</span><span class="p">([</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ndim</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">window1</span><span class="p">))</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">window1</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">window2</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="n">i</span><span class="p">]])</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;normxcorr2: self.window1 larger than IMG. Arguments may be swapped.&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">window1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">window1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">window1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">window2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">window2</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">window2</span><span class="p">)</span>
+
+        <span class="n">a1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">window1</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+        
+        <span class="c1"># Faster to flip up down and left right then use fftconvolve instead of scipy&#39;s correlate</span>
+        
+        <span class="n">ar</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flipud</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fliplr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">window1</span><span class="p">))</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="n">fftconvolve</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">window2</span><span class="p">,</span> <span class="n">ar</span><span class="o">.</span><span class="n">conj</span><span class="p">(),</span> <span class="n">mode</span><span class="o">=</span><span class="n">mode</span><span class="p">)</span>
+   
+        <span class="bp">self</span><span class="o">.</span><span class="n">window2</span> <span class="o">=</span> <span class="n">fftconvolve</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">window2</span><span class="p">),</span> <span class="n">a1</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="n">mode</span><span class="p">)</span> <span class="o">-</span> \
+                <span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">fftconvolve</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">window2</span><span class="p">,</span> <span class="n">a1</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="n">mode</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">window1</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
+
+        <span class="c1"># Remove small machine precision errors after subtraction</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">window2</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">window2</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)]</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">window1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">window1</span><span class="p">))</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="n">out</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">window2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">window1</span><span class="p">)</span>
+
+        <span class="c1"># Remove any divisions by 0 or very close to 0</span>
+        <span class="n">out</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">logical_not</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">out</span><span class="p">)))]</span> <span class="o">=</span> <span class="mi">0</span>
+   
+        <span class="bp">self</span><span class="o">.</span><span class="n">cross_corr</span> <span class="o">=</span> <span class="n">out</span></div>
+
+        
+<div class="viewcode-block" id="interrogation_window.find_peak"><a class="viewcode-back" href="../../processing.html#processing.interrogation_window.interrogation_window.find_peak">[docs]</a>    <span class="k">def</span> <span class="nf">find_peak</span> <span class="p">(</span><span class="bp">self</span><span class="p">):</span>    
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Function that returns the coordinates in x and y axis of the point of greatest intensity (peak) in the cross_cor attribute.</span>
+<span class="sd">        </span>
+<span class="sd">        :rtype: int</span>
+<span class="sd">        :return: Coordinates of the correlation peak</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="n">ind</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cross_corr</span><span class="o">.</span><span class="n">argmax</span><span class="p">()</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cross_corr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">xx_peak</span> <span class="o">=</span> <span class="n">ind</span> <span class="o">//</span> <span class="n">s</span>
+        <span class="n">yy_peak</span> <span class="o">=</span> <span class="n">ind</span> <span class="o">%</span> <span class="n">s</span>
+        <span class="k">return</span> <span class="n">xx_peak</span><span class="p">,</span> <span class="n">yy_peak</span></div>
+
+
+<div class="viewcode-block" id="interrogation_window.gauss_subpixel_peak_position"><a class="viewcode-back" href="../../processing.html#processing.interrogation_window.interrogation_window.gauss_subpixel_peak_position">[docs]</a>    <span class="k">def</span> <span class="nf">gauss_subpixel_peak_position</span> <span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x_pico</span><span class="p">,</span> <span class="n">y_pico</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">         Function that returns the gauss interpolation coordinates, which finds a better estimate for the location of the correlation peak.</span>
+<span class="sd">        </span>
+<span class="sd">        :type x_pico: int</span>
+<span class="sd">        :param x_pico: x-coordinate of the peak</span>
+<span class="sd">        </span>
+<span class="sd">        :type y_pico: int</span>
+<span class="sd">        :param y_pico: y-coordinate of the peak</span>
+<span class="sd">        </span>
+<span class="sd">        :rtype: int</span>
+<span class="sd">        :return: Coordenates in the cross-correlation matrix resulting from gauss interpolation</span>
+<span class="sd">            </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">x_pico</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">&gt;=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cross_corr</span><span class="p">):</span>
+            <span class="n">subp_peak_position</span> <span class="o">=</span> <span class="n">x_pico</span><span class="p">,</span> <span class="n">y_pico</span>
+        <span class="k">elif</span> <span class="n">y_pico</span> <span class="o">+</span><span class="mi">1</span> <span class="o">&gt;=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cross_corr</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+            <span class="n">subp_peak_position</span> <span class="o">=</span> <span class="n">x_pico</span><span class="p">,</span> <span class="n">y_pico</span>
+        <span class="k">else</span><span class="p">:</span>
+           
+            <span class="n">c</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cross_corr</span><span class="p">[</span><span class="n">x_pico</span><span class="p">,</span> <span class="n">y_pico</span><span class="p">]</span>
+            <span class="n">cl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cross_corr</span><span class="p">[</span><span class="n">x_pico</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">y_pico</span><span class="p">]</span>
+            <span class="n">cr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cross_corr</span><span class="p">[</span><span class="n">x_pico</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">y_pico</span><span class="p">]</span>
+            <span class="n">cd</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cross_corr</span><span class="p">[</span><span class="n">x_pico</span><span class="p">,</span> <span class="n">y_pico</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+            <span class="n">cu</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cross_corr</span><span class="p">[</span><span class="n">x_pico</span><span class="p">,</span> <span class="n">y_pico</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">c</span><span class="p">,</span> <span class="n">cl</span><span class="p">,</span> <span class="n">cr</span><span class="p">,</span> <span class="n">cd</span><span class="p">,</span> <span class="n">cu</span><span class="p">])</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">):</span>
+                <span class="n">subp_peak_position</span> <span class="o">=</span> <span class="p">(((</span><span class="n">x_pico</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">cl</span> <span class="o">+</span> <span class="n">x_pico</span> <span class="o">*</span> <span class="n">c</span> <span class="o">+</span> <span class="p">(</span><span class="n">x_pico</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">cr</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">cl</span> <span class="o">+</span> <span class="n">c</span> <span class="o">+</span> <span class="n">cr</span><span class="p">),</span>
+<span class="p">((</span><span class="n">y_pico</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">cd</span> <span class="o">+</span> <span class="n">y_pico</span> <span class="o">*</span> <span class="n">c</span> <span class="o">+</span> <span class="p">(</span><span class="n">y_pico</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">cu</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">cd</span> <span class="o">+</span> <span class="n">c</span> <span class="o">+</span> <span class="n">cu</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>    
+                <span class="n">subp_peak_position</span> <span class="o">=</span> <span class="p">(</span><span class="n">x_pico</span> <span class="o">+</span> <span class="p">((</span><span class="n">log</span><span class="p">(</span><span class="n">cl</span><span class="p">)</span> <span class="o">-</span> <span class="n">log</span><span class="p">(</span><span class="n">cr</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">log</span><span class="p">(</span><span class="n">cl</span><span class="p">)</span> <span class="o">-</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">log</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">log</span><span class="p">(</span><span class="n">cr</span><span class="p">))),</span>
+<span class="n">y_pico</span> <span class="o">+</span> <span class="p">((</span><span class="n">log</span><span class="p">(</span><span class="n">cd</span><span class="p">)</span> <span class="o">-</span> <span class="n">log</span><span class="p">(</span><span class="n">cu</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">log</span><span class="p">(</span><span class="n">cd</span><span class="p">)</span> <span class="o">-</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">log</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">log</span><span class="p">(</span><span class="n">cu</span><span class="p">))))</span>
+        <span class="k">return</span> <span class="n">subp_peak_position</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">subp_peak_position</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>        </div></div>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">PIV-LTHN</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">PIV-method-implementation-code</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Ester Fiorillo, André Santos, Vitor Silva.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.11</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
