@@ -260,8 +260,38 @@ same: The output is the same size as image, centered with respect to the ‘full
 </dd></dl>
 
 </div>
-<div class="section" id="processing-processing-module">
-<h2>processing.processing module<a class="headerlink" href="#processing-processing-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-processing.processing">
+<span id="processing-processing-module"></span><h2>processing.processing module<a class="headerlink" href="#module-processing.processing" title="Permalink to this headline">¶</a></h2>
+<p>This file contains the function responsible for joining all parts of the processing</p>
+<dl class="function">
+<dt id="processing.processing.thread_processing">
+<code class="descclassname">processing.processing.</code><code class="descname">thread_processing</code><span class="sig-paren">(</span><em>num_images</em>, <em>dir</em>, <em>file_prefix</em>, <em>num_primeira</em>, <em>file_form</em>, <em>bck_ground</em>, <em>mao</em>, <em>met</em>, <em>w_size</em>, <em>ovl</em>, <em>n_iterations</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/processing/processing.html#thread_processing"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#processing.processing.thread_processing" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function that loads the set of images from the name of the directory, the prefix of the files, the number of the first image and the file type of the images received as parameters.
+For this, a loop is made in which these images are opened and processed in pairs. Then, inside the loop, the pair is read, the pre-processing functions are applied and the processing method is applied (either multigrid or normal depending on the met variable received as a parameter).
+Finally, the displacement vector maps found for each pair are saved in lists. In the end, the lists are averaged and saved in csv files.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>num_images</strong> (<em>int</em>) – Number of images in the image set</li>
+<li><strong>dir</strong> (<em>str</em>) – Image set directory name</li>
+<li><strong>file_prefix</strong> (<em>str</em>) – Prefix name of the images names</li>
+<li><strong>num_primeira</strong> (<em>int</em>) – Number of the first image</li>
+<li><strong>file_form</strong> (<em>str</em>) – Format of the images in the image set</li>
+<li><strong>bck_ground</strong> (<em>float</em>) – Value for the back ground of the image set</li>
+<li><strong>mao</strong> (<em>float</em>) – Necessary value for the brightness homogenization</li>
+<li><strong>met</strong> (<em>str</em>) – Whether the method used in processing is normal or multigrid</li>
+<li><strong>w_size</strong> (<em>int</em>) – Interrogation window size</li>
+<li><strong>ovl</strong> (<em>int</em>) – Size of the overlap</li>
+<li><strong>n_iterations</strong> (<em>int</em>) – Number of iterations of the method</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </div>
 <div class="section" id="module-contents">
 <h2>Module contents<a class="headerlink" href="#module-contents" title="Permalink to this headline">¶</a></h2>
