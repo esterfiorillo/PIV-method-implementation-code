@@ -198,14 +198,14 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        This function and homogenize_brightness function aim to homogenize the brightness of the second image according to that of the first.</span>
 <span class="sd">        It was made to be apliyed to the second image of the par, not both of then.</span>
-<span class="sd">        Reference : Brightness correction, homogenization and adjunstment of images for face recognition, Eduardo Machado Silva, UNESP, ISSN 2316-9664, Volume 14, fev. 2019, Edic ̧ao Ermac</span>
 <span class="sd">        </span>
-<span class="sd">        :type im: 2d np.array</span>
-<span class="sd">        :param im: Input image</span>
+<span class="sd">        :type im2: 2d np.array</span>
+<span class="sd">        :param im2: Input image</span>
 <span class="sd">        </span>
 <span class="sd">        :rtype: float</span>
 <span class="sd">        :return: Value that will be used in homogenize_brightness function</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1">#Reference : Brightness correction, homogenization and adjunstment of images for face recognition, Eduardo Machado Silva, UNESP, ISSN 2316-9664, Volume 14, fev. 2019, Edic ̧ao Ermac</span>
         <span class="n">h</span><span class="p">,</span><span class="n">bins</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="n">im2</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span><span class="mi">256</span><span class="p">,[</span><span class="mi">0</span><span class="p">,</span><span class="mi">256</span><span class="p">])</span>
         <span class="n">h_min</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
         <span class="n">h_max</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
@@ -218,14 +218,14 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        This function and homogenize_brightness function aim to homogenize the brightness of the second image according to that of the first.</span>
 <span class="sd">        It was made to be apliyed to the second image of the par, not both of then.</span>
-<span class="sd">        Reference : Brightness correction, homogenization and adjunstment of images for face recognition, Eduardo Machado Silva, UNESP, ISSN 2316-9664, Volume 14, fev. 2019, Edic ̧ao Ermac</span>
 <span class="sd">        </span>
-<span class="sd">        :type im: 2d np.array</span>
-<span class="sd">        :param im: Input image</span>
+<span class="sd">        :type im2: 2d np.array</span>
+<span class="sd">        :param im2: Input image</span>
 <span class="sd">        </span>
 <span class="sd">        :rtype: 2d np.array</span>
 <span class="sd">        :return: Input image after brightness correction</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1">#Reference : Brightness correction, homogenization and adjunstment of images for face recognition, Eduardo Machado Silva, UNESP, ISSN 2316-9664, Volume 14, fev. 2019, Edic ̧ao Ermac</span>
         <span class="n">teta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calc_teta</span><span class="p">(</span><span class="n">im2</span><span class="p">)</span>
         <span class="n">tam_x</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">im2</span><span class="p">)</span>
         <span class="n">tam_y</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">im2</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>

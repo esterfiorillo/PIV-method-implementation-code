@@ -83,24 +83,20 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>num_images2</strong> (<em>int</em>) – Number of images in the image set divided by 2</li>
 <li><strong>dir</strong> (<em>str</em>) – Image set directory name</li>
 <li><strong>file_prefix</strong> (<em>str</em>) – Prefix name of the images names</li>
 <li><strong>num_primeira</strong> (<em>int</em>) – Number of the first image</li>
+<li><strong>file_form</strong> (<em>str</em>) – Format of the images in the image set</li>
 </ul>
 </td>
 </tr>
-</tbody>
-</table>
-<p>:param file_form:Format of the images in the image set</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">float</p>
+</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Necessary value for the brightness homogenization</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Necessary value for the brightness homogenization</p>
+</td>
 </tr>
 </tbody>
 </table>
@@ -114,17 +110,9 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>num_images</strong> (<em>int</em>) – Number of images in the image set</td>
-</tr>
-</tbody>
-</table>
-<p>:type dir : str
-:param dir: Image set directory name</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>num_images</strong> (<em>int</em>) – Number of images in the image set</li>
+<li><strong>dir</strong> (<em>str</em>) – Image set directory name</li>
 <li><strong>file_prefix</strong> (<em>str</em>) – Prefix name of the images names</li>
 <li><strong>num_primeira</strong> (<em>int</em>) – Number of the first image</li>
 <li><strong>file_form</strong> (<em>str</em>) – Format of the images in the image set</li>
@@ -149,24 +137,20 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>num_images2</strong> (<em>int</em>) – Number of images in the image set divided by 2</li>
 <li><strong>dir</strong> (<em>str</em>) – Image set directory name</li>
 <li><strong>file_prefix</strong> (<em>str</em>) – Prefix name of the images names</li>
 <li><strong>num_primeira</strong> (<em>int</em>) – Number of the first image</li>
+<li><strong>file_form</strong> (<em>str</em>) – Format of the images in the image set</li>
 </ul>
 </td>
 </tr>
-</tbody>
-</table>
-<p>:param file_form:Format of the images in the image set</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Necessary value for the brightness homogenization</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Necessary value for the brightness homogenization</p>
+</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">float</p>
+</td>
 </tr>
 </tbody>
 </table>
@@ -184,13 +168,12 @@
 <dt id="pre_processing.pre_processing_class.pre_processing.calc_teta">
 <code class="descname">calc_teta</code><span class="sig-paren">(</span><em>im2</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pre_processing/pre_processing_class.html#pre_processing.calc_teta"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pre_processing.pre_processing_class.pre_processing.calc_teta" title="Permalink to this definition">¶</a></dt>
 <dd><p>This function and homogenize_brightness function aim to homogenize the brightness of the second image according to that of the first.
-It was made to be apliyed to the second image of the par, not both of then.
-Reference : Brightness correction, homogenization and adjunstment of images for face recognition, Eduardo Machado Silva, UNESP, ISSN 2316-9664, Volume 14, fev. 2019, Edic ̧ao Ermac</p>
+It was made to be apliyed to the second image of the par, not both of then.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>im</strong> (<em>2d np.array</em>) – Input image</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>im2</strong> (<em>2d np.array</em>) – Input image</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float</td>
 </tr>
@@ -222,13 +205,12 @@ Reference : Brightness correction, homogenization and adjunstment of images for 
 <dt id="pre_processing.pre_processing_class.pre_processing.homogenize_brightness">
 <code class="descname">homogenize_brightness</code><span class="sig-paren">(</span><em>im2</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pre_processing/pre_processing_class.html#pre_processing.homogenize_brightness"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pre_processing.pre_processing_class.pre_processing.homogenize_brightness" title="Permalink to this definition">¶</a></dt>
 <dd><p>This function and homogenize_brightness function aim to homogenize the brightness of the second image according to that of the first.
-It was made to be apliyed to the second image of the par, not both of then.
-Reference : Brightness correction, homogenization and adjunstment of images for face recognition, Eduardo Machado Silva, UNESP, ISSN 2316-9664, Volume 14, fev. 2019, Edic ̧ao Ermac</p>
+It was made to be apliyed to the second image of the par, not both of then.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>im</strong> (<em>2d np.array</em>) – Input image</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>im2</strong> (<em>2d np.array</em>) – Input image</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">2d np.array</td>
 </tr>

@@ -81,9 +81,13 @@
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">   load basic modules</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">processing.interrogation_window</span> <span class="k">import</span> <span class="n">interrogation_window</span>
-<span class="kn">from</span> <span class="nn">processing.methods.methods</span> <span class="k">import</span> <span class="n">Methods</span>
-<span class="kn">from</span> <span class="nn">processing.methods.normal_method</span> <span class="k">import</span> <span class="n">normal_method</span>
+<span class="c1">#from processing.interrogation_window import interrogation_window</span>
+<span class="c1">#from processing.methods.methods import Methods</span>
+<span class="c1">#from processing.methods.normal_method import normal_method</span>
+
+<span class="c1">#from methods.methods import Methods</span>
+<span class="kn">from</span> <span class="nn">normal_method</span> <span class="k">import</span> <span class="n">normal_method</span>
+
 <span class="kn">import</span> <span class="nn">sys</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
@@ -131,7 +135,7 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Function that takes an object of the type displacement_map and doubles its dimensions. It will be used to add the displacements of the previous vector map.</span>
 <span class="sd">        </span>
-<span class="sd">        :type map_a : diplacement_map object</span>
+<span class="sd">        :type map_a: diplacement_map object</span>
 <span class="sd">        :param map_a: Input displacement vector map</span>
 <span class="sd">            </span>
 <span class="sd">        :type dpx_map: 2d np.array</span>

@@ -57,6 +57,8 @@ from processing.displacement_map import displacement_map
 
 from processing.methods.methods import Methods
 
+#from methods import Methods
+
 """
    try to load fundamental modules
 """

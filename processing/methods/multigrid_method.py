@@ -50,6 +50,9 @@ This file contains the class that represents the implementation of the multigrid
 from processing.interrogation_window import interrogation_window
 from processing.methods.methods import Methods
 from processing.methods.normal_method import normal_method
+
+#from normal_method import normal_method
+
 import sys
 
 """
@@ -97,7 +100,7 @@ class multigrid_method (normal_method):
         """
         Function that takes an object of the type displacement_map and doubles its dimensions. It will be used to add the displacements of the previous vector map.
         
-        :type map_a : diplacement_map object
+        :type map_a: diplacement_map object
         :param map_a: Input displacement vector map
             
         :type dpx_map: 2d np.array

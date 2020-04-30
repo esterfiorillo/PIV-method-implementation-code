@@ -46,19 +46,5 @@
 #------------------------------------------------------------------------------
 
 
-"""
-    load processing functions
-"""
-
-from .processing import thread_processing 
-from .displacement_map import displacement_map 
-from .interrogation_window import interrogation_window
-
-
-"""
-    load methods from methods folder,
-    see ./processing/methods/__init__.py for list of loaded methods.
-"""
-
 
 """This is the Processing packege"""

@@ -88,10 +88,10 @@ class displacement_map:
         """
         Constructor
         
-        :type dp_x : 2d np.array
+        :type dp_x: 2d np.array
         :param dp_x: Matrix with the components of the displacement vectors on the x axis.
         
-        :type dp_y : 2d np.array
+        :type dp_y: 2d np.array
         :param dp_y: Matrix with the components of the displacement vectors on the y axis.
         
         """
@@ -126,8 +126,9 @@ class displacement_map:
         
         :type ii: int
         :param ii: x coordinate of the point at which the neighborhood(3x3) median of subtraction is being calculated.
+        
         :type jj: int
-        :param jj:y coordinate of the point at which the neighborhood(3x3) median of subtraction is being calculated.
+        :param jj: y coordinate of the point at which the neighborhood(3x3) median of subtraction is being calculated.
             
         :rtype: float
         :return: Median of the subtration of the neighborhood points (3x3) and the neighboorhood median on dpx and dpy        

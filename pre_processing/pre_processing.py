@@ -86,7 +86,7 @@ def thread_mmao(num_images2, dir, file_prefix, num_primeira, file_form):
     :param num_primeira: Number of the first image
     
     :type file_form: str
-    :param file_form:Format of the images in the image set
+    :param file_form: Format of the images in the image set
     
     :return: Necessary value for the brightness homogenization
     :rtype: float
@@ -104,7 +104,7 @@ def thread_bckg(num_images, dir, file_prefix, num_primeira, file_form):
     :type num_images: int
     :param num_images: Number of images in the image set
         
-    :type dir : str
+    :type dir: str
     :param dir: Image set directory name
     
     :type file_prefix: str
@@ -183,7 +183,7 @@ def calc_m (n_im, dir, file_prefix, num_primeira, file_form):
     :param num_primeira: Number of the first image
     
     :type file_form: str
-    :param file_form:Format of the images in the image set
+    :param file_form: Format of the images in the image set
     
     :rtype: float
     :return: Necessary value for the brightness homogenization

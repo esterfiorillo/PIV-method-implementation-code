@@ -124,7 +124,7 @@ class interrogation_window:
         The matrix value resulted from the method is assigned to the class attribute cross_cor.
         
 
-        :type mode : str, optional
+        :type mode: str, optional
         :param mode: full (Default): The output of fftconvolve is the full discrete linear convolution of the inputs.
         Output size will be image size + 1/2 template size in each dimension.
         valid: The output consists only of those elements that do not rely on the zero-padding.

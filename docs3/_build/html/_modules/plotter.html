@@ -114,9 +114,8 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Asks the user the final size of the interrogation window after processing the images, apply reescaling and plot the displacement vector map</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1">#ws = input(&quot;Type the final interrogation window size:&quot;)</span>
-    <span class="c1">#ws = int (ws)</span>
-    <span class="n">ws</span> <span class="o">=</span> <span class="mi">16</span>
+    <span class="n">ws</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Type the final interrogation window size:&quot;</span><span class="p">)</span>
+    <span class="n">ws</span> <span class="o">=</span> <span class="nb">int</span> <span class="p">(</span><span class="n">ws</span><span class="p">)</span>
     
     <span class="c1">#Opens the two csv files, which have the displacement vector maps found in the processing and transforms them into np.arrays</span>
     <span class="n">entrada1</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;dpx_resultado_multigrid&#39;</span><span class="p">,</span> <span class="n">sep</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">)</span>

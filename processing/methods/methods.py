@@ -48,10 +48,10 @@ This file contains the base class for the processing methods.
    load basic modules
 """
 
-#from pre_processing.pre_processing_class import pre_processing
-#from processing.interrogation_window import interrogation_window
+from pre_processing.pre_processing_class import pre_processing
+from processing.interrogation_window import interrogation_window
 import sys
-#from processing.displacement_map import displacement_map
+from processing.displacement_map import displacement_map
 
 """
    try to load fundamental modules

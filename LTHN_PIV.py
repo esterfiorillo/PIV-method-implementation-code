@@ -75,22 +75,17 @@ from PyQt5 import QtWidgets
 from PyQt5.QtGui import QDesktopServices
 from PyQt5.QtCore import QUrl
 
-#
-#
+
 from pre_processing.pre_processing import calc_background 
 from pre_processing.pre_processing import calc_m 
 from pre_processing.pre_processing import thread_mmao 
 from pre_processing.pre_processing import thread_bckg 
 from pre_processing.pre_processing_class import pre_processing
-#
-#
-#
+
 from processing.processing import thread_processing 
 from processing.displacement_map import displacement_map 
 from processing.interrogation_window import interrogation_window
-#
-#
-#
+
 from processing.methods.normal_method import normal_method
 from processing.methods.multigrid_method import multigrid_method  
 
@@ -103,7 +98,7 @@ from interface.interface import mywindow as mywindow
 def main():
     """
     
-    Start LTHN PIV interface
+    Starts LTHN PIV interface
     
     """
     app = QApplication([])

@@ -164,14 +164,14 @@ class pre_processing:
         """
         This function and homogenize_brightness function aim to homogenize the brightness of the second image according to that of the first.
         It was made to be apliyed to the second image of the par, not both of then.
-        Reference : Brightness correction, homogenization and adjunstment of images for face recognition, Eduardo Machado Silva, UNESP, ISSN 2316-9664, Volume 14, fev. 2019, Edic ̧ao Ermac
         
-        :type im: 2d np.array
-        :param im: Input image
+        :type im2: 2d np.array
+        :param im2: Input image
         
         :rtype: float
         :return: Value that will be used in homogenize_brightness function
         """
+        #Reference : Brightness correction, homogenization and adjunstment of images for face recognition, Eduardo Machado Silva, UNESP, ISSN 2316-9664, Volume 14, fev. 2019, Edic ̧ao Ermac
         h,bins = np.histogram(im2.ravel(),256,[0,256])
         h_min = min(h)
         h_max = max(h)
@@ -184,14 +184,14 @@ class pre_processing:
         """
         This function and homogenize_brightness function aim to homogenize the brightness of the second image according to that of the first.
         It was made to be apliyed to the second image of the par, not both of then.
-        Reference : Brightness correction, homogenization and adjunstment of images for face recognition, Eduardo Machado Silva, UNESP, ISSN 2316-9664, Volume 14, fev. 2019, Edic ̧ao Ermac
         
-        :type im: 2d np.array
-        :param im: Input image
+        :type im2: 2d np.array
+        :param im2: Input image
         
         :rtype: 2d np.array
         :return: Input image after brightness correction
         """
+        #Reference : Brightness correction, homogenization and adjunstment of images for face recognition, Eduardo Machado Silva, UNESP, ISSN 2316-9664, Volume 14, fev. 2019, Edic ̧ao Ermac
         teta = self.calc_teta(im2)
         tam_x = len(im2)
         tam_y = len(im2[0])
