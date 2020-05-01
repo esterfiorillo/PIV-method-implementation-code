@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>processing.methods.multigrid_method &#8212; PIV-LTHN  documentation</title>
+    <title>processing.methods.multigrid_method &#8212; LTHN PIV  documentation</title>
     <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
@@ -82,6 +82,7 @@
 <span class="sd">   load basic modules</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="c1">#from processing.interrogation_window import interrogation_window</span>
+<span class="c1">#from processing.displacement_map import displacement_map</span>
 <span class="c1">#from processing.methods.methods import Methods</span>
 <span class="c1">#from processing.methods.normal_method import normal_method</span>
 
@@ -180,8 +181,8 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Function that implements the Multigrid method.</span>
 <span class="sd">        </span>
-<span class="sd">        :rtype: displacement_map</span>
-<span class="sd">        :return: Displacement vector map resulting from the method</span>
+<span class="sd">        :rtype: displacement_map, float</span>
+<span class="sd">        :return: Displacement vector map resulting from the method and the final interrogation window size</span>
 <span class="sd">        </span>
 <span class="sd">        &quot;&quot;&quot;</span>
     
@@ -193,6 +194,9 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">y_size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_size</span><span class="o">//</span><span class="mi">2</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">overlap</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">overlap</span><span class="o">//</span><span class="mi">2</span>
             <span class="n">size_r_x</span><span class="p">,</span> <span class="n">size_r_y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_dimensions</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x_size</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_size</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">overlap</span><span class="p">)</span>
+            <span class="n">x_map</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">size_r_x</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">y_map</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">size_r_y</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">x_map</span><span class="p">,</span> <span class="n">y_map</span><span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">x_map</span><span class="p">,</span> <span class="n">y_map</span><span class="p">)</span>
             
             <span class="n">dpx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">size_r_x</span><span class="p">,</span> <span class="n">size_r_y</span><span class="p">))</span>
             <span class="n">dpy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">size_r_x</span><span class="p">,</span> <span class="n">size_r_y</span><span class="p">))</span>
@@ -290,13 +294,10 @@
                     <span class="n">yy</span> <span class="o">-=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y_size</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span><span class="o">//</span><span class="mi">2</span>
                        
                     <span class="n">dpx</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">],</span> <span class="n">dpy</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">xx</span><span class="p">,</span> <span class="n">yy</span>
-            <span class="n">dp_anterior</span><span class="o">.</span><span class="n">dpx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">size_r_x</span><span class="p">,</span> <span class="n">size_r_y</span><span class="p">))</span>
-            <span class="n">dp_anterior</span><span class="o">.</span><span class="n">dpy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">size_r_x</span><span class="p">,</span> <span class="n">size_r_y</span><span class="p">))</span>
-            <span class="n">dp_anterior</span><span class="o">.</span><span class="n">dpx</span> <span class="o">=</span> <span class="n">dpx</span>
-            <span class="n">dp_anterior</span><span class="o">.</span><span class="n">dpy</span> <span class="o">=</span> <span class="n">dpy</span>
+            <span class="n">dp_anterior</span> <span class="o">=</span> <span class="n">displacement_map</span><span class="p">(</span><span class="n">dpx</span><span class="p">,</span> <span class="n">dpy</span><span class="p">,</span> <span class="n">x_map</span><span class="p">,</span> <span class="n">y_map</span><span class="p">)</span>
             <span class="n">aux</span> <span class="o">=</span> <span class="n">aux</span> <span class="o">+</span><span class="mi">1</span>
-    
-        <span class="k">return</span> <span class="n">dp_anterior</span></div>
+            
+        <span class="k">return</span> <span class="n">dp_anterior</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">x_size</span></div>
 
 <span class="c1">#Second implementaton:</span>
         
@@ -304,8 +305,8 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Function that is a second implementation of Multigrid method</span>
 <span class="sd">        </span>
-<span class="sd">        :rtype: displacement_map</span>
-<span class="sd">        :return: Displacement vector map resulting from the method</span>
+<span class="sd">        :rtype: displacement_map, float</span>
+<span class="sd">        :return: Displacement vector map resulting from the method and the final interrogation window size</span>
 <span class="sd">        </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">aux</span> <span class="o">=</span> <span class="mi">0</span>
@@ -316,6 +317,10 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">overlap</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">overlap</span><span class="o">//</span><span class="mi">2</span>
             <span class="n">size_r_x</span><span class="p">,</span> <span class="n">size_r_y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_dimensions</span><span class="p">()</span>
             <span class="n">ind1_x</span><span class="p">,</span> <span class="n">ind1_y</span><span class="p">,</span> <span class="n">ind2_x</span><span class="p">,</span> <span class="n">ind2_y</span> <span class="o">=</span> <span class="n">dp_anterior</span><span class="o">.</span><span class="n">index_guard</span><span class="p">()</span>
+            
+            <span class="n">x_map</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">size_r_x</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">y_map</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">size_r_y</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">x_map</span><span class="p">,</span> <span class="n">y_map</span><span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">x_map</span><span class="p">,</span> <span class="n">y_map</span><span class="p">)</span>
    
             <span class="n">dp_anterior</span><span class="o">.</span><span class="n">resize_dp</span> <span class="p">()</span>
 
@@ -411,14 +416,11 @@
                     <span class="n">yy</span> <span class="o">-=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y_size</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span><span class="o">//</span><span class="mi">2</span>
                        
                     <span class="n">dpx</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">],</span> <span class="n">dpy</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">xx</span><span class="p">,</span> <span class="n">yy</span>
-            <span class="n">dp_anterior</span><span class="o">.</span><span class="n">dpx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">size_r_x</span><span class="p">,</span> <span class="n">size_r_y</span><span class="p">))</span>
-            <span class="n">dp_anterior</span><span class="o">.</span><span class="n">dpy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">size_r_x</span><span class="p">,</span> <span class="n">size_r_y</span><span class="p">))</span>
-            <span class="n">dp_anterior</span><span class="o">.</span><span class="n">dpx</span> <span class="o">=</span> <span class="n">dpx</span>
-            <span class="n">dp_anterior</span><span class="o">.</span><span class="n">dpy</span> <span class="o">=</span> <span class="n">dpy</span>
+            <span class="n">dp_anterior</span> <span class="o">=</span> <span class="n">displacement_map</span><span class="p">(</span><span class="n">dpx</span><span class="p">,</span> <span class="n">dpy</span><span class="p">,</span> <span class="n">x_map</span><span class="p">,</span> <span class="n">y_map</span><span class="p">)</span>
             <span class="n">cont1</span> <span class="o">=</span> <span class="n">cont1</span> <span class="o">+</span><span class="mi">1</span>
             <span class="n">cont2</span> <span class="o">=</span> <span class="mi">0</span>
             <span class="n">aux</span> <span class="o">=</span> <span class="n">aux</span> <span class="o">+</span><span class="mi">1</span>
-        <span class="k">return</span> <span class="n">dp_anterior</span></div></div>
+        <span class="k">return</span> <span class="n">dp_anterior</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">x_size</span></div></div>
 </pre></div>
 
           </div>
@@ -427,7 +429,7 @@
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="../../../index.html">PIV-LTHN</a></h1>
+<h1 class="logo"><a href="../../../index.html">LTHN PIV</a></h1>
 
 
 

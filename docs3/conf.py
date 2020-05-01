@@ -19,7 +19,7 @@ sys.path.insert(0, os.path.abspath('..'))
 
 # -- Project information -----------------------------------------------------
 
-project = u'PIV-LTHN'
+project = u'LTHN PIV'
 copyright = u'2020, Ester Fiorillo, André Santos, Vitor Silva'
 author = u'Ester Fiorillo, André Santos, Vitor Silva'
 
@@ -103,7 +103,7 @@ html_static_path = ['_static']
 # -- Options for HTMLHelp output ---------------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'PIV-LTHNdoc'
+htmlhelp_basename = 'LTHNPIVdoc'
 
 
 # -- Options for LaTeX output ------------------------------------------------
@@ -130,7 +130,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'PIV-LTHN.tex', u'PIV-LTHN Documentation',
+    (master_doc, 'LTHNPIV.tex', u'LTHN PIV Documentation',
      u'Ester Fiorillo, André Santos, Vitor Silva', 'manual'),
 ]
 
@@ -140,7 +140,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'piv-lthn', u'PIV-LTHN Documentation',
+    (master_doc, 'lthnpiv', u'LTHN PIV Documentation',
      [author], 1)
 ]
 
@@ -151,8 +151,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'PIV-LTHN', u'PIV-LTHN Documentation',
-     author, 'PIV-LTHN', 'One line description of project.',
+    (master_doc, 'LTHNPIV', u'LTHN PIV Documentation',
+     author, 'LTHNPIV', 'One line description of project.',
      'Miscellaneous'),
 ]
 

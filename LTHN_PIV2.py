@@ -37,34 +37,34 @@
 #     along with LTHN PIV.  If not, see <http://www.gnu.org/licenses/>.
 #
 # File
-#     ./plotter.py
+#     ./LTHN2.py
 
 """
-This file is used to plot the final result on a graphic
+Only this file needs to be executed to generate the output by using input txt files and not the interface.
 """
 """
    Load basic modules
 """
-import numpy as np
-import matplotlib.pyplot as plt
-import pandas as pd
+import sys
+
+"""
+    try to load processing functions
+"""
+try:
+    from processing.read_input_files import processing_input_file
+except Exception as E:
+    print("Missing critical processing module. Please install module:")
+    print(E)
+    sys.exit()
+    
 
 def main():
     """
-    Reads the csv file resulting and plot the displacement vector map 
+    Reads the string that has the address of the input file and call the function that executes the process. 
     """
-    data = []
+    f_address = 'Input_files/file1'
     
-    for i in range (4):
-        a = pd.read_csv('resultado_multigrid.csv', usecols=[i])
-        data.append(a)
-        
-    x = np.array(data[0])
-    y = np.array(data[1])
-    u = np.array(data[2])
-    v = np.array(data[3])
+    processing_input_file(f_address)
 
-    plt.quiver(x, y, u, v)
-    
 if __name__ == "__main__":
     main()

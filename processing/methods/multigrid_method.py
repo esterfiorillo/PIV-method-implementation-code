@@ -48,6 +48,7 @@ This file contains the class that represents the implementation of the multigrid
    load basic modules
 """
 from processing.interrogation_window import interrogation_window
+from processing.displacement_map import displacement_map
 from processing.methods.methods import Methods
 from processing.methods.normal_method import normal_method
 
@@ -146,8 +147,8 @@ class multigrid_method (normal_method):
         """
         Function that implements the Multigrid method.
         
-        :rtype: displacement_map
-        :return: Displacement vector map resulting from the method
+        :rtype: displacement_map, float
+        :return: Displacement vector map resulting from the method and the final interrogation window size
         
         """
     
@@ -159,6 +160,9 @@ class multigrid_method (normal_method):
             self.y_size = self.y_size//2
             self.overlap = self.overlap//2
             size_r_x, size_r_y = self.result_dimensions(self.x_size, self.y_size, self.overlap)
+            x_map = np.arange(0, size_r_x, 1)
+            y_map = np.arange(0, size_r_y, 1)
+            x_map, y_map= np.meshgrid(x_map, y_map)
             
             dpx = np.zeros((size_r_x, size_r_y))
             dpy = np.zeros((size_r_x, size_r_y))
@@ -256,13 +260,10 @@ class multigrid_method (normal_method):
                     yy -= (self.y_size + self.y_size - 1)//2
                        
                     dpx[i, j], dpy[i, j] = -xx, yy
-            dp_anterior.dpx = np.zeros((size_r_x, size_r_y))
-            dp_anterior.dpy = np.zeros((size_r_x, size_r_y))
-            dp_anterior.dpx = dpx
-            dp_anterior.dpy = dpy
+            dp_anterior = displacement_map(dpx, dpy, x_map, y_map)
             aux = aux +1
-    
-        return dp_anterior
+            
+        return dp_anterior, self.x_size
 
 #Second implementaton:
         
@@ -270,8 +271,8 @@ class multigrid_method (normal_method):
         """
         Function that is a second implementation of Multigrid method
         
-        :rtype: displacement_map
-        :return: Displacement vector map resulting from the method
+        :rtype: displacement_map, float
+        :return: Displacement vector map resulting from the method and the final interrogation window size
         
         """
         aux = 0
@@ -282,6 +283,10 @@ class multigrid_method (normal_method):
             self.overlap = self.overlap//2
             size_r_x, size_r_y = self.result_dimensions()
             ind1_x, ind1_y, ind2_x, ind2_y = dp_anterior.index_guard()
+            
+            x_map = np.arange(0, size_r_x, 1)
+            y_map = np.arange(0, size_r_y, 1)
+            x_map, y_map= np.meshgrid(x_map, y_map)
    
             dp_anterior.resize_dp ()
 
@@ -377,11 +382,8 @@ class multigrid_method (normal_method):
                     yy -= (self.y_size + self.y_size - 1)//2
                        
                     dpx[i, j], dpy[i, j] = -xx, yy
-            dp_anterior.dpx = np.zeros((size_r_x, size_r_y))
-            dp_anterior.dpy = np.zeros((size_r_x, size_r_y))
-            dp_anterior.dpx = dpx
-            dp_anterior.dpy = dpy
+            dp_anterior = displacement_map(dpx, dpy, x_map, y_map)
             cont1 = cont1 +1
             cont2 = 0
             aux = aux +1
-        return dp_anterior
+        return dp_anterior, self.x_size

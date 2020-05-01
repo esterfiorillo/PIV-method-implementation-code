@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>processing package &#8212; PIV-LTHN  documentation</title>
+    <title>processing package &#8212; LTHN PIV  documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -58,7 +58,7 @@
 <p>This file contains the displacement_map class.</p>
 <dl class="class">
 <dt id="processing.displacement_map.displacement_map">
-<em class="property">class </em><code class="descclassname">processing.displacement_map.</code><code class="descname">displacement_map</code><span class="sig-paren">(</span><em>dp_x</em>, <em>dp_y</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/processing/displacement_map.html#displacement_map"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#processing.displacement_map.displacement_map" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">processing.displacement_map.</code><code class="descname">displacement_map</code><span class="sig-paren">(</span><em>dp_x</em>, <em>dp_y</em>, <em>x</em>, <em>y</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/processing/displacement_map.html#displacement_map"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#processing.displacement_map.displacement_map" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class that represents a vector field, which is the displacements of the particles between the time of capture of the pair of images.
 This class also have the functions applied to vector field the for data validation.</p>
 <dl class="method">
@@ -175,6 +175,20 @@ This class also have the functions applied to vector field the for data validati
 </dd></dl>
 
 <dl class="method">
+<dt id="processing.displacement_map.displacement_map.reescaling">
+<code class="descname">reescaling</code><span class="sig-paren">(</span><em>ws</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/processing/displacement_map.html#displacement_map.reescaling"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#processing.displacement_map.displacement_map.reescaling" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function that reescale the values x, y, a, b for the ws size</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>ws</strong> (<em>float</em>) – Final interrogation window size</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="processing.displacement_map.displacement_map.replacement3">
 <code class="descname">replacement3</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/processing/displacement_map.html#displacement_map.replacement3"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#processing.displacement_map.displacement_map.replacement3" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function that calculates the value of r for all points on the displacement vector field.
@@ -185,6 +199,12 @@ It also replaces the value of points with the neighborhood mean, if the value of
 <dt id="processing.displacement_map.displacement_map.resize_dp">
 <code class="descname">resize_dp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/processing/displacement_map.html#displacement_map.resize_dp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#processing.displacement_map.displacement_map.resize_dp" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function that divides the values ​​of the displacement vectors by two.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="processing.displacement_map.displacement_map.xyuv">
+<code class="descname">xyuv</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/processing/displacement_map.html#displacement_map.xyuv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#processing.displacement_map.displacement_map.xyuv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function that transforms dpx, dpy, xx and yy matrices into u, v, x, y lists that can later be plotted</p>
 </dd></dl>
 
 </dd></dl>
@@ -268,7 +288,7 @@ same: The output is the same size as image, centered with respect to the ‘full
 <code class="descclassname">processing.processing.</code><code class="descname">thread_processing</code><span class="sig-paren">(</span><em>num_images</em>, <em>dir</em>, <em>file_prefix</em>, <em>num_primeira</em>, <em>file_form</em>, <em>bck_ground</em>, <em>mao</em>, <em>met</em>, <em>w_size</em>, <em>ovl</em>, <em>n_iterations</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/processing/processing.html#thread_processing"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#processing.processing.thread_processing" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function that loads the set of images from the name of the directory, the prefix of the files, the number of the first image and the file type of the images received as parameters.
 For this, a loop is made in which these images are opened and processed in pairs. Then, inside the loop, the pair is read, the pre-processing functions are applied and the processing method is applied (either multigrid or normal depending on the met variable received as a parameter).
-Finally, the displacement vector maps found for each pair are saved in lists. In the end, the lists are averaged and saved in csv files.</p>
+Finally, the displacement vector maps found for each pair are saved in lists. In the end, the lists are averaged and the final displacement vector map is saved in a csv file.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -287,6 +307,24 @@ Finally, the displacement vector maps found for each pair are saved in lists. In
 <li><strong>n_iterations</strong> (<em>int</em>) – Number of iterations of the method</li>
 </ul>
 </td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-processing.read_input_files">
+<span id="processing-read-input-files-module"></span><h2>processing.read_input_files module<a class="headerlink" href="#module-processing.read_input_files" title="Permalink to this headline">¶</a></h2>
+<p>This file is an alternative to take the input parameters, other than through the graphical interface. It does this by reading the parameters in a txt file.</p>
+<dl class="function">
+<dt id="processing.read_input_files.processing_input_file">
+<code class="descclassname">processing.read_input_files.</code><code class="descname">processing_input_file</code><span class="sig-paren">(</span><em>file_address</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/processing/read_input_files.html#processing_input_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#processing.read_input_files.processing_input_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function that reads a txt file that has the input parameters desired by the user. These parameters are image address1, number of images, size of the initial interrogation window, overlap, method used and number of iterations if the multigrid method is chosen. After that, the function calls the processing threads to perform the process of finding the csv file with the resulting displacement vector map.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>file_address</strong> (<em>str</em>) – String with the address of the input file that has the parameters</td>
 </tr>
 </tbody>
 </table>
@@ -329,7 +367,7 @@ Finally, the displacement vector maps found for each pair are saved in lists. In
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="index.html">PIV-LTHN</a></h1>
+<h1 class="logo"><a href="index.html">LTHN PIV</a></h1>
 
 
 
@@ -343,6 +381,8 @@ Finally, the displacement vector maps found for each pair are saved in lists. In
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="modules.html">PIV-method-implementation-code</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="LTHN_PIV.html">LTHN_PIV module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="LTHN_PIV2.html">LTHN_PIV2 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="commum.html">commum package</a></li>
 <li class="toctree-l2"><a class="reference internal" href="interface.html">interface package</a></li>
 <li class="toctree-l2"><a class="reference internal" href="plotter.html">plotter module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="post_processing.html">post_processing package</a></li>

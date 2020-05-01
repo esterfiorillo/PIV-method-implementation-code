@@ -35,6 +35,14 @@ processing.processing module
     :undoc-members:
     :show-inheritance:
 
+processing.read\_input\_files module
+------------------------------------
+
+.. automodule:: processing.read_input_files
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------

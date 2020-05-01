@@ -110,6 +110,11 @@ class normal_method(Methods):
         """
         
         size_r_x, size_r_y = self.result_dimensions(self.x_size, self.y_size, self.overlap)
+        
+        x_map = np.arange(0, size_r_x, 1)
+        y_map = np.arange(0, size_r_y, 1)
+        x_map, y_map= np.meshgrid(x_map, y_map)
+        
         #create matrix for substitute divisions of im1
         a = np.zeros ((self.x_size, self.y_size))
         #create matrix for substitute search window in im2
@@ -139,5 +144,5 @@ class normal_method(Methods):
 
                 dpx1[i][j], dpy1[i][j] = -xx, yy
 
-        res = displacement_map(dpx1, dpy1)
+        res = displacement_map(dpx1, dpy1, x_map, y_map)
         return res

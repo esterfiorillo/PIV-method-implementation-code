@@ -58,7 +58,7 @@ import sys
 """
 try:
     import numpy as np
-    #import matplotlib.pyplot as plt
+    import matplotlib.pyplot as plt
     import pandas as pd
     import time
     import cv2
@@ -86,13 +86,14 @@ except Exception as E:
 """
 from processing.methods.normal_method import normal_method
 from processing.methods.multigrid_method import multigrid_method
+from processing.displacement_map import displacement_map
 
 
 def thread_processing (num_images, dir, file_prefix, num_primeira, file_form, bck_ground, mao, met, w_size, ovl, n_iterations):
     """
     Function that loads the set of images from the name of the directory, the prefix of the files, the number of the first image and the file type of the images received as parameters.
     For this, a loop is made in which these images are opened and processed in pairs. Then, inside the loop, the pair is read, the pre-processing functions are applied and the processing method is applied (either multigrid or normal depending on the met variable received as a parameter).
-    Finally, the displacement vector maps found for each pair are saved in lists. In the end, the lists are averaged and saved in csv files.
+    Finally, the displacement vector maps found for each pair are saved in lists. In the end, the lists are averaged and the final displacement vector map is saved in a csv file.
     
     :type num_images: int
     :param num_images: Number of images in the image set
@@ -171,26 +172,39 @@ def thread_processing (num_images, dir, file_prefix, num_primeira, file_form, bc
         tam_x, tam_y = np.shape(im1)
    
         if met == 'Multigrid':
-            
+
             par2 = multigrid_method(im1, im2, w_size, ovl, n_iterations)
-            s = par2.multigrid_method1()
+            s, wss = par2.multigrid_method1()
             s.replacement3()
             
             dpx_list1.append(s.dpx)
             dpy_list1.append(s.dpy)
+            
             if i == (num_images -1):
+                
+                x_map = s.xx
+                y_map = s.yy
+                
                 dpx_def = sum (dpx_list1)/len (dpx_list1)
                 dpy_def = sum (dpy_list1)/len (dpx_list1)
-                 
-                #saves the average of dpx and dpy results in two csv files
-                dpx_csv = pd.DataFrame(dpx_def)
-                pd.DataFrame(dpx_csv).to_csv("dpx_resultado_multigrid", sep='\t', header = False, index = False)
-                dpy_csv = pd.DataFrame(dpy_def)
-                pd.DataFrame(dpy_csv).to_csv("dpy_resultado_multigrid", sep='\t', header = False, index = False)
+                
+                final = displacement_map (dpx_def, dpy_def, x_map, y_map)
+                final.reescaling(wss)
+                final_csv = final.xyuv()
+                
+                file_csv = pd.DataFrame(final_csv, columns = ['x', 'y', 'u', 'v'])
+                file_csv.to_csv("resultado_multigrid.csv", sep=',', header = True, index = False)
                 print ("Process Finished")
                 finish = time.perf_counter()
                 sec = round (finish - start, 2)
                 print(f"execution time = {sec} seconds") 
+                #plt.quiver(final.xx, final.yy, final.dpx, final.dpy)
+                #saves the average of dpx and dpy results in two csv files
+#                dpx_csv = pd.DataFrame(dpx_def)
+#                pd.DataFrame(dpx_csv).to_csv("dpx_resultado_multigrid", sep='\t', header = False, index = False)
+#                dpy_csv = pd.DataFrame(dpy_def)
+#                pd.DataFrame(dpy_csv).to_csv("dpy_resultado_multigrid", sep='\t', header = False, index = False)
+
            
         if met == 'Normal':
             par1 = normal_method(im1, im2, w_size, ovl)
@@ -198,16 +212,31 @@ def thread_processing (num_images, dir, file_prefix, num_primeira, file_form, bc
             dpx_list2.append(r.dpx)
             dpy_list2.append(r.dpy)
             
+            xx_map = r.xx
+            yy_map = r.yy
             if i == (num_images -1):
+                xx_map = r.xx
+                yy_map = r.yy
                 dpx_def2 = sum (dpx_list2)/len (dpx_list2)
                 dpy_def2 = sum (dpy_list2)/len (dpx_list2)
-            
-                #saves the average of dpx and dpy results in two csv files
-                dpx_csv2 = pd.DataFrame(dpx_def2)
-                pd.DataFrame(dpx_csv2).to_csv("dpx_resultado_normal", sep='\t')
-                dpy_csv2 = pd.DataFrame(dpy_def2)
-                pd.DataFrame(dpy_csv2).to_csv("dpy_resultado_normal", sep='\t')
+                
+                final = displacement_map (dpx_def2, dpy_def2, xx_map, yy_map)
+                final.reescaling(w_size)
+                final_csv = final.xyuv()
+                
+                file_csv2 = pd.DataFrame(final_csv, columns = ['x', 'y', 'u', 'v'])
+                file_csv2.to_csv("resultado_normal.csv", sep=',', header = True, index = False)
                 print ("Process Finished")
                 finish = time.perf_counter()
                 sec = round (finish - start, 2)
                 print(f"execution time = {sec} seconds") 
+            
+#                #saves the average of dpx and dpy results in two csv files
+#                dpx_csv2 = pd.DataFrame(dpx_def2)
+#                pd.DataFrame(dpx_csv2).to_csv("dpx_resultado_normal", sep='\t')
+#                dpy_csv2 = pd.DataFrame(dpy_def2)
+#                pd.DataFrame(dpy_csv2).to_csv("dpy_resultado_normal", sep='\t')
+#                print ("Process Finished")
+#                finish = time.perf_counter()
+#                sec = round (finish - start, 2)
+#                print(f"execution time = {sec} seconds") 

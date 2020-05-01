@@ -84,7 +84,7 @@ class displacement_map:
     
     """ 
    
-    def __init__ (self, dp_x, dp_y): 
+    def __init__ (self, dp_x, dp_y, x, y): 
         """
         Constructor
         
@@ -94,9 +94,44 @@ class displacement_map:
         :type dp_y: 2d np.array
         :param dp_y: Matrix with the components of the displacement vectors on the y axis.
         
+        :type x: 2d np.array
+        :param x: Matrix with the coordinates in x of the displacement vector field
+        
+        :type y: 2d np.array
+        :param y: Matrix with the coordinates in y of the displacement vector field
+        
         """
         self.dpx = dp_x
         self.dpy = dp_y
+        self.xx = x
+        self.yy = y
+        
+    def reescaling(self, ws):
+        """
+        Function that reescale the values x, y, a, b for the ws size
+        
+        :type ws: float
+        :param ws: Final interrogation window size
+        
+        """
+        
+        self.dpx = self.dpx*ws
+        self.dpy = self.dpy*ws
+        self.xx = self.xx*ws
+        self.yy = self.yy*ws
+        
+    def xyuv (self):
+        """
+        Function that transforms dpx, dpy, xx and yy matrices into u, v, x, y lists that can later be plotted
+        """
+        
+        u = self.dpx.ravel()
+        v = self.dpy.ravel()
+        x = self.xx.ravel()
+        y = self.yy.ravel()
+        rai = np.vstack([x, y, u, v])
+        rai = rai.T
+        return rai
      
         
     def neighborhood_median (self, ii, jj):

@@ -1,0 +1,6 @@
+Image1=tests/Test2/exp1_001_1.png
+Number of Images=2
+Interrogation Window Size=64
+Overlap=0
+Method=Multigrid
+Number of Iterations=2
